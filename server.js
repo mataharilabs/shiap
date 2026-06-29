@@ -313,7 +313,7 @@ app.post('/api/rfq', (req, res) => {
 });
 
 app.get('/api/users', (req, res) => {
-  db.all('SELECT id, role, first_name, last_name, email, country, company_name, status, created_at FROM users ORDER BY created_at DESC', [], (err, rows) => {
+  db.all('SELECT id, role, first_name, last_name, email, phone, country, company_name, status, created_at FROM users ORDER BY created_at DESC', [], (err, rows) => {
     if (err) return res.status(500).json({ error: 'Unable to fetch users.' });
     res.json(rows);
   });
@@ -886,6 +886,58 @@ app.put('/api/users/:email/status', async (req, res) => {
     res.json({ message: 'User status updated.' });
   } catch (err) {
     res.status(500).json({ error: 'Unable to update user status.' });
+  }
+});
+
+app.put('/api/admin/users/:id', async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { first_name, last_name, email, phone, role, country, company_name, status, password } = req.body;
+  if (!email || !role) return res.status(400).json({ error: 'Email and role are required.' });
+  const validRoles = ['buyer', 'supplier', 'admin'];
+  const validStatuses = ['active', 'inactive', 'pending', 'suspended'];
+  if (!validRoles.includes(role)) return res.status(400).json({ error: 'Invalid role.' });
+  if (status && !validStatuses.includes(status)) return res.status(400).json({ error: 'Invalid status.' });
+  try {
+    if (password && password.trim()) {
+      const hash = await bcrypt.hash(password.trim(), 10);
+      await new Promise((resolve, reject) => {
+        db.run(
+          'UPDATE users SET first_name=?, last_name=?, email=?, phone=?, role=?, country=?, company_name=?, status=?, password=? WHERE id=?',
+          [first_name || null, last_name || null, email, phone || null, role, country || null, company_name || null, status || 'pending', hash, id],
+          function(err) { if (err) reject(err); else resolve(this.changes); }
+        );
+      });
+    } else {
+      await new Promise((resolve, reject) => {
+        db.run(
+          'UPDATE users SET first_name=?, last_name=?, email=?, phone=?, role=?, country=?, company_name=?, status=? WHERE id=?',
+          [first_name || null, last_name || null, email, phone || null, role, country || null, company_name || null, status || 'pending', id],
+          function(err) { if (err) reject(err); else resolve(this.changes); }
+        );
+      });
+    }
+    res.json({ message: 'User updated.' });
+  } catch (err) {
+    console.error('Admin user update error:', err);
+    res.status(500).json({ error: 'Unable to update user.' });
+  }
+});
+
+app.put('/api/admin/users/:id/kyb', async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { action } = req.body;
+  if (!['approve', 'reject'].includes(action)) return res.status(400).json({ error: 'Invalid action.' });
+  const status = action === 'approve' ? 'active' : 'inactive';
+  const kyb_verified = action === 'approve' ? 1 : 0;
+  try {
+    await new Promise((resolve, reject) => {
+      db.run('UPDATE users SET status=?, kyb_verified=? WHERE id=?', [status, kyb_verified, id],
+        function(err) { if (err) reject(err); else resolve(this.changes); }
+      );
+    });
+    res.json({ message: `KYB ${action}d.` });
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to update KYB status.' });
   }
 });
 
