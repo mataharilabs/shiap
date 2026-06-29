@@ -1058,6 +1058,133 @@ app.get('/api/debug/products', (req, res) => {
   });
 });
 
+// ── 1688 Sourcing Proxy ─────────────────────────────────────────────────────
+const TMAPI_TOKEN = process.env.TMAPI_TOKEN || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImZyYW5zaW5nIiwiQ29taWQiOm51bGwsIlJvbGVpZCI6bnVsbCwiaXNzIjoidG1hcGkiLCJzdWIiOiJmcmFuc2luZyIsImF1ZCI6WyIiXX0.meAKUhYnWPqfhNAINLIxIm3aQ36h2BarInWA9lsO_VY';
+const CNY_TO_USD = parseFloat(process.env.CNY_USD_RATE || '0.138');
+const SHIAP_FEE = 0.12;
+
+function httpGetJson(url, timeoutMs = 12000) {
+  return new Promise((resolve, reject) => {
+    const mod = url.startsWith('https') ? https : require('http');
+    const req = mod.get(url, (r) => {
+      r.setEncoding('utf8');
+      let buf = '';
+      r.on('data', c => buf += c);
+      r.on('end', () => { try { resolve(JSON.parse(buf)); } catch(e) { reject(new Error('Bad JSON from upstream')); } });
+    });
+    req.setTimeout(timeoutMs, () => { req.destroy(); reject(new Error('Upstream API timed out')); });
+    req.on('error', reject);
+  });
+}
+
+function extract1688Id(input) {
+  // https://detail.1688.com/offer/975079174251.html
+  let m = input.match(/\/offer\/(\d+)(?:\.html)?/);
+  if (m) return m[1];
+  // bare number
+  m = input.match(/^(\d{8,})$/);
+  if (m) return m[1];
+  // id= query param (taobao-style, fallback)
+  m = input.match(/[?&]id=(\d+)/);
+  if (m) return m[1];
+  return null;
+}
+
+app.get('/api/sourcing/1688', async (req, res) => {
+  const rawUrl = (req.query.url || '').trim();
+  if (!rawUrl) return res.status(400).json({ error: 'url parameter is required.' });
+
+  const itemId = extract1688Id(rawUrl);
+  if (!itemId) return res.status(400).json({ error: 'Could not extract product ID from the URL. Make sure it is a valid 1688.com product link.' });
+
+  try {
+    const apiUrl = `http://api.tmapi.top/1688/item_detail?apiToken=${TMAPI_TOKEN}&item_id=${itemId}`;
+    const raw = await httpGetJson(apiUrl);
+    if (raw.code !== 200) return res.status(502).json({ error: raw.msg || 'API returned non-200' });
+
+    const d = raw.data || {};
+
+    // Price
+    const priceInfo = d.price_info || {};
+    const baseCny = parseFloat(priceInfo.price || priceInfo.price_min || 0);
+    const maxCny = parseFloat(priceInfo.price_max || baseCny);
+
+    // Tiered pricing
+    const tieredPrices = (d.tiered_price_info?.prices || []);
+    const tiers = tieredPrices
+      .filter(t => t.price)
+      .map(t => ({
+        minQty: parseInt(t.begin_num || t.beginNum || 1),
+        cny: parseFloat(t.price)
+      }));
+    if (!tiers.length && baseCny > 0) {
+      tiers.push({ minQty: 1, cny: baseCny });
+    }
+
+    const shiapTiers = tiers.map(t => ({
+      minQty: t.minQty,
+      cny: t.cny,
+      usd: parseFloat((t.cny * CNY_TO_USD * (1 + SHIAP_FEE)).toFixed(2))
+    }));
+
+    const baseUsd = parseFloat((baseCny * CNY_TO_USD * (1 + SHIAP_FEE)).toFixed(2));
+
+    // Domestic shipping fee from seller (CNY)
+    const deliveryInfo = d.delivery_info || {};
+    const shippingCny = parseFloat(deliveryInfo.delivery_fee || 0);
+    const shippingUsd = parseFloat((shippingCny * CNY_TO_USD).toFixed(2));
+
+    // MOQ
+    const moq = parseInt(d.tiered_price_info?.begin_num || 1);
+
+    // Images
+    const images = (d.main_imgs || d.imageList || []).slice(0, 10);
+
+    // Seller
+    const shopInfo = d.shop_info || {};
+    const sellerName = shopInfo.shop_name || '';
+    const sellerLocation = deliveryInfo.location || '';
+
+    // Product props → description
+    const props = d.product_props || [];
+    const propText = props.slice(0, 8).map(p => {
+      const k = Object.keys(p)[0];
+      return k ? `${k}: ${p[k]}` : '';
+    }).filter(Boolean).join(' · ');
+
+    // Variants from sku_props
+    const skuProps = d.sku_props || [];
+
+    res.json({
+      item_id: String(itemId),
+      platform: '1688',
+      title: d.title || '',
+      description: propText || '',
+      images,
+      moq,
+      base_cny: baseCny,
+      max_cny: maxCny,
+      base_usd: baseUsd,
+      cny_rate: CNY_TO_USD,
+      shiap_fee_pct: SHIAP_FEE * 100,
+      tiers: shiapTiers,
+      shipping_cny: shippingCny,
+      shipping_usd: shippingUsd,
+      seller_name: sellerName,
+      seller_location: sellerLocation,
+      seller_url: shopInfo.shop_url || '',
+      sale_count: d.sale_count || d.sale_info?.sale_quantity_90days || 0,
+      offer_unit: d.offer_unit || 'unit',
+      sku_props: skuProps.map(sp => ({ name: sp.prop_name, values: (sp.values || []).map(v => v.name) })),
+      service_tags: d.service_tags || [],
+      source_url: rawUrl,
+      product_url: d.product_url || `https://detail.1688.com/offer/${itemId}.html`
+    });
+  } catch(e) {
+    res.status(502).json({ error: 'Failed to fetch from sourcing API: ' + e.message });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server started on http://localhost:${PORT}`);
