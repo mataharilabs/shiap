@@ -381,7 +381,8 @@
   function updateCartBadge() {
     try {
       const cart = JSON.parse(localStorage.getItem('shiap_cart')) || [];
-      const count = cart.length;
+      const scart = JSON.parse(localStorage.getItem('shiap_sourcing_cart')) || [];
+      const count = cart.length + scart.length;
       const btn = document.getElementById('nav-cart-btn');
       const badge = document.getElementById('cart-badge');
       if (!btn || !badge) return;

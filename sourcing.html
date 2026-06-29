@@ -216,10 +216,14 @@
   function saveSCart(c) { localStorage.setItem('shiap_sourcing_cart', JSON.stringify(c)); updateCartBadge(); }
 
   function updateCartBadge() {
-    const n = readSCart().length;
-    const badge = document.getElementById('nav-cart-badge');
-    if (!badge) return;
-    if (n > 0) { badge.textContent = n; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
+    try {
+      const mkt = JSON.parse(localStorage.getItem('shiap_cart')) || [];
+      const src = readSCart();
+      const n = mkt.length + src.length;
+      const badge = document.getElementById('nav-cart-badge');
+      if (!badge) return;
+      if (n > 0) { badge.textContent = n; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
+    } catch(e) {}
   }
 
   let toastTimer;
@@ -240,6 +244,7 @@
     const existingIdx = cart.findIndex(i => i.item_id === currentProduct.item_id);
     const entry = {
       type: 'sourcing',
+      platform: currentProduct.platform || '1688',
       item_id: currentProduct.item_id,
       title: currentProduct.title,
       seller_name: currentProduct.seller_name,

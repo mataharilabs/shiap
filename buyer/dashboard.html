@@ -318,9 +318,10 @@
   function updateCartBadge() {
     try {
       const cart = JSON.parse(localStorage.getItem('shiap_cart')) || [];
-      const count = cart.length;
+      const scart = JSON.parse(localStorage.getItem('shiap_sourcing_cart')) || [];
+      const count = cart.length + scart.length;
       const badge = document.getElementById('nav-cart-count');
-      if (badge && count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+      if (badge) { badge.textContent = count; badge.classList.toggle('hidden', count === 0); }
     } catch(e) {}
   }
 

@@ -547,7 +547,7 @@ app.post('/api/orders', async (req, res) => {
       const lastId = await new Promise((resolve, reject) => {
         db.run(
           `INSERT INTO orders (order_number, buyer_email, supplier_email, product_id, quantity, total_price, status, payment_method, payment_date, shipping_address, order_type, sourcing_meta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [orderNumber, buyer_email, item.supplier_email || null, item.product_id || null, item.quantity, item.total_price, 'paid', payment_method || 'Xendit Virtual Account', paymentDate, shipping_address || null, orderType, sourcingMeta],
+          [orderNumber, buyer_email, item.supplier_email || '', item.product_id || 0, item.quantity, item.total_price, 'paid', payment_method || 'Xendit Virtual Account', paymentDate, shipping_address || null, orderType, sourcingMeta],
           function (err) { if (err) reject(err); else resolve(this.lastID); }
         );
       });

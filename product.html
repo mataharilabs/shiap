@@ -530,9 +530,10 @@
     }
 
     function updateCartBadge() {
-      let cart = [];
+      let cart = [], scart = [];
       try { cart = JSON.parse(localStorage.getItem('shiap_cart')) || []; } catch(e) {}
-      const count = cart.length;
+      try { scart = JSON.parse(localStorage.getItem('shiap_sourcing_cart')) || []; } catch(e) {}
+      const count = cart.length + scart.length;
       const btn = document.getElementById('nav-cart-btn');
       const badge = document.getElementById('cart-badge');
       if (!btn || !badge) return;
