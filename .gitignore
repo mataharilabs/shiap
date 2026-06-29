@@ -1,4 +1,6 @@
 node_modules/
 data/shiap.db
+uploads/
 npm-debug.log
 .DS_Store
+.env

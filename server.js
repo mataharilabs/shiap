@@ -920,4 +920,15 @@ app.get('/api/debug/products', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server started on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server started on http://localhost:${PORT}`);
+  // Auto-seed demo data on first deploy if DB is empty
+  dbGet('SELECT COUNT(*) as count FROM products').then(row => {
+    if (row && row.count === 0) {
+      console.log('Empty database detected — running auto-seed...');
+      require('http').get(`http://localhost:${PORT}/api/seed`, res => {
+        console.log(`Auto-seed finished with status ${res.statusCode}`);
+      }).on('error', () => {});
+    }
+  }).catch(() => {});
+});
