@@ -417,35 +417,43 @@
     </div>`;
   }
 
+  const PLATFORM_NAMES = { '1688': '1688.com', 'taobao': 'Taobao.com', 'tmall': 'Tmall.com' };
+
+  function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   function actionButtons(order) {
     const btns = [];
     const id = order.id;
     const s = order.status;
+    const isSourcing = order.order_type === 'sourcing';
 
     if (s === 'producing') {
       btns.push(`<button onclick="openProductionModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-amber-50 border border-amber-200 text-amber-700 rounded-lg hover:bg-amber-100">🏭 View Production Updates</button>`);
-      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Chat with Supplier</button>`);
+      if (!isSourcing) btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Chat with Supplier</button>`);
     }
     if (s === 'in_transit') {
       if (order.tracking_number) {
         btns.push(`<button onclick="openTrackingModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-blue-50 border border-blue-200 text-blue-700 rounded-lg hover:bg-blue-100">🚢 Track Shipment</button>`);
       }
       btns.push(`<button onclick="openEscrowModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">✅ Confirm Receipt &amp; Release Escrow</button>`);
-      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
+      if (!isSourcing) btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
       btns.push(`<button onclick="openDisputeModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-red-200 text-red-600 rounded-lg hover:bg-red-50">⚠️ Raise Dispute</button>`);
     }
     if (s === 'delivered') {
       btns.push(`<button onclick="openEscrowModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">✅ Confirm Receipt &amp; Release Escrow</button>`);
-      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
+      if (!isSourcing) btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
       btns.push(`<button onclick="openDisputeModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-red-200 text-red-600 rounded-lg hover:bg-red-50">⚠️ Raise Dispute</button>`);
     }
     if (s === 'completed') {
       btns.push(`<button onclick="openInvoiceModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50">📋 View Invoice</button>`);
-      btns.push(`<button onclick="openReviewModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-amber-50 border border-amber-200 text-amber-700 rounded-lg hover:bg-amber-100">⭐ Write Review</button>`);
-      btns.push(`<button onclick="location='../marketplace.html'" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">🔄 Reorder</button>`);
+      if (!isSourcing) btns.push(`<button onclick="openReviewModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-amber-50 border border-amber-200 text-amber-700 rounded-lg hover:bg-amber-100">⭐ Write Review</button>`);
+      const reorderLink = isSourcing ? '../sourcing.html' : '../marketplace.html';
+      btns.push(`<button onclick="location='${reorderLink}'" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">🔄 ${isSourcing ? 'Source Again' : 'Reorder'}</button>`);
     }
     if (['paid', 'confirmed'].includes(s)) {
-      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
+      if (!isSourcing) btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
     }
     if (s === 'disputed') {
       btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact SHIAP Support</button>`);
@@ -457,10 +465,38 @@
     const statusBadge = STATUS_BADGE[order.status] || 'bg-slate-100 text-slate-600';
     const statusLabel = STATUS_LABEL[order.status] || order.status;
     const statusIcon = STATUS_ICON[order.status] || '📦';
-    const emoji = order.image_emoji || '📦';
-    const supplier = order.supplier_company || order.supplier_email;
-    const country = order.supplier_country || '';
     const dateStr = order.created_at ? new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+    const isSourcing = order.order_type === 'sourcing';
+    const meta = order.sourcing_meta || {};
+
+    let productThumb, productInfo, subtitleLine;
+    if (isSourcing) {
+      const platform = PLATFORM_NAMES[meta.platform] || '1688.com';
+      const sellerLoc = meta.seller_location ? ` · ${meta.seller_location}` : '';
+      productThumb = meta.image_url
+        ? `<img src="${escHtml(meta.image_url)}" alt="" class="w-10 h-10 rounded-xl object-cover border border-slate-200 flex-shrink-0 bg-slate-100" onerror="this.style.display='none'" />`
+        : `<div class="w-10 h-10 bg-red-50 border border-red-100 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🇨🇳</div>`;
+      productInfo = `<div>
+        <div class="flex items-center gap-1.5 mb-0.5">
+          <span class="text-[10px] bg-red-100 text-red-700 font-bold px-1.5 py-0.5 rounded-full">🇨🇳 ${escHtml(platform)}</span>
+        </div>
+        <div class="text-sm font-medium text-slate-900 line-clamp-2">${escHtml(order.product_name || meta.title || 'Sourcing Item')}</div>
+        <div class="text-xs text-slate-400">${Number(order.quantity).toLocaleString()} ${escHtml(meta.offer_unit || 'units')} · ${escHtml(meta.seller_name || 'China Seller')}${sellerLoc}</div>
+      </div>`;
+      subtitleLine = meta.source_url
+        ? `<div class="text-xs text-slate-400 mb-0.5">#${escHtml(order.order_number)} · ${dateStr} · <a href="${escHtml(meta.source_url)}" target="_blank" class="text-blue-500 hover:underline">View on ${escHtml(platform)}</a></div>`
+        : `<div class="text-xs text-slate-400 mb-0.5">#${escHtml(order.order_number)} · ${dateStr}</div>`;
+    } else {
+      const emoji = order.image_emoji || '📦';
+      const supplier = order.supplier_company || order.supplier_email || '—';
+      const country = order.supplier_country ? ` · ${order.supplier_country}` : '';
+      productThumb = `<div class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-xl flex-shrink-0">${emoji}</div>`;
+      productInfo = `<div>
+        <div class="text-sm font-medium text-slate-900">${escHtml(order.product_name || 'Product')}</div>
+        <div class="text-xs text-slate-400">${Number(order.quantity).toLocaleString()} units · ${escHtml(supplier)}${country}</div>
+      </div>`;
+      subtitleLine = `<div class="text-xs text-slate-400 mb-0.5">#${escHtml(order.order_number)} · ${dateStr}</div>`;
+    }
 
     let extraSections = '';
     if (order.status === 'in_transit' && order.tracking_number) {
@@ -469,15 +505,15 @@
           <div class="text-xs font-semibold text-blue-700 uppercase tracking-widest">Tracking</div>
           <button onclick="openTrackingModal(${order.id})" class="text-xs text-blue-600 hover:text-blue-800 font-medium">View details →</button>
         </div>
-        <div class="text-sm font-bold font-mono text-blue-900">${order.tracking_number}</div>
-        <div class="text-xs text-blue-500 mt-0.5">${order.carrier || 'Carrier'} · ETA: ${order.eta || '—'}</div>
+        <div class="text-sm font-bold font-mono text-blue-900">${escHtml(order.tracking_number)}</div>
+        <div class="text-xs text-blue-500 mt-0.5">${escHtml(order.carrier || 'Carrier')} · ETA: ${escHtml(order.eta || '—')}</div>
       </div>`;
     }
     if (order.status === 'producing' && order.production_update) {
       extraSections += `<div class="mx-5 mb-4 bg-amber-50 border border-amber-100 rounded-xl p-4">
         <div class="text-xs font-semibold text-amber-700 uppercase tracking-widest mb-1">Production Update</div>
-        <div class="text-sm text-amber-800">${order.production_update}</div>
-        ${order.eta ? `<div class="text-xs text-amber-600 mt-1 font-medium">Expected dispatch: ${order.eta}</div>` : ''}
+        <div class="text-sm text-amber-800">${escHtml(order.production_update)}</div>
+        ${order.eta ? `<div class="text-xs text-amber-600 mt-1 font-medium">Expected dispatch: ${escHtml(order.eta)}</div>` : ''}
       </div>`;
     }
 
@@ -486,25 +522,22 @@
     return `<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-5">
       <div class="flex items-center justify-between p-5 border-b border-slate-50">
         <div>
-          <div class="text-xs text-slate-400 mb-0.5">#${order.order_number} · ${dateStr}</div>
-          <div class="text-sm font-bold text-slate-900">${order.product_name || 'Product'}</div>
+          ${subtitleLine}
+          <div class="text-sm font-bold text-slate-900 line-clamp-1">${escHtml(order.product_name || 'Product')}</div>
         </div>
-        <div class="text-right">
+        <div class="text-right flex-shrink-0 ml-4">
           <div class="text-base font-extrabold text-slate-900">$${Number(order.total_price).toLocaleString()}</div>
           <span class="text-xs ${statusBadge} font-semibold px-2 py-0.5 rounded-full">${statusIcon} ${statusLabel}</span>
         </div>
       </div>
       <div class="px-5 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-xl">${emoji}</div>
-          <div>
-            <div class="text-sm font-medium text-slate-900">${order.product_name || 'Product'}</div>
-            <div class="text-xs text-slate-400">${Number(order.quantity).toLocaleString()} units · ${supplier}${country ? ' · ' + country : ''}</div>
-          </div>
+          ${productThumb}
+          ${productInfo}
         </div>
-        ${order.payment_method ? `<div class="text-right text-xs text-slate-500 hidden sm:block">
-          <div class="font-semibold text-slate-700">${order.payment_method}</div>
-          <div>${order.payment_date || ''}</div>
+        ${order.payment_method ? `<div class="text-right text-xs text-slate-500 hidden sm:block flex-shrink-0">
+          <div class="font-semibold text-slate-700">${escHtml(order.payment_method)}</div>
+          <div>${escHtml(order.payment_date || '')}</div>
         </div>` : ''}
       </div>
       <div class="px-5 py-4 border-b border-slate-100">

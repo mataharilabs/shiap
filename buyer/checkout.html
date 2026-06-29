@@ -165,13 +165,29 @@
   </main>
 
 <script>
-  let cart = [];
+  let mktCart = [];    // shiap_cart — marketplace items
+  let srcCart = [];    // shiap_sourcing_cart — sourcing items
   let currentUser = null;
   let selectedPayment = 'Xendit Virtual Account';
 
-  function readCart() {
+  function readMktCart() {
     try { return JSON.parse(localStorage.getItem('shiap_cart')) || []; } catch(e) { return []; }
   }
+  function readSrcCart() {
+    try { return JSON.parse(localStorage.getItem('shiap_sourcing_cart')) || []; } catch(e) { return []; }
+  }
+
+  function getSrcUsdForQty(item, qty) {
+    const tiers = (item.tiers || []).slice().sort((a, b) => b.minQty - a.minQty);
+    for (const t of tiers) { if (qty >= t.minQty) return t.usd; }
+    return item.unit_usd || item.base_usd || 0;
+  }
+
+  function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  const PLATFORM_LABELS = { '1688': '1688.com', 'taobao': 'Taobao.com', 'tmall': 'Tmall.com' };
 
   function selectPayment(el, value) {
     selectedPayment = value;
@@ -180,21 +196,51 @@
   }
 
   function renderOrderSummary() {
-    cart = readCart();
-    const subtotal = cart.reduce((s, i) => s + i.quantity * i.unit_price, 0);
+    mktCart = readMktCart();
+    srcCart = readSrcCart();
+
+    const mktSubtotal = mktCart.reduce((s, i) => s + i.quantity * i.unit_price, 0);
+    const srcSubtotal = srcCart.reduce((s, i) => {
+      const unitUsd = getSrcUsdForQty(i, i.quantity);
+      return s + i.quantity * unitUsd;
+    }, 0);
+    const subtotal = mktSubtotal + srcSubtotal;
     const fee = subtotal * 0.01;
     const total = subtotal + fee;
 
-    document.getElementById('summary-items').innerHTML = cart.map(i =>
-      `<div class="flex items-start gap-3">
-        <div class="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center text-lg flex-shrink-0">${i.image_emoji || '📦'}</div>
-        <div class="flex-1 min-w-0">
-          <div class="text-sm font-medium text-slate-900 leading-tight truncate">${i.product_name}</div>
-          <div class="text-xs text-slate-400 mt-0.5">${Number(i.quantity).toLocaleString()} units × $${i.unit_price}</div>
-        </div>
-        <div class="font-semibold text-slate-900 text-sm flex-shrink-0">$${(i.quantity * i.unit_price).toLocaleString()}</div>
-      </div>`
-    ).join('');
+    const mktHtml = mktCart.length ? `
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 mt-1">Marketplace Items</div>
+      ${mktCart.map(i => `
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center text-lg flex-shrink-0">${i.image_emoji || '📦'}</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium text-slate-900 leading-tight truncate">${escHtml(i.product_name)}</div>
+            <div class="text-xs text-slate-400 mt-0.5">${Number(i.quantity).toLocaleString()} units × $${i.unit_price}</div>
+          </div>
+          <div class="font-semibold text-slate-900 text-sm flex-shrink-0">$${(i.quantity * i.unit_price).toFixed(2)}</div>
+        </div>`).join('')}` : '';
+
+    const srcHtml = srcCart.length ? `
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 ${mktCart.length ? 'mt-4 pt-3 border-t border-slate-100' : 'mt-1'}">Sourcing Items (China)</div>
+      ${srcCart.map(i => {
+        const unitUsd = getSrcUsdForQty(i, i.quantity);
+        const lineTotal = (i.quantity * unitUsd).toFixed(2);
+        const platform = PLATFORM_LABELS[i.platform] || '1688.com';
+        return `
+        <div class="flex items-start gap-3">
+          <img src="${escHtml(i.image_url)}" alt="" class="w-9 h-9 rounded-lg object-cover flex-shrink-0 bg-slate-100" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22><rect fill=%22%23f1f5f9%22 width=%221%22 height=%221%22/></svg>'" />
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium text-slate-900 leading-tight line-clamp-2">${escHtml(i.title || i.item_id)}</div>
+            <div class="flex items-center gap-1 mt-0.5">
+              <span class="text-[10px] bg-red-100 text-red-700 font-semibold px-1.5 py-0.5 rounded-full">🇨🇳 ${escHtml(platform)}</span>
+              <span class="text-xs text-slate-400">${Number(i.quantity).toLocaleString()} ${escHtml(i.offer_unit || 'unit')} × $${unitUsd.toFixed(2)}</span>
+            </div>
+          </div>
+          <div class="font-semibold text-slate-900 text-sm flex-shrink-0">$${lineTotal}</div>
+        </div>`;
+      }).join('')}` : '';
+
+    document.getElementById('summary-items').innerHTML = mktHtml + srcHtml;
 
     document.getElementById('summary-subtotal').textContent = '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('summary-fee').textContent = '$' + fee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -223,7 +269,10 @@
   async function submitOrder() {
     const errMsg = validateForm();
     if (errMsg) { showError(errMsg); return; }
-    if (!cart.length) { showError('Your cart is empty.'); return; }
+
+    mktCart = readMktCart();
+    srcCart = readSrcCart();
+    if (!mktCart.length && !srcCart.length) { showError('Your cart is empty.'); return; }
 
     const btn = document.getElementById('place-order-btn');
     btn.disabled = true;
@@ -241,19 +290,43 @@
       phone: document.getElementById('addr-phone').value.trim()
     });
 
-    const subtotal = cart.reduce((s, i) => s + i.quantity * i.unit_price, 0);
-    const fee = subtotal * 0.01;
-    const totalWithFee = subtotal + fee;
+    // Build combined items list for API
+    const mktItems = mktCart.map(i => ({
+      order_type: 'marketplace',
+      supplier_email: i.supplier_email,
+      product_id: i.product_id,
+      quantity: i.quantity,
+      total_price: parseFloat((i.quantity * i.unit_price).toFixed(2)),
+      product_name: i.product_name
+    }));
+
+    const srcItems = srcCart.map(i => {
+      const unitUsd = getSrcUsdForQty(i, i.quantity);
+      return {
+        order_type: 'sourcing',
+        supplier_email: null,
+        product_id: null,
+        quantity: i.quantity,
+        total_price: parseFloat((i.quantity * unitUsd).toFixed(2)),
+        product_name: i.title || i.item_id,
+        sourcing_meta: {
+          item_id: i.item_id,
+          platform: i.platform || '1688',
+          title: i.title,
+          seller_name: i.seller_name,
+          seller_location: i.seller_location,
+          image_url: i.image_url,
+          source_url: i.source_url,
+          unit_usd: unitUsd,
+          offer_unit: i.offer_unit,
+          selected_sku: i.selected_sku || {}
+        }
+      };
+    });
 
     const payload = {
       buyer_email: currentUser.email,
-      items: cart.map(i => ({
-        supplier_email: i.supplier_email,
-        product_id: i.product_id,
-        quantity: i.quantity,
-        total_price: parseFloat((i.quantity * i.unit_price).toFixed(2)),
-        product_name: i.product_name
-      })),
+      items: [...mktItems, ...srcItems],
       shipping_address: shippingAddress,
       payment_method: selectedPayment
     };
@@ -268,8 +341,8 @@
         const err = await res.json();
         throw new Error(err.error || 'Server error');
       }
-      const data = await res.json();
       localStorage.removeItem('shiap_cart');
+      localStorage.removeItem('shiap_sourcing_cart');
       window.location.replace('orders.html');
     } catch (err) {
       showError(`Failed to place order: ${err.message}. Please try again.`);
@@ -290,8 +363,9 @@
     try { user = JSON.parse(localStorage.getItem('shiap_user')); } catch(e) {}
     if (!user || !user.email || user.role !== 'buyer') { window.location.replace('../login.html'); return; }
 
-    cart = readCart();
-    if (!cart.length) { window.location.replace('cart.html'); return; }
+    mktCart = readMktCart();
+    srcCart = readSrcCart();
+    if (!mktCart.length && !srcCart.length) { window.location.replace('cart.html'); return; }
 
     currentUser = user;
     try {
@@ -299,7 +373,6 @@
       if (res.ok) { const data = await res.json(); currentUser = data; }
     } catch(e) {}
 
-    // Pre-fill form
     document.getElementById('addr-name').value = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
     document.getElementById('addr-company').value = currentUser.company_name || '';
     document.getElementById('addr-country').value = currentUser.country || 'Indonesia';

@@ -128,6 +128,8 @@ function initializeDatabase() {
     db.run(`ALTER TABLE rfqs ADD COLUMN category TEXT`, [], () => {});
     db.run(`ALTER TABLE rfqs ADD COLUMN unit TEXT`, [], () => {});
     db.run(`ALTER TABLE rfqs ADD COLUMN deadline TEXT`, [], () => {});
+    db.run(`ALTER TABLE orders ADD COLUMN order_type TEXT DEFAULT 'marketplace'`, [], () => {});
+    db.run(`ALTER TABLE orders ADD COLUMN sourcing_meta TEXT`, [], () => {});
 
     db.run(`CREATE TABLE IF NOT EXISTS rfq_quotes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -505,6 +507,10 @@ app.get('/api/orders/buyer', async (req, res) => {
       WHERE o.buyer_email = ?
       ORDER BY o.created_at DESC
     `, [email]);
+    orders.forEach(o => {
+      if (o.sourcing_meta) { try { o.sourcing_meta = JSON.parse(o.sourcing_meta); } catch(e) {} }
+      if (!o.order_type) o.order_type = 'marketplace';
+    });
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: 'Unable to fetch orders.' });
@@ -535,14 +541,17 @@ app.post('/api/orders', async (req, res) => {
     const paymentDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     for (const item of items) {
       const orderNumber = `ORD-${new Date().getFullYear()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+      const orderType = item.order_type || 'marketplace';
+      const sourcingMeta = item.sourcing_meta ? JSON.stringify(item.sourcing_meta) : null;
+      const productName = item.product_name || (item.sourcing_meta?.title) || '';
       const lastId = await new Promise((resolve, reject) => {
         db.run(
-          `INSERT INTO orders (order_number, buyer_email, supplier_email, product_id, quantity, total_price, status, payment_method, payment_date, shipping_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [orderNumber, buyer_email, item.supplier_email, item.product_id, item.quantity, item.total_price, 'paid', payment_method || 'Xendit Virtual Account', paymentDate, shipping_address || null],
+          `INSERT INTO orders (order_number, buyer_email, supplier_email, product_id, quantity, total_price, status, payment_method, payment_date, shipping_address, order_type, sourcing_meta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [orderNumber, buyer_email, item.supplier_email || null, item.product_id || null, item.quantity, item.total_price, 'paid', payment_method || 'Xendit Virtual Account', paymentDate, shipping_address || null, orderType, sourcingMeta],
           function (err) { if (err) reject(err); else resolve(this.lastID); }
         );
       });
-      results.push({ order_number: orderNumber, id: lastId });
+      results.push({ order_number: orderNumber, id: lastId, order_type: orderType });
     }
     res.json({ orders: results });
   } catch (err) {
@@ -923,6 +932,10 @@ app.get('/api/orders/admin', async (req, res) => {
       LEFT JOIN users s ON o.supplier_email = s.email
       ORDER BY o.created_at DESC
     `);
+    orders.forEach(o => {
+      if (o.sourcing_meta) { try { o.sourcing_meta = JSON.parse(o.sourcing_meta); } catch(e) {} }
+      if (!o.order_type) o.order_type = 'marketplace';
+    });
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: 'Unable to fetch orders.' });
@@ -1100,108 +1113,112 @@ function httpGetJson(url, timeoutMs = 12000) {
 }
 
 function extract1688Id(input) {
-  // https://detail.1688.com/offer/975079174251.html
   let m = input.match(/\/offer\/(\d+)(?:\.html)?/);
   if (m) return m[1];
-  // bare number
   m = input.match(/^(\d{8,})$/);
   if (m) return m[1];
-  // id= query param (taobao-style, fallback)
   m = input.match(/[?&]id=(\d+)/);
   if (m) return m[1];
   return null;
 }
 
+function extractTaobaoId(input) {
+  // https://item.taobao.com/item.htm?...&id=1058457598796&...
+  // https://detail.tmall.com/item.htm?...&id=618363764576
+  let m = input.match(/[?&]id=(\d+)/);
+  if (m) return m[1];
+  m = input.match(/^(\d{8,})$/);
+  if (m) return m[1];
+  return null;
+}
+
+function normalizeSourcingResponse(d, itemId, platform, rawUrl) {
+  const priceInfo = d.price_info || {};
+  const baseCny = parseFloat(priceInfo.price || priceInfo.price_min || 0);
+  const maxCny = parseFloat(priceInfo.price_max || baseCny);
+
+  const tieredPrices = (d.tiered_price_info?.prices || []);
+  const tiers = tieredPrices.filter(t => t.price).map(t => ({
+    minQty: parseInt(t.begin_num || t.beginNum || 1),
+    cny: parseFloat(t.price)
+  }));
+  if (!tiers.length && baseCny > 0) tiers.push({ minQty: 1, cny: baseCny });
+
+  const shiapTiers = tiers.map(t => ({
+    minQty: t.minQty, cny: t.cny,
+    usd: parseFloat((t.cny * CNY_TO_USD * (1 + SHIAP_FEE)).toFixed(2))
+  }));
+
+  const deliveryInfo = d.delivery_info || {};
+  const shippingCny = parseFloat(deliveryInfo.delivery_fee || 0);
+  const shopInfo = d.shop_info || {};
+
+  const props = d.product_props || [];
+  const propText = props.slice(0, 8).map(p => {
+    const k = Object.keys(p)[0];
+    return k ? `${k}: ${p[k]}` : '';
+  }).filter(Boolean).join(' · ');
+
+  const skuProps = d.sku_props || [];
+  const images = (d.main_imgs || d.imageList || d.images || []).slice(0, 10);
+
+  const defaultUrl = platform === '1688'
+    ? `https://detail.1688.com/offer/${itemId}.html`
+    : platform === 'tmall'
+      ? `https://detail.tmall.com/item.htm?id=${itemId}`
+      : `https://item.taobao.com/item.htm?id=${itemId}`;
+
+  return {
+    item_id: String(itemId),
+    platform,
+    title: d.title || '',
+    description: propText || '',
+    images,
+    moq: parseInt(d.tiered_price_info?.begin_num || 1),
+    base_cny: baseCny,
+    max_cny: maxCny,
+    base_usd: parseFloat((baseCny * CNY_TO_USD * (1 + SHIAP_FEE)).toFixed(2)),
+    cny_rate: CNY_TO_USD,
+    shiap_fee_pct: SHIAP_FEE * 100,
+    tiers: shiapTiers,
+    shipping_cny: shippingCny,
+    shipping_usd: parseFloat((shippingCny * CNY_TO_USD).toFixed(2)),
+    seller_name: shopInfo.shop_name || shopInfo.nick || d.seller_nick || '',
+    seller_location: deliveryInfo.location || d.location || '',
+    seller_url: shopInfo.shop_url || shopInfo.shopUrl || '',
+    sale_count: d.sale_count || d.sale_info?.sale_quantity_90days || d.sold_count || 0,
+    offer_unit: d.offer_unit || d.unit || 'unit',
+    sku_props: skuProps.map(sp => ({ name: sp.prop_name, values: (sp.values || []).map(v => v.name) })),
+    service_tags: d.service_tags || [],
+    source_url: rawUrl,
+    product_url: d.product_url || defaultUrl
+  };
+}
+
 app.get('/api/sourcing/1688', async (req, res) => {
   const rawUrl = (req.query.url || '').trim();
   if (!rawUrl) return res.status(400).json({ error: 'url parameter is required.' });
-
   const itemId = extract1688Id(rawUrl);
-  if (!itemId) return res.status(400).json({ error: 'Could not extract product ID from the URL. Make sure it is a valid 1688.com product link.' });
-
+  if (!itemId) return res.status(400).json({ error: 'Could not extract product ID. Paste a valid 1688.com product URL.' });
   try {
-    const apiUrl = `http://api.tmapi.top/1688/item_detail?apiToken=${TMAPI_TOKEN}&item_id=${itemId}`;
-    const raw = await httpGetJson(apiUrl);
+    const raw = await httpGetJson(`http://api.tmapi.top/1688/item_detail?apiToken=${TMAPI_TOKEN}&item_id=${itemId}`);
     if (raw.code !== 200) return res.status(502).json({ error: raw.msg || 'API returned non-200' });
+    res.json(normalizeSourcingResponse(raw.data || {}, itemId, '1688', rawUrl));
+  } catch(e) {
+    res.status(502).json({ error: 'Failed to fetch from sourcing API: ' + e.message });
+  }
+});
 
-    const d = raw.data || {};
-
-    // Price
-    const priceInfo = d.price_info || {};
-    const baseCny = parseFloat(priceInfo.price || priceInfo.price_min || 0);
-    const maxCny = parseFloat(priceInfo.price_max || baseCny);
-
-    // Tiered pricing
-    const tieredPrices = (d.tiered_price_info?.prices || []);
-    const tiers = tieredPrices
-      .filter(t => t.price)
-      .map(t => ({
-        minQty: parseInt(t.begin_num || t.beginNum || 1),
-        cny: parseFloat(t.price)
-      }));
-    if (!tiers.length && baseCny > 0) {
-      tiers.push({ minQty: 1, cny: baseCny });
-    }
-
-    const shiapTiers = tiers.map(t => ({
-      minQty: t.minQty,
-      cny: t.cny,
-      usd: parseFloat((t.cny * CNY_TO_USD * (1 + SHIAP_FEE)).toFixed(2))
-    }));
-
-    const baseUsd = parseFloat((baseCny * CNY_TO_USD * (1 + SHIAP_FEE)).toFixed(2));
-
-    // Domestic shipping fee from seller (CNY)
-    const deliveryInfo = d.delivery_info || {};
-    const shippingCny = parseFloat(deliveryInfo.delivery_fee || 0);
-    const shippingUsd = parseFloat((shippingCny * CNY_TO_USD).toFixed(2));
-
-    // MOQ
-    const moq = parseInt(d.tiered_price_info?.begin_num || 1);
-
-    // Images
-    const images = (d.main_imgs || d.imageList || []).slice(0, 10);
-
-    // Seller
-    const shopInfo = d.shop_info || {};
-    const sellerName = shopInfo.shop_name || '';
-    const sellerLocation = deliveryInfo.location || '';
-
-    // Product props → description
-    const props = d.product_props || [];
-    const propText = props.slice(0, 8).map(p => {
-      const k = Object.keys(p)[0];
-      return k ? `${k}: ${p[k]}` : '';
-    }).filter(Boolean).join(' · ');
-
-    // Variants from sku_props
-    const skuProps = d.sku_props || [];
-
-    res.json({
-      item_id: String(itemId),
-      platform: '1688',
-      title: d.title || '',
-      description: propText || '',
-      images,
-      moq,
-      base_cny: baseCny,
-      max_cny: maxCny,
-      base_usd: baseUsd,
-      cny_rate: CNY_TO_USD,
-      shiap_fee_pct: SHIAP_FEE * 100,
-      tiers: shiapTiers,
-      shipping_cny: shippingCny,
-      shipping_usd: shippingUsd,
-      seller_name: sellerName,
-      seller_location: sellerLocation,
-      seller_url: shopInfo.shop_url || '',
-      sale_count: d.sale_count || d.sale_info?.sale_quantity_90days || 0,
-      offer_unit: d.offer_unit || 'unit',
-      sku_props: skuProps.map(sp => ({ name: sp.prop_name, values: (sp.values || []).map(v => v.name) })),
-      service_tags: d.service_tags || [],
-      source_url: rawUrl,
-      product_url: d.product_url || `https://detail.1688.com/offer/${itemId}.html`
-    });
+app.get('/api/sourcing/taobao', async (req, res) => {
+  const rawUrl = (req.query.url || '').trim();
+  if (!rawUrl) return res.status(400).json({ error: 'url parameter is required.' });
+  const itemId = extractTaobaoId(rawUrl);
+  if (!itemId) return res.status(400).json({ error: 'Could not extract product ID. Paste a valid Taobao or Tmall product URL.' });
+  const platform = rawUrl.includes('tmall.com') ? 'tmall' : 'taobao';
+  try {
+    const raw = await httpGetJson(`http://api.tmapi.top/taobao/item_detail?apiToken=${TMAPI_TOKEN}&item_id=${itemId}`);
+    if (raw.code !== 200) return res.status(502).json({ error: raw.msg || 'API returned non-200' });
+    res.json(normalizeSourcingResponse(raw.data || {}, itemId, platform, rawUrl));
   } catch(e) {
     res.status(502).json({ error: 'Failed to fetch from sourcing API: ' + e.message });
   }

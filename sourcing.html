@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>1688 Sourcing – SHIAP</title>
+  <title>1688 / Taobao / Tmall Sourcing – SHIAP</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
@@ -53,10 +53,10 @@
     <!-- Header -->
     <div class="text-center mb-10">
       <div class="inline-flex items-center gap-2 bg-red-50 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
-        <span class="text-base">🇨🇳</span> Powered by 1688 Integration API
+        <span class="text-base">🇨🇳</span> Powered by 1688 · Taobao · Tmall Integration
       </div>
       <h1 class="text-4xl font-extrabold text-slate-900 mb-3">Source Directly from China</h1>
-      <p class="text-slate-500 text-lg max-w-xl mx-auto">Paste any 1688.com product URL. We'll fetch real product data, convert the price, and add our transparent service fee.</p>
+      <p class="text-slate-500 text-lg max-w-xl mx-auto">Paste any 1688.com, Taobao.com, or Tmall.com product URL. We'll fetch real product data, convert the price, and add our transparent service fee.</p>
     </div>
 
     <!-- URL Input -->
@@ -65,7 +65,7 @@
       <div class="flex gap-3">
         <div class="flex-1 relative">
           <input type="text" id="url-input"
-            placeholder="https://detail.1688.com/offer/975079174251.html"
+            placeholder="https://detail.1688.com/offer/... or https://item.taobao.com/item.htm?id=... or https://detail.tmall.com/item.htm?id=..."
             class="w-full pl-12 pr-4 py-4 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
             onkeydown="if(event.key==='Enter')fetchProduct()" />
           <div class="absolute left-4 top-1/2 -translate-y-1/2 text-xl">🔗</div>
@@ -75,16 +75,18 @@
           Fetch Product
         </button>
       </div>
-      <div class="flex items-center gap-3 mt-4">
+      <div class="flex items-center gap-3 mt-4 flex-wrap">
         <span class="text-xs text-slate-400">Try an example:</span>
-        <button onclick="demoFetch()" class="text-xs text-red-600 bg-red-50 px-3 py-1.5 rounded-lg hover:bg-red-100 font-medium">Demo 1688 URL</button>
+        <button onclick="demoFetch('1688')" class="text-xs text-red-600 bg-red-50 px-3 py-1.5 rounded-lg hover:bg-red-100 font-medium">Demo 1688 URL</button>
+        <button onclick="demoFetch('tmall')" class="text-xs text-orange-600 bg-orange-50 px-3 py-1.5 rounded-lg hover:bg-orange-100 font-medium">Demo Tmall URL</button>
+        <button onclick="demoFetch('taobao')" class="text-xs text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg hover:bg-amber-100 font-medium">Demo Taobao URL</button>
       </div>
     </div>
 
     <!-- Loading -->
     <div id="loading-state" class="text-center py-14">
       <div class="inline-block w-10 h-10 border-4 border-blue-200 border-t-blue-700 rounded-full animate-spin mb-4"></div>
-      <p class="text-slate-500 text-sm">Fetching product data from 1688.com...</p>
+      <p id="loading-msg" class="text-slate-500 text-sm">Fetching product data...</p>
     </div>
 
     <!-- Error -->
@@ -97,11 +99,11 @@
     <!-- Product Result -->
     <div id="product-result">
       <div class="flex items-center gap-3 mb-5 flex-wrap">
-        <div class="flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-          <span>🇨🇳</span> Sourced from 1688.com
+        <div id="platform-badge" class="flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+          <span>🇨🇳</span> <span id="platform-badge-text">Sourced from 1688.com</span>
         </div>
         <span class="text-xs text-slate-400">Fetched & localized by SHIAP</span>
-        <a id="source-link" href="#" target="_blank" class="text-xs text-blue-600 hover:underline ml-auto">View on 1688.com →</a>
+        <a id="source-link" href="#" target="_blank" class="text-xs text-blue-600 hover:underline ml-auto"><span id="source-link-text">View on 1688.com</span> →</a>
       </div>
 
       <div class="grid lg:grid-cols-5 gap-8">
@@ -183,7 +185,7 @@
 
           <!-- Seller Info -->
           <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Original Seller (1688.com)</h3>
+            <h3 id="seller-label" class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Original Seller</h3>
             <div id="seller-info" class="text-sm space-y-2.5"></div>
           </div>
         </div>
@@ -277,18 +279,46 @@
     });
   }
 
-  function demoFetch() {
-    document.getElementById('url-input').value = 'https://detail.1688.com/offer/975079174251.html';
+  const DEMO_URLS = {
+    '1688': 'https://detail.1688.com/offer/975079174251.html',
+    'tmall': 'https://detail.tmall.com/item.htm?id=618363764576',
+    'taobao': 'https://item.taobao.com/item.htm?id=1058457598796'
+  };
+
+  function demoFetch(platform) {
+    document.getElementById('url-input').value = DEMO_URLS[platform] || DEMO_URLS['1688'];
     fetchProduct();
   }
 
+  function detectPlatform(url) {
+    if (url.includes('1688.com')) return '1688';
+    if (url.includes('tmall.com')) return 'tmall';
+    if (url.includes('taobao.com')) return 'taobao';
+    // Bare number — assume 1688
+    return '1688';
+  }
+
+  function getPlatformEndpoint(platform) {
+    return platform === '1688' ? '/api/sourcing/1688' : '/api/sourcing/taobao';
+  }
+
+  const PLATFORM_LABELS = {
+    '1688': { name: '1688.com', seller: 'Original Seller (1688.com)', color: 'bg-red-600' },
+    'taobao': { name: 'Taobao.com', seller: 'Original Seller (Taobao.com)', color: 'bg-orange-500' },
+    'tmall': { name: 'Tmall.com', seller: 'Original Seller (Tmall.com)', color: 'bg-rose-600' }
+  };
+
   async function fetchProduct() {
     const url = document.getElementById('url-input').value.trim();
-    if (!url) { alert('Please paste a 1688.com product URL.'); return; }
+    if (!url) { alert('Please paste a 1688.com, Taobao.com, or Tmall.com product URL.'); return; }
     selectedSkus = {};
+    const platform = detectPlatform(url);
+    const pLabel = PLATFORM_LABELS[platform] || PLATFORM_LABELS['1688'];
+    document.getElementById('loading-msg').textContent = `Fetching product data from ${pLabel.name}...`;
     showSection('loading-state');
+    const endpoint = getPlatformEndpoint(platform);
     try {
-      const res = await fetch(`/api/sourcing/1688?url=${encodeURIComponent(url)}`);
+      const res = await fetch(`${endpoint}?url=${encodeURIComponent(url)}`);
       const data = await res.json();
       if (!res.ok) {
         document.getElementById('error-msg').textContent = 'Could not fetch product';
@@ -305,6 +335,16 @@
 
   function renderProduct(p) {
     currentProduct = p;
+
+    const platform = p.platform || '1688';
+    const pLabel = PLATFORM_LABELS[platform] || PLATFORM_LABELS['1688'];
+
+    // Update dynamic platform labels
+    const badge = document.getElementById('platform-badge');
+    badge.className = `flex items-center gap-2 ${pLabel.color} text-white text-xs font-bold px-3 py-1.5 rounded-full`;
+    document.getElementById('platform-badge-text').textContent = `Sourced from ${pLabel.name}`;
+    document.getElementById('source-link-text').textContent = `View on ${pLabel.name}`;
+    document.getElementById('seller-label').textContent = pLabel.seller;
 
     document.getElementById('source-link').href = p.product_url || p.source_url;
 
