@@ -116,21 +116,12 @@
                 </div>
               </div>
 
-              <div class="mb-6">
-                <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Attach Reference Files</label>
-                <div class="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:border-blue-400 cursor-pointer transition">
-                  <div class="text-3xl mb-2">📎</div>
-                  <p class="text-sm text-slate-500">Drop files here or <span class="text-blue-600 font-medium">browse</span></p>
-                  <p class="text-xs text-slate-400 mt-1">PDF, PNG, JPG, DWG up to 20MB</p>
-                </div>
-              </div>
-
               <div class="flex items-center gap-3 mb-6 p-4 bg-amber-50 rounded-xl border border-amber-100">
                 <svg class="w-5 h-5 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <p class="text-xs text-amber-800">Your RFQ will be reviewed by our team before being distributed to relevant suppliers. You'll receive quotes within 24–48 hours.</p>
               </div>
 
-              <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 rounded-xl transition shadow-sm text-base">
+              <button type="submit" id="rfq-submit-btn" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 rounded-xl transition shadow-sm text-base">
                 Submit RFQ to Suppliers →
               </button>
             </form>
@@ -164,208 +155,249 @@
           <h2 class="text-xl font-bold text-slate-900">My RFQs</h2>
           <button onclick="switchSection('create')" class="text-sm bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800">+ New RFQ</button>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-slate-50 border-b border-slate-100">
-              <tr>
-                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">RFQ ID</th>
-                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Product</th>
-                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Quantity</th>
-                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Status</th>
-                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Quotes</th>
-                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Submitted</th>
-                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Action</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-2026-087</td>
-                <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">Industrial Network Switch 24-Port</div><div class="text-xs text-slate-400">Electronics</div></td>
-                <td class="px-6 py-4 text-sm text-slate-700">500 units</td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700">Quotes Received</span></td>
-                <td class="px-6 py-4"><span class="text-sm font-bold text-slate-900">5</span><span class="text-xs text-slate-400 ml-1">quotes</span></td>
-                <td class="px-6 py-4 text-sm text-slate-500">Jun 20, 2026</td>
-                <td class="px-6 py-4"><button onclick="switchSection('compare')" class="text-sm text-blue-600 font-medium hover:text-blue-800">Compare →</button></td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-2026-074</td>
-                <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">Cotton T-Shirt Plain 180gsm</div><div class="text-xs text-slate-400">Textiles</div></td>
-                <td class="px-6 py-4 text-sm text-slate-700">2,000 pcs</td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700">Sent to Suppliers</span></td>
-                <td class="px-6 py-4"><span class="text-sm font-bold text-slate-900">3</span><span class="text-xs text-slate-400 ml-1">quotes</span></td>
-                <td class="px-6 py-4 text-sm text-slate-500">Jun 18, 2026</td>
-                <td class="px-6 py-4"><button class="text-sm text-blue-600 font-medium hover:text-blue-800">View →</button></td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-2026-061</td>
-                <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">Solar Panel 400W Monocrystalline</div><div class="text-xs text-slate-400">Electronics</div></td>
-                <td class="px-6 py-4 text-sm text-slate-700">50 units</td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700">Awarded</span></td>
-                <td class="px-6 py-4"><span class="text-sm font-bold text-slate-900">7</span><span class="text-xs text-slate-400 ml-1">quotes</span></td>
-                <td class="px-6 py-4 text-sm text-slate-500">Jun 10, 2026</td>
-                <td class="px-6 py-4"><button class="text-sm text-slate-400 font-medium">Closed</button></td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-2026-045</td>
-                <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">Servo Motor 750W AC 220V</div><div class="text-xs text-slate-400">Machinery</div></td>
-                <td class="px-6 py-4 text-sm text-slate-700">20 units</td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">Draft</span></td>
-                <td class="px-6 py-4"><span class="text-sm text-slate-400">—</span></td>
-                <td class="px-6 py-4 text-sm text-slate-500">Jun 5, 2026</td>
-                <td class="px-6 py-4"><button class="text-sm text-blue-600 font-medium hover:text-blue-800">Edit →</button></td>
-              </tr>
-            </tbody>
-          </table>
+        <div id="my-rfq-body">
+          <div class="p-8 text-center text-sm text-slate-400">Loading...</div>
         </div>
       </div>
     </div>
 
     <!-- Compare Quotes -->
     <div id="section-compare" class="section">
-      <div class="mb-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-xl font-bold text-slate-900">Compare Quotes</h2>
-            <p class="text-sm text-slate-500 mt-1">RFQ #2026-087 · Industrial Network Switch 24-Port · 500 units</p>
-          </div>
-          <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full">5 Quotes Received</span>
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Compare Quotes</h2>
+          <p id="compare-subtitle" class="text-sm text-slate-500 mt-1">Select an RFQ from My RFQs to compare quotes</p>
+        </div>
+        <span id="compare-badge" class="hidden bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full"></span>
+      </div>
+      <div id="compare-body">
+        <div class="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400">
+          <div class="text-3xl mb-3">📊</div>
+          <p>Go to <button onclick="switchSection('my-rfq')" class="text-blue-600 underline">My RFQs</button> and click <strong>Compare Quotes</strong> on an RFQ to see supplier quotes here.</p>
         </div>
       </div>
-
-      <div class="overflow-x-auto">
-        <div class="grid grid-cols-4 gap-4 min-w-max md:min-w-0">
-
-          <!-- Labels column -->
-          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mt-14">
-            <div class="space-y-[22px] pt-1 text-sm text-slate-500 font-medium">
-              <div class="h-8 flex items-center">Unit Price</div>
-              <div class="h-8 flex items-center">Total (500 units)</div>
-              <div class="h-8 flex items-center">Lead Time</div>
-              <div class="h-8 flex items-center">Shipping Terms</div>
-              <div class="h-8 flex items-center">Payment Terms</div>
-              <div class="h-8 flex items-center">Samples</div>
-              <div class="h-8 flex items-center">Rating</div>
-              <div class="h-8 flex items-center">Certifications</div>
-            </div>
-          </div>
-
-          <!-- Quote 1 - Best Price -->
-          <div class="bg-white rounded-2xl border-2 border-blue-500 shadow-lg p-5 relative">
-            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-700 text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Best Price</div>
-            <div class="text-center mb-5 pt-2">
-              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-lg mx-auto mb-2">🏭</div>
-              <div class="font-bold text-slate-900 text-sm">Shenzhen TechPro</div>
-              <div class="text-xs text-slate-400">China · ⭐ 4.8</div>
-            </div>
-            <div class="space-y-[14px] text-sm">
-              <div class="h-8 flex items-center font-bold text-emerald-600 text-base">$12.50</div>
-              <div class="h-8 flex items-center font-bold text-slate-900">$6,250.00</div>
-              <div class="h-8 flex items-center text-slate-700">10 days</div>
-              <div class="h-8 flex items-center text-slate-700">FOB Shenzhen</div>
-              <div class="h-8 flex items-center text-slate-700">30% deposit</div>
-              <div class="h-8 flex items-center text-slate-700">$35 each</div>
-              <div class="h-8 flex items-center text-amber-500">★★★★★ 4.8</div>
-              <div class="h-8 flex items-center text-slate-700">CE, FCC, RoHS</div>
-            </div>
-            <button class="w-full mt-6 bg-blue-700 text-white font-semibold py-3 rounded-xl hover:bg-blue-800 transition text-sm">Award This Quote</button>
-          </div>
-
-          <!-- Quote 2 -->
-          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mt-14">
-            <div class="text-center mb-5">
-              <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-lg mx-auto mb-2">🏭</div>
-              <div class="font-bold text-slate-900 text-sm">Guangzhou NetTech</div>
-              <div class="text-xs text-slate-400">China · ⭐ 4.6</div>
-            </div>
-            <div class="space-y-[14px] text-sm">
-              <div class="h-8 flex items-center font-bold text-slate-900 text-base">$13.80</div>
-              <div class="h-8 flex items-center font-bold text-slate-900">$6,900.00</div>
-              <div class="h-8 flex items-center text-slate-700">14 days</div>
-              <div class="h-8 flex items-center text-slate-700">FOB Guangzhou</div>
-              <div class="h-8 flex items-center text-slate-700">50% deposit</div>
-              <div class="h-8 flex items-center text-slate-700">$45 each</div>
-              <div class="h-8 flex items-center text-amber-400">★★★★☆ 4.6</div>
-              <div class="h-8 flex items-center text-slate-700">CE, RoHS</div>
-            </div>
-            <button class="w-full mt-6 border border-slate-200 text-slate-600 font-medium py-3 rounded-xl hover:border-blue-400 hover:text-blue-700 transition text-sm">Award This Quote</button>
-          </div>
-
-          <!-- Quote 3 -->
-          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mt-14">
-            <div class="text-center mb-5">
-              <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-lg mx-auto mb-2">🏭</div>
-              <div class="font-bold text-slate-900 text-sm">Dongguan ElecCo</div>
-              <div class="text-xs text-slate-400">China · ⭐ 4.4</div>
-            </div>
-            <div class="space-y-[14px] text-sm">
-              <div class="h-8 flex items-center font-bold text-slate-900 text-base">$15.00</div>
-              <div class="h-8 flex items-center font-bold text-slate-900">$7,500.00</div>
-              <div class="h-8 flex items-center text-slate-700">7 days</div>
-              <div class="h-8 flex items-center text-slate-700">EXW Factory</div>
-              <div class="h-8 flex items-center text-slate-700">100% upfront</div>
-              <div class="h-8 flex items-center text-slate-700">$50 each</div>
-              <div class="h-8 flex items-center text-amber-400">★★★★☆ 4.4</div>
-              <div class="h-8 flex items-center text-slate-700">CE</div>
-            </div>
-            <button class="w-full mt-6 border border-slate-200 text-slate-600 font-medium py-3 rounded-xl hover:border-blue-400 hover:text-blue-700 transition text-sm">Award This Quote</button>
-          </div>
-
-        </div>
-      </div>
-      <p class="text-xs text-slate-400 mt-4 text-center">Showing top 3 of 5 quotes. <button class="text-blue-600 underline">View all 5 quotes</button></p>
     </div>
   </div>
 
-  <script>
-    function switchSection(name) {
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('[id^="btn-"]').forEach(el => { el.classList.remove('bg-blue-700','text-white'); el.classList.add('text-slate-600'); });
-      document.getElementById('section-'+name).classList.add('active');
-      document.getElementById('btn-'+name).classList.add('bg-blue-700','text-white');
-      document.getElementById('btn-'+name).classList.remove('text-slate-600');
-    }
-    async function submitRFQ(e) {
-      e.preventDefault();
-      const payload = {
-        email: document.getElementById('rfq-email').value.trim(),
-        product_name: document.getElementById('product-name').value.trim(),
-        description: document.getElementById('description').value.trim(),
-        quantity: document.getElementById('quantity').value.trim(),
-        target_price: document.getElementById('target-price').value.trim(),
-        origin: document.getElementById('origin').value.trim()
-      };
-
-      if (!payload.email || !payload.product_name || !payload.description) {
-        return alert('Email, product name, and description are required.');
-      }
-
-      try {
-        const response = await fetch('/api/rfq', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const result = await response.json();
-        if (!response.ok) return alert(result.error || 'Unable to submit RFQ.');
-
-        alert('RFQ submitted successfully! Our team will review and distribute to relevant suppliers within 2–4 hours. You will be notified by email when quotes arrive.');
-        document.querySelector('form').reset();
-      } catch (error) {
-        alert('Unable to connect to the server. Please run the backend server and refresh.');
-      }
-    }
-  </script>
 <script>
-  (function() {
+  let currentUser = null;
+  let myRfqs = [];
+  let myRfqsLoaded = false;
+
+  function switchSection(name) {
+    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('[id^="btn-"]').forEach(el => { el.classList.remove('bg-blue-700','text-white'); el.classList.add('text-slate-600'); });
+    document.getElementById('section-'+name).classList.add('active');
+    const btn = document.getElementById('btn-'+name);
+    btn.classList.add('bg-blue-700','text-white'); btn.classList.remove('text-slate-600');
+    if (name === 'my-rfq') loadMyRfqs();
+  }
+
+  async function submitRFQ(e) {
+    e.preventDefault();
+    const email = document.getElementById('rfq-email').value.trim();
+    const product_name = document.getElementById('product-name').value.trim();
+    const category = document.getElementById('category').value;
+    const description = document.getElementById('description').value.trim();
+    const quantity = document.getElementById('quantity').value.trim();
+    const unit = document.getElementById('unit').value;
+    const target_price = document.getElementById('target-price').value.trim();
+    const origin = document.getElementById('origin').value;
+    const deadline = document.getElementById('deadline').value;
+
+    if (!email || !product_name || !description) return alert('Email, product name, and description are required.');
+
+    const btn = document.getElementById('rfq-submit-btn');
+    btn.textContent = 'Submitting...'; btn.disabled = true;
     try {
-      const user = JSON.parse(localStorage.getItem('shiap_user'));
-      if (!user || !user.email) return;
-      const dash = { admin: 'admin/dashboard.html', supplier: 'supplier/dashboard.html', buyer: 'buyer/dashboard.html' };
-      const btn = document.getElementById('nav-auth-btn');
-      if (!btn) return;
+      const res = await fetch('/api/rfq', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, product_name, category, description, quantity, unit, target_price, origin, deadline })
+      });
+      const result = await res.json();
+      if (!res.ok) { alert(result.error || 'Unable to submit RFQ.'); return; }
+      alert('RFQ submitted successfully! Our team will review and distribute to relevant suppliers within 2–4 hours. You will be notified by email when quotes arrive.');
+      document.querySelector('form').reset();
+      if (currentUser) document.getElementById('rfq-email').value = currentUser.email;
+      myRfqsLoaded = false;
+    } catch(err) {
+      alert('Unable to connect to the server.');
+    } finally {
+      btn.textContent = 'Submit RFQ to Suppliers →'; btn.disabled = false;
+    }
+  }
+
+  function rfqStatusBadge(status, quoteCount) {
+    if (status === 'pending') return '<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700">⏳ Pending Review</span>';
+    if (status === 'open' && quoteCount > 0) return `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700">✓ ${quoteCount} Quote${quoteCount>1?'s':''} Received</span>`;
+    if (status === 'open') return '<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700">📤 Sent to Suppliers</span>';
+    if (status === 'awarded') return '<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700">🏆 Awarded</span>';
+    if (status === 'rejected') return '<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-red-50 text-red-600">✗ Rejected</span>';
+    return `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">${status}</span>`;
+  }
+
+  function renderMyRfqsTable(rfqs) {
+    if (!rfqs.length) {
+      document.getElementById('my-rfq-body').innerHTML = '<div class="p-12 text-center text-slate-400"><div class="text-3xl mb-3">📋</div><p>No RFQs yet. <button onclick="switchSection(\'create\')" class="text-blue-600 underline">Create your first RFQ</button></p></div>';
+      return;
+    }
+    const rows = rfqs.map(r => {
+      const date = new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const hasQuotes = r.quote_count > 0;
+      const compareBtn = (r.status === 'open' || r.status === 'awarded') && hasQuotes
+        ? `<button onclick="loadCompare(${r.id},'${escHtml(r.product_name)}')" class="text-sm text-blue-600 font-medium hover:text-blue-800">Compare →</button>`
+        : r.status === 'awarded'
+        ? `<span class="text-sm text-slate-400">Closed</span>`
+        : `<span class="text-sm text-slate-300">—</span>`;
+      return `<tr class="hover:bg-slate-50">
+        <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-${String(r.id).padStart(4,'0')}</td>
+        <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">${escHtml(r.product_name)}</div><div class="text-xs text-slate-400">${escHtml(r.category || '—')}</div></td>
+        <td class="px-6 py-4 text-sm text-slate-700">${r.quantity ? `${r.quantity} ${r.unit || ''}` : '—'}</td>
+        <td class="px-6 py-4">${rfqStatusBadge(r.status, r.quote_count)}</td>
+        <td class="px-6 py-4"><span class="text-sm font-bold text-slate-900">${r.quote_count || 0}</span><span class="text-xs text-slate-400 ml-1">quotes</span>${r.best_price ? `<div class="text-xs text-emerald-600 font-semibold">Best: $${parseFloat(r.best_price).toFixed(2)}</div>` : ''}</td>
+        <td class="px-6 py-4 text-sm text-slate-500">${date}</td>
+        <td class="px-6 py-4">${compareBtn}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('my-rfq-body').innerHTML = `
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-slate-50 border-b border-slate-100">
+            <tr>
+              <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">RFQ ID</th>
+              <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Product</th>
+              <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Quantity</th>
+              <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Status</th>
+              <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Quotes</th>
+              <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Submitted</th>
+              <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-50">${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  async function loadMyRfqs() {
+    if (!currentUser) {
+      document.getElementById('my-rfq-body').innerHTML = '<div class="p-8 text-center"><p class="text-slate-500 mb-4">Please sign in to view your RFQs.</p><a href="login.html" class="bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-800">Sign In</a></div>';
+      return;
+    }
+    if (myRfqsLoaded) return;
+    document.getElementById('my-rfq-body').innerHTML = '<div class="p-8 text-center text-sm text-slate-400">Loading...</div>';
+    try {
+      const res = await fetch(`/api/rfqs/buyer?email=${encodeURIComponent(currentUser.email)}`);
+      myRfqs = await res.json();
+      myRfqsLoaded = true;
+      renderMyRfqsTable(myRfqs);
+    } catch(e) {
+      document.getElementById('my-rfq-body').innerHTML = '<div class="p-8 text-center text-red-500 text-sm">Unable to load RFQs.</div>';
+    }
+  }
+
+  async function loadCompare(rfqId, productName) {
+    switchSection('compare');
+    document.getElementById('compare-subtitle').textContent = `Loading quotes for: ${productName}...`;
+    document.getElementById('compare-badge').classList.add('hidden');
+    document.getElementById('compare-body').innerHTML = '<div class="text-center py-8 text-slate-400 text-sm">Loading quotes...</div>';
+    try {
+      const res = await fetch(`/api/rfq-quotes?rfq_id=${rfqId}`);
+      const quotes = await res.json();
+      if (!quotes.length) {
+        document.getElementById('compare-subtitle').textContent = `${productName} · No quotes yet`;
+        document.getElementById('compare-body').innerHTML = '<div class="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400"><div class="text-3xl mb-3">⏳</div><p>No quotes have been submitted yet. Check back later.</p></div>';
+        return;
+      }
+      document.getElementById('compare-subtitle').textContent = `#RFQ-${String(rfqId).padStart(4,'0')} · ${productName}`;
+      const badge = document.getElementById('compare-badge');
+      badge.textContent = `${quotes.length} Quote${quotes.length > 1 ? 's' : ''} Received`;
+      badge.classList.remove('hidden');
+
+      const rfq = myRfqs.find(r => r.id === rfqId);
+      const qty = rfq ? parseInt(rfq.quantity) || 1 : 1;
+
+      const colsCls = ['border-slate-100 shadow-sm','border-slate-100 shadow-sm','border-slate-100 shadow-sm'];
+      const bestPrice = quotes[0].unit_price;
+      const cols = quotes.map((q, i) => {
+        const isBest = q.unit_price === bestPrice;
+        const name = q.supplier_name || q.supplier_email;
+        const country = q.supplier_country || '—';
+        const total = (q.unit_price * qty).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const stars = '★'.repeat(Math.round(q.response_rate || 4)) + '☆'.repeat(5 - Math.round(q.response_rate || 4));
+        return `<div class="bg-white rounded-2xl ${isBest ? 'border-2 border-blue-500 shadow-lg' : 'border border-slate-100 shadow-sm mt-14'} p-5 relative">
+          ${isBest ? '<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-700 text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Best Price</div>' : ''}
+          <div class="text-center mb-5 ${isBest ? 'pt-2' : ''}">
+            <div class="w-10 h-10 bg-${isBest?'blue':'slate'}-100 rounded-full flex items-center justify-center text-lg mx-auto mb-2">🏭</div>
+            <div class="font-bold text-slate-900 text-sm">${escHtml(name)}</div>
+            <div class="text-xs text-slate-400">${escHtml(country)}</div>
+          </div>
+          <div class="space-y-[14px] text-sm">
+            <div class="h-8 flex items-center font-bold ${isBest?'text-emerald-600':'text-slate-900'} text-base">$${parseFloat(q.unit_price).toFixed(2)}</div>
+            <div class="h-8 flex items-center font-bold text-slate-900">$${total}</div>
+            <div class="h-8 flex items-center text-slate-700">${q.lead_time ? `${q.lead_time} days` : '—'}</div>
+            <div class="h-8 flex items-center text-slate-700">${escHtml(q.shipping_terms || '—')}</div>
+            <div class="h-8 flex items-center text-slate-700">${escHtml(q.payment_terms || '—')}</div>
+            <div class="h-8 flex items-center text-amber-500">${stars}</div>
+          </div>
+          ${q.notes ? `<div class="mt-3 text-xs text-slate-500 bg-slate-50 rounded-lg p-2">${escHtml(q.notes)}</div>` : ''}
+          <button onclick="awardQuote(${rfqId},${q.id},'${escHtml(name)}')" class="w-full mt-4 ${isBest?'bg-blue-700 hover:bg-blue-800 text-white':'border border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-700'} font-semibold py-3 rounded-xl transition text-sm">Award This Quote</button>
+        </div>`;
+      }).join('');
+
+      document.getElementById('compare-body').innerHTML = `
+        <div class="overflow-x-auto">
+          <div class="grid gap-4" style="grid-template-columns: 140px repeat(${quotes.length}, minmax(200px, 1fr));">
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mt-14">
+              <div class="space-y-[22px] pt-1 text-sm text-slate-500 font-medium">
+                <div class="h-8 flex items-center">Unit Price</div>
+                <div class="h-8 flex items-center">Total (${qty} units)</div>
+                <div class="h-8 flex items-center">Lead Time</div>
+                <div class="h-8 flex items-center">Shipping Terms</div>
+                <div class="h-8 flex items-center">Payment Terms</div>
+                <div class="h-8 flex items-center">Rating</div>
+              </div>
+            </div>
+            ${cols}
+          </div>
+        </div>`;
+    } catch(e) {
+      document.getElementById('compare-body').innerHTML = '<div class="text-center py-8 text-red-500 text-sm">Unable to load quotes.</div>';
+    }
+  }
+
+  async function awardQuote(rfqId, quoteId, supplierName) {
+    if (!confirm(`Award this RFQ to ${supplierName}?`)) return;
+    try {
+      const res = await fetch(`/api/rfqs/${rfqId}/status`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'awarded' })
+      });
+      if (!res.ok) throw new Error();
+      alert(`RFQ awarded to ${supplierName}! The supplier will be notified to proceed with production.`);
+      myRfqsLoaded = false;
+      const r = myRfqs.find(x => x.id === rfqId);
+      if (r) r.status = 'awarded';
+    } catch(e) {
+      alert('Failed to award quote. Please try again.');
+    }
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  (function init() {
+    try { currentUser = JSON.parse(localStorage.getItem('shiap_user')); } catch(e) {}
+    const btn = document.getElementById('nav-auth-btn');
+    if (currentUser) {
       btn.textContent = 'My Account';
-      btn.href = dash[user.role] || 'buyer/dashboard.html';
-    } catch(e) {}
+      const dash = { admin: 'admin/dashboard.html', supplier: 'supplier/dashboard.html', buyer: 'buyer/dashboard.html' };
+      btn.href = dash[currentUser.role] || 'buyer/dashboard.html';
+      document.getElementById('rfq-email').value = currentUser.email;
+    }
+    // Check if URL has tab param
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (tab === 'my-rfq' || tab === 'compare') switchSection(tab);
   })();
 </script>
 </body>

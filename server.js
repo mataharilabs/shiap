@@ -124,7 +124,23 @@ function initializeDatabase() {
     db.run(`ALTER TABLE orders ADD COLUMN payment_date TEXT DEFAULT NULL`, [], () => {});
     db.run(`ALTER TABLE orders ADD COLUMN production_update TEXT DEFAULT NULL`, [], () => {});
     db.run(`ALTER TABLE orders ADD COLUMN shipping_address TEXT DEFAULT NULL`, [], () => {});
-    db.run(`ALTER TABLE rfqs ADD COLUMN status TEXT DEFAULT 'open'`, [], () => {});
+    db.run(`ALTER TABLE rfqs ADD COLUMN status TEXT DEFAULT 'pending'`, [], () => {});
+    db.run(`ALTER TABLE rfqs ADD COLUMN category TEXT`, [], () => {});
+    db.run(`ALTER TABLE rfqs ADD COLUMN unit TEXT`, [], () => {});
+    db.run(`ALTER TABLE rfqs ADD COLUMN deadline TEXT`, [], () => {});
+
+    db.run(`CREATE TABLE IF NOT EXISTS rfq_quotes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      rfq_id INTEGER NOT NULL,
+      supplier_email TEXT NOT NULL,
+      unit_price REAL,
+      lead_time INTEGER,
+      shipping_terms TEXT,
+      payment_terms TEXT,
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(rfq_id, supplier_email)
+    )`);
 
     db.run(`CREATE TABLE IF NOT EXISTS saved_products (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -302,14 +318,16 @@ app.post('/api/google-signin', async (req, res) => {
 });
 
 app.post('/api/rfq', (req, res) => {
-  const { email, product_name, description, quantity, target_price, origin } = req.body;
+  const { email, product_name, category, description, quantity, unit, target_price, origin, deadline } = req.body;
   if (!email || !product_name || !description) return res.status(400).json({ error: 'Email, product name, and description are required.' });
-  const stmt = db.prepare(`INSERT INTO rfqs (user_email, product_name, description, quantity, target_price, origin) VALUES (?, ?, ?, ?, ?, ?)`);
-  stmt.run(email, product_name, description, quantity || '', target_price || '', origin || '', function (err) {
-    if (err) return res.status(500).json({ error: 'Unable to submit RFQ.' });
-    res.json({ message: 'RFQ submitted successfully.', rfqId: this.lastID });
-  });
-  stmt.finalize();
+  db.run(
+    `INSERT INTO rfqs (user_email, product_name, category, description, quantity, unit, target_price, origin, deadline, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
+    [email, product_name, category || '', description, quantity || '', unit || '', target_price || '', origin || '', deadline || ''],
+    function(err) {
+      if (err) return res.status(500).json({ error: 'Unable to submit RFQ.' });
+      res.json({ message: 'RFQ submitted successfully.', rfqId: this.lastID });
+    }
+  );
 });
 
 app.get('/api/users', (req, res) => {
@@ -321,7 +339,8 @@ app.get('/api/users', (req, res) => {
 
 app.get('/api/rfqs', (req, res) => {
   db.all(`
-    SELECT r.*, u.company_name AS buyer_company, u.country AS buyer_country, u.status AS buyer_status
+    SELECT r.*, u.company_name AS buyer_company, u.country AS buyer_country, u.status AS buyer_status,
+      (SELECT COUNT(*) FROM rfq_quotes WHERE rfq_id = r.id) AS quote_count
     FROM rfqs r
     LEFT JOIN users u ON r.user_email = u.email
     ORDER BY r.created_at DESC
@@ -335,10 +354,78 @@ app.get('/api/rfqs/buyer', async (req, res) => {
   const email = req.query.email;
   if (!email) return res.status(400).json({ error: 'Email is required.' });
   try {
-    const rfqs = await dbAll('SELECT * FROM rfqs WHERE user_email = ? ORDER BY created_at DESC', [email]);
+    const rfqs = await dbAll(`
+      SELECT r.*,
+        (SELECT COUNT(*) FROM rfq_quotes WHERE rfq_id = r.id) AS quote_count,
+        (SELECT MIN(unit_price) FROM rfq_quotes WHERE rfq_id = r.id) AS best_price
+      FROM rfqs r WHERE r.user_email = ? ORDER BY r.created_at DESC
+    `, [email]);
     res.json(rfqs);
   } catch (err) {
     res.status(500).json({ error: 'Unable to fetch RFQs.' });
+  }
+});
+
+app.get('/api/rfqs/supplier', async (req, res) => {
+  const email = req.query.email;
+  if (!email) return res.status(400).json({ error: 'Email is required.' });
+  try {
+    const rfqs = await dbAll(`
+      SELECT r.*,
+        u.company_name AS buyer_company, u.country AS buyer_country,
+        q.id AS my_quote_id, q.unit_price AS my_unit_price, q.lead_time AS my_lead_time,
+        (SELECT COUNT(*) FROM rfq_quotes WHERE rfq_id = r.id) AS quote_count
+      FROM rfqs r
+      LEFT JOIN users u ON r.user_email = u.email
+      LEFT JOIN rfq_quotes q ON q.rfq_id = r.id AND q.supplier_email = ?
+      WHERE r.status = 'open'
+      ORDER BY r.created_at DESC
+    `, [email]);
+    res.json(rfqs);
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to fetch RFQs.' });
+  }
+});
+
+app.post('/api/rfq-quotes', async (req, res) => {
+  const { rfq_id, supplier_email, unit_price, lead_time, shipping_terms, payment_terms, notes } = req.body;
+  if (!rfq_id || !supplier_email || !unit_price) return res.status(400).json({ error: 'rfq_id, supplier_email, and unit_price are required.' });
+  try {
+    const existing = await dbGet('SELECT id FROM rfq_quotes WHERE rfq_id=? AND supplier_email=?', [rfq_id, supplier_email]);
+    if (existing) {
+      await new Promise((resolve, reject) => {
+        db.run('UPDATE rfq_quotes SET unit_price=?, lead_time=?, shipping_terms=?, payment_terms=?, notes=? WHERE id=?',
+          [unit_price, lead_time || null, shipping_terms || null, payment_terms || null, notes || null, existing.id],
+          function(err) { if (err) reject(err); else resolve(); });
+      });
+    } else {
+      await new Promise((resolve, reject) => {
+        db.run('INSERT INTO rfq_quotes (rfq_id, supplier_email, unit_price, lead_time, shipping_terms, payment_terms, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
+          [rfq_id, supplier_email, unit_price, lead_time || null, shipping_terms || null, payment_terms || null, notes || null],
+          function(err) { if (err) reject(err); else resolve(); });
+      });
+    }
+    res.json({ message: 'Quote submitted.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to submit quote.' });
+  }
+});
+
+app.get('/api/rfq-quotes', async (req, res) => {
+  const rfq_id = req.query.rfq_id;
+  if (!rfq_id) return res.status(400).json({ error: 'rfq_id is required.' });
+  try {
+    const quotes = await dbAll(`
+      SELECT q.*, u.company_name AS supplier_name, u.country AS supplier_country,
+        u.response_rate, u.years_on_platform
+      FROM rfq_quotes q
+      LEFT JOIN users u ON q.supplier_email = u.email
+      WHERE q.rfq_id = ?
+      ORDER BY q.unit_price ASC
+    `, [rfq_id]);
+    res.json(quotes);
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to fetch quotes.' });
   }
 });
 

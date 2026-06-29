@@ -61,10 +61,14 @@
     </div>
     <div class="p-8">
       <!-- Stats -->
-      <div class="grid grid-cols-3 gap-5 mb-8">
+      <div class="grid grid-cols-4 gap-5 mb-8">
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
-          <div id="rfq-stat-open" class="text-2xl font-extrabold text-amber-600">—</div>
-          <div class="text-xs text-slate-400 mt-1">Open RFQs</div>
+          <div id="rfq-stat-pending" class="text-2xl font-extrabold text-amber-600">—</div>
+          <div class="text-xs text-slate-400 mt-1">Pending Review</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+          <div id="rfq-stat-open" class="text-2xl font-extrabold text-blue-600">—</div>
+          <div class="text-xs text-slate-400 mt-1">Distributed (Open)</div>
         </div>
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
           <div id="rfq-stat-awarded" class="text-2xl font-extrabold text-emerald-600">—</div>
@@ -106,45 +110,36 @@
   function doLogout() { localStorage.removeItem('shiap_user'); window.location.replace('../login.html'); }
 
   async function approveRFQ(rfqId, btn) {
-    btn.disabled = true;
-    btn.textContent = 'Processing...';
+    btn.disabled = true; btn.textContent = 'Processing...';
     try {
       const res = await fetch(`/api/rfqs/${rfqId}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'awarded' })
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'open' })
       });
       if (!res.ok) throw new Error();
       const rfq = allRfqs.find(r => r.id === rfqId);
-      if (rfq) rfq.status = 'awarded';
+      if (rfq) rfq.status = 'open';
       const card = btn.closest('.rfq-card');
       if (card) {
-        card.style.opacity = '0.6';
         const badge = card.querySelector('.rfq-status-badge');
         if (badge) { badge.textContent = '✓ Distributed'; badge.className = 'rfq-status-badge text-xs bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full'; }
         btn.textContent = '✓ Distributed to Suppliers';
         btn.className = 'flex-1 bg-emerald-600 cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm opacity-70';
-        const rejectBtn = card.querySelector('button:last-child');
-        if (rejectBtn) { rejectBtn.disabled = true; rejectBtn.style.opacity = '0.5'; }
+        const actions = card.querySelector('.rfq-actions');
+        if (actions) actions.innerHTML = '<p class="text-xs text-emerald-600 font-medium">✓ Distributed to suppliers · Awaiting quotes</p>';
       }
-      const open = allRfqs.filter(r => r.status === 'open').length;
-      const awarded = allRfqs.filter(r => r.status === 'awarded').length;
-      document.getElementById('rfq-stat-open').textContent = open;
-      document.getElementById('rfq-stat-awarded').textContent = awarded;
+      updateStats();
     } catch(e) {
-      btn.disabled = false;
-      btn.textContent = '✓ Approve & Distribute';
-      alert('Failed to approve RFQ. Please try again.');
+      btn.disabled = false; btn.textContent = '✓ Approve & Distribute';
+      alert('Failed to approve RFQ.');
     }
   }
 
   async function rejectRFQ(rfqId, btn) {
-    btn.disabled = true;
-    btn.textContent = '...';
+    btn.disabled = true; btn.textContent = '...';
     try {
       const res = await fetch(`/api/rfqs/${rfqId}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected' })
       });
       if (!res.ok) throw new Error();
@@ -157,64 +152,89 @@
         if (badge) { badge.textContent = '✗ Rejected'; badge.className = 'rfq-status-badge text-xs bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full'; }
         Array.from(card.querySelectorAll('button')).forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
       }
-      const open = allRfqs.filter(r => r.status === 'open').length;
-      document.getElementById('rfq-stat-open').textContent = open;
+      updateStats();
     } catch(e) {
-      btn.disabled = false;
-      btn.textContent = 'Reject';
-      alert('Failed to reject RFQ. Please try again.');
+      btn.disabled = false; btn.textContent = 'Reject';
+      alert('Failed to reject RFQ.');
     }
+  }
+
+  function updateStats() {
+    const pending = allRfqs.filter(r => r.status === 'pending').length;
+    const open = allRfqs.filter(r => r.status === 'open').length;
+    const awarded = allRfqs.filter(r => r.status === 'awarded' || r.status === 'closed').length;
+    document.getElementById('rfq-stat-pending').textContent = pending;
+    document.getElementById('rfq-stat-open').textContent = open;
+    document.getElementById('rfq-stat-awarded').textContent = awarded;
+    document.getElementById('rfq-stat-total').textContent = allRfqs.length;
+    document.getElementById('rfq-queue-badge').textContent = `${pending} pending`;
+  }
+
+  function rfqStatusBadge(status) {
+    if (status === 'pending') return 'bg-amber-100 text-amber-700';
+    if (status === 'open') return 'bg-emerald-100 text-emerald-700';
+    if (status === 'awarded' || status === 'closed') return 'bg-blue-100 text-blue-700';
+    if (status === 'rejected') return 'bg-red-100 text-red-700';
+    return 'bg-slate-100 text-slate-600';
+  }
+
+  function rfqStatusLabel(status) {
+    if (status === 'pending') return '⏳ Pending Review';
+    if (status === 'open') return '✓ Distributed';
+    if (status === 'awarded') return '🏆 Awarded';
+    if (status === 'closed') return '✓ Closed';
+    if (status === 'rejected') return '✗ Rejected';
+    return status;
   }
 
   function renderRfqs(rfqs) {
     const container = document.getElementById('rfq-cards-container');
-    const badge = document.getElementById('rfq-queue-badge');
-    badge.textContent = `${rfqs.length} RFQs`;
-
     if (!rfqs.length) {
       container.innerHTML = '<div class="bg-white rounded-2xl border border-slate-100 p-12 text-center"><div class="text-3xl mb-3">📋</div><div class="text-slate-400">No RFQs to review.</div></div>';
       return;
     }
-
     container.innerHTML = rfqs.map(r => {
       const date = new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      const statusBadgeCls = r.status === 'open'
-        ? 'bg-amber-100 text-amber-700'
-        : r.status === 'awarded' ? 'bg-emerald-100 text-emerald-700'
-        : 'bg-slate-100 text-slate-600';
-      const statusLabel = r.status === 'open' ? 'Open' : r.status === 'awarded' ? '✓ Awarded' : r.status;
-      const borderCls = r.status === 'open' ? 'border-2 border-amber-200' : 'border border-slate-100';
+      const badgeCls = rfqStatusBadge(r.status);
+      const badgeLabel = rfqStatusLabel(r.status);
+      const borderCls = r.status === 'pending' ? 'border-2 border-amber-200' : 'border border-slate-100';
       const buyer = r.buyer_company || r.user_email;
       const country = r.buyer_country || r.origin || '—';
+      const qtyLine = [r.quantity && `Qty: ${r.quantity} ${r.unit || ''}`, r.category && `· ${r.category}`, r.target_price && `· Target: $${r.target_price}`].filter(Boolean).join(' ');
+      const deadlineLine = r.deadline ? `<span class="text-xs text-amber-600 font-medium">Deadline: ${r.deadline}</span>` : '';
+      const quoteInfo = r.quote_count > 0 ? `<span class="text-xs text-blue-600 font-semibold">${r.quote_count} quotes received</span>` : '';
+      const actions = r.status === 'pending'
+        ? `<div class="rfq-actions flex gap-3 mt-4">
+            <button onclick="approveRFQ(${r.id},this)" class="flex-1 bg-blue-700 text-white font-semibold py-3 rounded-xl hover:bg-blue-800 text-sm">✓ Approve & Distribute to Suppliers</button>
+            <button onclick="rejectRFQ(${r.id},this)" class="px-6 bg-red-50 text-red-600 border border-red-100 font-medium py-3 rounded-xl hover:bg-red-100 text-sm">Reject</button>
+           </div>`
+        : r.quote_count > 0
+        ? `<div class="rfq-actions mt-3"><span class="text-xs text-slate-400">${r.quote_count} supplier quote(s) received · awaiting buyer decision</span></div>`
+        : '';
       return `<div class="rfq-card bg-white rounded-2xl ${borderCls} shadow-sm p-6">
-        <div class="flex items-start justify-between mb-4">
+        <div class="flex items-start justify-between mb-3">
           <div>
             <div class="flex items-center gap-3 mb-2">
               <span class="text-sm font-mono text-blue-600">#RFQ-${String(r.id).padStart(4,'0')}</span>
-              <span class="rfq-status-badge text-xs ${statusBadgeCls} font-bold px-2 py-0.5 rounded-full">${statusLabel}</span>
+              <span class="rfq-status-badge text-xs ${badgeCls} font-bold px-2 py-0.5 rounded-full">${badgeLabel}</span>
               <span class="text-xs text-slate-400">${date}</span>
             </div>
             <h3 class="text-base font-bold text-slate-900">${r.product_name}</h3>
-            <div class="text-sm text-slate-500 mt-1">
-              ${r.quantity ? `Qty: ${r.quantity}` : ''} ${r.target_price ? `· Target: ${r.target_price}` : ''}
-            </div>
+            <div class="flex items-center gap-3 mt-1 text-xs text-slate-500">${qtyLine} ${deadlineLine} ${quoteInfo}</div>
           </div>
         </div>
-        <div class="grid md:grid-cols-3 gap-3 mb-4">
+        <div class="grid md:grid-cols-3 gap-3">
           <div class="bg-slate-50 rounded-xl p-3 text-xs">
             <div class="font-semibold text-slate-700 mb-1">Buyer</div>
-            <div class="text-slate-600">${buyer}</div>
-            <div class="text-slate-400">${country}</div>
+            <div class="text-slate-700 font-medium">${buyer}</div>
+            <div class="text-slate-400">${country} · ${r.user_email}</div>
           </div>
           <div class="bg-slate-50 rounded-xl p-3 text-xs md:col-span-2">
             <div class="font-semibold text-slate-700 mb-1">Description</div>
-            <div class="text-slate-600">${r.description || '—'}</div>
+            <div class="text-slate-600 line-clamp-3">${r.description || '—'}</div>
           </div>
         </div>
-        ${r.status === 'open' ? `<div class="flex gap-3">
-          <button onclick="approveRFQ(${r.id},this)" class="flex-1 bg-blue-700 text-white font-semibold py-3 rounded-xl hover:bg-blue-800 text-sm">✓ Approve & Distribute</button>
-          <button onclick="rejectRFQ(${r.id},this)" class="px-6 bg-red-50 text-red-600 border border-red-100 font-medium py-3 rounded-xl hover:bg-red-100 text-sm">Reject</button>
-        </div>` : ''}
+        ${actions}
       </div>`;
     }).join('');
   }
@@ -226,11 +246,7 @@
       const res = await fetch('/api/rfqs');
       if (!res.ok) throw new Error();
       allRfqs = await res.json();
-      const open = allRfqs.filter(r => r.status === 'open').length;
-      const awarded = allRfqs.filter(r => r.status === 'awarded').length;
-      document.getElementById('rfq-stat-open').textContent = open;
-      document.getElementById('rfq-stat-awarded').textContent = awarded;
-      document.getElementById('rfq-stat-total').textContent = allRfqs.length;
+      updateStats();
       renderRfqs(allRfqs);
     } catch(e) {
       document.getElementById('rfq-cards-container').innerHTML = '<div class="text-center py-8 text-red-500 text-sm">Unable to load RFQs.</div>';
