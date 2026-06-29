@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Industrial Network Switch 24-Port – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;} .tab-content{display:none;} .tab-content.active{display:block;}</style>
+</head>
+<body class="bg-slate-50">
+
+  <!-- Nav -->
+  <nav class="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+          <span class="text-xl font-extrabold text-slate-900">SHIAP</span>
+        </a>
+        <div class="flex items-center gap-3">
+          <a href="rfq.html" class="text-sm font-medium text-slate-600 hover:text-blue-700 px-3 py-2">Create RFQ</a>
+          <a id="nav-cart-btn" href="buyer/cart.html" class="relative hidden items-center justify-center w-9 h-9 text-slate-600 hover:text-blue-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center leading-none">0</span>
+          </a>
+          <a id="nav-auth-btn" href="login.html" class="text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-slate-400 mb-6">
+      <a href="index.html" class="hover:text-blue-600">Home</a><span>›</span>
+      <a href="marketplace.html" class="hover:text-blue-600">Marketplace</a><span>›</span>
+      <a href="marketplace.html" class="hover:text-blue-600" id="breadcrumb-category">Electronics</a><span>›</span>
+      <span id="product-breadcrumb-name" class="text-slate-700">Industrial Network Switch 24-Port</span>
+    </div>
+
+    <div class="grid lg:grid-cols-5 gap-10">
+      <!-- Left: Images + Details -->
+      <div class="lg:col-span-3">
+        <!-- Image Gallery -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-6">
+          <div class="bg-gradient-to-br from-blue-50 to-indigo-100 h-80 flex items-center justify-center text-9xl">🖥️</div>
+          <div class="flex gap-3 p-4">
+            <div class="w-16 h-16 rounded-xl bg-blue-50 border-2 border-blue-500 flex items-center justify-center text-2xl cursor-pointer">🖥️</div>
+            <div class="w-16 h-16 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-2xl cursor-pointer hover:border-blue-300">📦</div>
+            <div class="w-16 h-16 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-2xl cursor-pointer hover:border-blue-300">📋</div>
+            <div class="w-16 h-16 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-2xl cursor-pointer hover:border-blue-300">🔌</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div class="flex border-b border-slate-100">
+            <button onclick="showTab('desc')" id="tab-desc" class="tab-btn px-6 py-4 text-sm font-semibold text-blue-700 border-b-2 border-blue-700">Description</button>
+            <button onclick="showTab('spec')" id="tab-spec" class="tab-btn px-6 py-4 text-sm font-medium text-slate-500 hover:text-slate-700">Specifications</button>
+            <button onclick="showTab('review')" id="tab-review" class="tab-btn px-6 py-4 text-sm font-medium text-slate-500 hover:text-slate-700">Reviews (<span id="tab-review-count">0</span>)</button>
+            <button onclick="showTab('faq')" id="tab-faq" class="tab-btn px-6 py-4 text-sm font-medium text-slate-500 hover:text-slate-700">FAQ</button>
+          </div>
+          <div class="p-6">
+            <div id="content-desc" class="tab-content active">
+              <h3 class="font-bold text-slate-900 mb-3">Product Description</h3>
+              <p id="product-description" class="text-slate-600 text-sm leading-relaxed mb-4">The Industrial Network Switch 24-Port Managed Gigabit is engineered for demanding enterprise environments. With 24 × 10/100/1000BASE-T RJ45 ports and 4 × SFP uplinks, this switch delivers line-rate performance for high-density networks.</p>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4">Features Layer 2/3 management with VLAN, QoS, Link Aggregation, RSTP/MSTP support, and comprehensive SNMP v1/v2c/v3 management. Industrial-grade design rated for -40°C to +85°C operation, IP30 protection, and DIN-rail or rack mount options.</p>
+              <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                <li>24 × Gigabit RJ45 + 4 × SFP uplinks</li>
+                <li>Non-blocking 56Gbps switching capacity</li>
+                <li>Supports 802.1Q VLAN, 802.3ad LACP</li>
+                <li>Web-based + CLI management</li>
+                <li>FCC, CE, RoHS certified</li>
+              </ul>
+            </div>
+            <div id="content-spec" class="tab-content">
+              <h3 class="font-bold text-slate-900 mb-4">Technical Specifications</h3>
+              <ul id="specs-list" class="space-y-2 text-sm text-slate-600">
+                <li class="text-slate-400">Loading specifications...</li>
+              </ul>
+            </div>
+            <div id="content-review" class="tab-content">
+              <div class="flex items-center gap-6 mb-6">
+                <div class="text-center">
+                  <div id="review-avg-score" class="text-5xl font-extrabold text-slate-900">—</div>
+                  <div id="review-avg-stars" class="text-amber-400 text-xl">☆☆☆☆☆</div>
+                  <div id="review-total-count" class="text-xs text-slate-400 mt-1">0 reviews</div>
+                </div>
+                <div class="flex-1">
+                  <div id="review-bars" class="space-y-1 text-xs text-slate-400">Loading...</div>
+                </div>
+              </div>
+              <div id="reviews-container" class="space-y-4">
+                <p class="text-sm text-slate-400">Loading reviews...</p>
+              </div>
+              <div id="review-pagination"></div>
+            </div>
+            <div id="content-faq" class="tab-content">
+              <div id="faq-container" class="space-y-4">
+                <p class="text-sm text-slate-400">Loading FAQ...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Order Panel + Supplier -->
+      <div class="lg:col-span-2 space-y-5">
+        <!-- Product Info -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2 py-1 rounded-full">✓ Verified Supplier</span>
+            <span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2 py-1 rounded-full">★ Top Rated</span>
+          </div>
+          <h1 id="product-title" class="text-xl font-extrabold text-slate-900 mb-1 leading-tight">Industrial Network Switch 24-Port Managed Gigabit</h1>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl font-bold text-blue-700" id="product-price">$150.00</span>
+            <div class="flex items-center gap-2">
+              <span id="product-rating" class="text-amber-400">★★★★★</span>
+              <span id="product-review-count" class="text-sm text-slate-500">4.8 (124 reviews)</span>
+              <span class="text-slate-300">·</span>
+              <span id="product-sold" class="text-sm text-slate-500">5,200+ sold</span>
+            </div>
+          </div>
+
+          <!-- Tiered Pricing -->
+          <div class="mb-5">
+            <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Wholesale Tiered Pricing</h3>
+            <div class="border border-slate-200 rounded-xl overflow-hidden">
+              <table class="w-full text-sm">
+                <thead class="bg-slate-50">
+                  <tr><th class="px-4 py-2.5 text-left font-semibold text-slate-600">Quantity</th><th class="px-4 py-2.5 text-right font-semibold text-slate-600">Unit Price</th></tr>
+                </thead>
+                <tbody id="pricing-tbody" class="divide-y divide-slate-100">
+                  <tr><td colspan="2" class="px-4 py-3 text-center text-slate-400 text-xs">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Quantity -->
+          <div class="mb-5">
+            <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Order Quantity</label>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+                <button class="px-4 py-2.5 text-slate-600 hover:bg-slate-50 font-bold text-lg" onclick="changeQty(-50)">−</button>
+                <input type="number" id="qty" value="200" min="50" class="w-24 text-center py-2.5 text-sm font-semibold text-slate-900 border-x border-slate-200 focus:outline-none" />
+                <button class="px-4 py-2.5 text-slate-600 hover:bg-slate-50 font-bold text-lg" onclick="changeQty(50)">+</button>
+              </div>
+              <div>
+                <div class="text-sm text-slate-500">Total:</div>
+                <div class="font-extrabold text-lg text-blue-700" id="total-price">$3,000.00</div>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-1.5" id="product-moq">MOQ: 50 units</p>
+          </div>
+
+          <!-- Variant Selection -->
+          <div class="mb-5">
+            <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Variant / Model</label>
+            <div id="variants-container" class="flex flex-wrap gap-2">
+              <span class="text-xs text-slate-400">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="space-y-3">
+            <button id="add-to-cart-btn" onclick="handleAddToCart()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3.5 rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              Add to Cart
+            </button>
+            <a href="rfq.html" class="w-full bg-white hover:bg-slate-50 text-blue-700 font-semibold py-3.5 rounded-xl transition border-2 border-blue-200 hover:border-blue-400 flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Request Custom Quote (RFQ)
+            </a>
+          </div>
+
+          <!-- Guarantees -->
+          <div class="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-slate-100">
+            <div class="text-center text-xs text-slate-500">
+              <div class="text-lg mb-1">🔒</div>
+              <div>Escrow<br/>Protected</div>
+            </div>
+            <div class="text-center text-xs text-slate-500">
+              <div class="text-lg mb-1">🚢</div>
+              <div>Free DDP<br/>Shipping Quote</div>
+            </div>
+            <div class="text-center text-xs text-slate-500">
+              <div class="text-lg mb-1">↩️</div>
+              <div>14-Day<br/>Dispute Policy</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Supplier Card -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Supplier</h3>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-xl">🏭</div>
+            <div>
+              <div id="product-supplier-name" class="font-bold text-slate-900">Shenzhen TechPro Ltd.</div>
+              <div id="product-supplier-location" class="text-sm text-slate-500">Shenzhen, Guangdong, China</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-3 mb-4 text-center">
+            <div class="bg-slate-50 rounded-xl p-3">
+              <div id="supplier-years" class="font-bold text-slate-900 text-sm">—</div>
+              <div class="text-xs text-slate-400">On Platform</div>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-3">
+              <div id="supplier-response" class="font-bold text-slate-900 text-sm">—</div>
+              <div class="text-xs text-slate-400">Response Rate</div>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-3">
+              <div id="supplier-orders" class="font-bold text-slate-900 text-sm">—</div>
+              <div class="text-xs text-slate-400">Orders</div>
+            </div>
+          </div>
+          <div id="supplier-badges" class="flex items-center gap-2 text-xs text-slate-500 mb-4"></div>
+          <button onclick="openChat()" class="w-full border border-slate-200 hover:border-blue-400 text-slate-700 font-medium py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2 hover:text-blue-700">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            Chat with Supplier
+          </button>
+        </div>
+
+        <!-- Shipping Estimate -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Shipping Estimate</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between items-center"><span class="text-slate-600">🚢 Sea Freight (FCL)</span><span class="font-semibold text-slate-900">25–35 days</span></div>
+            <div class="flex justify-between items-center"><span class="text-slate-600">✈️ Air Freight</span><span class="font-semibold text-slate-900">5–8 days</span></div>
+            <div class="flex justify-between items-center"><span class="text-slate-600">🚀 Express (DHL/FedEx)</span><span class="font-semibold text-slate-900">3–5 days</span></div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-400">Production lead time: 7–10 business days before shipping</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Widget -->
+  <div id="chat-widget" class="hidden fixed bottom-6 right-6 z-50">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-80">
+      <div class="bg-blue-700 rounded-t-2xl p-4 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm">🏭</div>
+          <div><div id="chat-supplier-name" class="text-white font-semibold text-sm">Supplier</div><div class="text-blue-200 text-xs">● Online now</div></div>
+        </div>
+        <button onclick="closeChat()" class="text-white/70 hover:text-white text-lg">✕</button>
+      </div>
+      <div class="p-4 h-48 overflow-y-auto space-y-3">
+        <div class="flex gap-2">
+          <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs flex-shrink-0">🏭</div>
+          <div class="bg-slate-100 rounded-xl rounded-tl-none px-3 py-2 text-xs text-slate-700 max-w-xs">Hello! Thank you for your interest in our Network Switch. How can I help you today?</div>
+        </div>
+      </div>
+      <div class="p-4 border-t border-slate-100">
+        <div class="flex gap-2">
+          <input type="text" placeholder="Type a message..." class="flex-1 text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+          <button class="bg-blue-700 text-white px-3 py-2 rounded-lg hover:bg-blue-800">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Toast -->
+  <div id="cart-toast" class="hidden fixed bottom-6 right-6 z-50 bg-emerald-600 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg items-center gap-2">
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+    <span id="cart-toast-msg">Added to cart!</span>
+    <a href="buyer/cart.html" class="ml-2 underline text-white hover:text-emerald-100">View Cart →</a>
+  </div>
+
+  <script>
+    let productUnitPrice = 18;
+    let currentProduct = null;
+    let allReviews = [];
+    let currentReviewPage = 1;
+    const REVIEWS_PER_PAGE = 10;
+
+    function renderReviewPage(page) {
+      const total = allReviews.length;
+      const totalPages = Math.max(1, Math.ceil(total / REVIEWS_PER_PAGE));
+      currentReviewPage = Math.min(Math.max(1, page), totalPages);
+      const start = (currentReviewPage - 1) * REVIEWS_PER_PAGE;
+      const slice = allReviews.slice(start, start + REVIEWS_PER_PAGE);
+      document.getElementById('reviews-container').innerHTML = slice.length
+        ? slice.map(r => {
+            const date = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) : '';
+            return `<div class="border border-slate-100 rounded-xl p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-semibold text-sm text-slate-900">${r.reviewer_company || 'Anonymous'}</span>
+                <span class="text-amber-400 text-sm">${starsHtml(r.rating)}</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">${r.review_text || ''}</p>
+              <p class="text-xs text-slate-400 mt-2 flex items-center gap-2 flex-wrap">
+                ${r.order_quantity ? `<span>📦 ${r.order_quantity} units</span>` : ''}
+                ${r.country ? `<span>📍 ${r.country}</span>` : ''}
+                ${date ? `<span>🗓 ${date}</span>` : ''}
+              </p>
+            </div>`;
+          }).join('')
+        : '<p class="text-sm text-slate-400">No reviews yet.</p>';
+      const paginationEl = document.getElementById('review-pagination');
+      if (totalPages > 1) {
+        const prevDisabled = currentReviewPage === 1 ? 'disabled' : '';
+        const nextDisabled = currentReviewPage === totalPages ? 'disabled' : '';
+        paginationEl.innerHTML = `<div class="flex items-center justify-between mt-5 pt-4 border-t border-slate-100">
+          <button onclick="renderReviewPage(currentReviewPage-1)" ${prevDisabled} class="px-4 py-2 text-sm font-medium rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-slate-700">← Prev</button>
+          <span class="text-sm text-slate-500">Page ${currentReviewPage} of ${totalPages} · ${total} reviews</span>
+          <button onclick="renderReviewPage(currentReviewPage+1)" ${nextDisabled} class="px-4 py-2 text-sm font-medium rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-slate-700">Next →</button>
+        </div>`;
+      } else {
+        paginationEl.innerHTML = '';
+      }
+    }
+
+    function showTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('text-blue-700','border-b-2','border-blue-700'); el.classList.add('text-slate-500'); });
+      document.getElementById('content-'+tab).classList.add('active');
+      document.getElementById('tab-'+tab).classList.add('text-blue-700','border-b-2','border-blue-700');
+      document.getElementById('tab-'+tab).classList.remove('text-slate-500');
+    }
+    function updateTotal() {
+      const qtyEl = document.getElementById('qty');
+      const qty = Number(qtyEl.value) || 50;
+      const total = qty * productUnitPrice;
+      document.getElementById('total-price').textContent = '$' + total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+    function changeQty(delta) {
+      const qtyEl = document.getElementById('qty');
+      let val = parseInt(qtyEl.value) + delta;
+      if (val < 50) val = 50;
+      qtyEl.value = val;
+      updateTotal();
+    }
+
+    function starsHtml(rating) {
+      const full = Math.round(rating);
+      return '★'.repeat(full) + '☆'.repeat(5 - full);
+    }
+
+    async function loadProductDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) return;
+      try {
+        const response = await fetch('/api/products/' + encodeURIComponent(id));
+        if (!response.ok) return;
+        const product = await response.json();
+
+        // Basic info
+        document.title = `${product.name} – SHIAP`;
+        document.getElementById('breadcrumb-category').textContent = product.category || 'Marketplace';
+        document.getElementById('product-breadcrumb-name').textContent = product.name;
+        document.getElementById('product-title').textContent = product.name;
+        document.getElementById('product-price').textContent = '$' + Number(product.price).toFixed(2);
+        document.getElementById('product-moq').textContent = `MOQ: ${product.moq || 50} units`;
+        productUnitPrice = Number(product.price) || productUnitPrice;
+        updateTotal();
+
+        // Rating & sold
+        const avgRating = Number(product.avg_rating) || 0;
+        const reviewCount = Number(product.review_count) || 0;
+        document.getElementById('product-rating').textContent = starsHtml(avgRating);
+        document.getElementById('product-review-count').textContent = `${avgRating.toFixed(1)} (${reviewCount} reviews)`;
+        document.getElementById('product-sold').textContent = `${Number(product.units_sold || 0).toLocaleString()}+ sold`;
+        document.getElementById('tab-review-count').textContent = reviewCount;
+
+        // Description
+        const supplierName = product.supplier_name || product.supplier_email || 'Supplier';
+        document.getElementById('product-description').textContent = product.description || `Buy ${product.name} from ${supplierName}.`;
+
+        // Specs
+        const specs = Array.isArray(product.specifications) ? product.specifications : [];
+        document.getElementById('specs-list').innerHTML = specs.length
+          ? specs.map(s => `<li class="flex items-start gap-2"><span class="text-emerald-500 mt-0.5">✓</span><span>${s}</span></li>`).join('')
+          : '<li class="text-slate-400">No specifications available.</li>';
+
+        // Wholesale pricing
+        const pricing = Array.isArray(product.wholesale_pricing) ? product.wholesale_pricing : [];
+        document.getElementById('pricing-tbody').innerHTML = pricing.length
+          ? pricing.map((t, i) => {
+              const isPopular = i === 1;
+              return `<tr class="hover:bg-blue-50 cursor-pointer${isPopular ? ' bg-blue-50/50' : ''}">
+                <td class="px-4 py-3 text-slate-700${isPopular ? ' font-medium' : ''}">${t.qty} units${isPopular ? ' <span class="text-xs text-emerald-600 font-semibold ml-1">Popular</span>' : ''}</td>
+                <td class="px-4 py-3 text-right font-bold ${i === pricing.length - 1 ? 'text-emerald-600' : 'text-blue-700'}">$${Number(t.price).toFixed(2)}${i === pricing.length - 1 ? ' 🏆' : ''}</td>
+              </tr>`;
+            }).join('')
+          : `<tr><td colspan="2" class="px-4 py-3 text-center text-slate-400 text-xs">$${Number(product.price).toFixed(2)}/unit</td></tr>`;
+
+        // Variants
+        const variants = Array.isArray(product.variants) ? product.variants : [];
+        let selectedVariant = variants[0] || null;
+        function renderVariants() {
+          document.getElementById('variants-container').innerHTML = variants.length
+            ? variants.map(v => `<button onclick="selectVariant(this)" data-variant="${v.replace(/"/g,'&quot;')}" class="px-3 py-1.5 text-xs font-medium ${v === selectedVariant ? 'bg-blue-700 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-400'} rounded-lg transition-colors">${v}</button>`).join('')
+            : '<span class="text-xs text-slate-400">Standard</span>';
+        }
+        window.selectVariant = function(btn) {
+          selectedVariant = btn.dataset.variant;
+          renderVariants();
+        };
+        renderVariants();
+
+        // Supplier info
+        const supplierCountry = product.supplier_country || '—';
+        document.getElementById('product-supplier-name').textContent = supplierName;
+        document.getElementById('product-supplier-location').textContent = supplierCountry;
+        document.getElementById('supplier-years').textContent = product.years_on_platform ? `${product.years_on_platform} yrs` : '—';
+        document.getElementById('supplier-response').textContent = product.response_rate ? `${product.response_rate}%` : '—';
+        document.getElementById('supplier-orders').textContent = product.supplier_total_orders ? Number(product.supplier_total_orders).toLocaleString() : '—';
+        document.getElementById('chat-supplier-name').textContent = supplierName;
+
+        // KYB / Export badges
+        const badges = [];
+        if (product.kyb_verified) badges.push('<span class="bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full font-medium">✓ KYB Verified</span>');
+        if (product.export_license) badges.push('<span class="bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium">📦 Export License</span>');
+        document.getElementById('supplier-badges').innerHTML = badges.join('');
+
+        // Reviews
+        const reviews = Array.isArray(product.reviews) ? product.reviews : [];
+        document.getElementById('review-avg-score').textContent = avgRating ? avgRating.toFixed(1) : '—';
+        document.getElementById('review-avg-stars').textContent = starsHtml(avgRating);
+        document.getElementById('review-total-count').textContent = `${reviewCount} reviews`;
+
+        // Distribute reviewCount across stars using avg_rating when actual reviews are sparse
+        function estimateStarCounts(avg, total, actualReviews) {
+          if (actualReviews.length >= Math.min(total, 10)) {
+            const c = [0,0,0,0,0];
+            actualReviews.forEach(r => { if (r.rating >= 1 && r.rating <= 5) c[r.rating - 1]++; });
+            return c;
+          }
+          const distMap = {
+            2:[0.35,0.30,0.20,0.10,0.05], 3:[0.15,0.20,0.35,0.20,0.10],
+            4:[0.08,0.12,0.20,0.40,0.20], 5:[0.05,0.08,0.14,0.32,0.41],
+            6:[0.04,0.06,0.10,0.28,0.52], 7:[0.03,0.04,0.08,0.22,0.63],
+            8:[0.02,0.03,0.06,0.16,0.73], 9:[0.02,0.02,0.05,0.14,0.77],
+            10:[0.01,0.01,0.03,0.08,0.87]
+          };
+          const key = Math.min(10, Math.max(2, Math.round(avg * 2)));
+          const dist = distMap[key] || distMap[9];
+          const counts = dist.map(p => Math.round(p * total));
+          counts[4] += total - counts.reduce((s, v) => s + v, 0);
+          return counts;
+        }
+        const starCounts = estimateStarCounts(avgRating, reviewCount, reviews);
+        const barTotal = starCounts.reduce((s, v) => s + v, 0) || 1;
+        document.getElementById('review-bars').innerHTML = [5,4,3,2,1].map(star => {
+          const count = starCounts[star - 1];
+          const pct = Math.round((count / barTotal) * 100);
+          return `<div class="flex items-center gap-2"><span class="w-8 text-right text-xs text-slate-500 flex-shrink-0">${star} ★</span><div class="flex-1 bg-slate-100 rounded-full h-2.5 overflow-hidden"><div class="bg-amber-400 h-2.5 rounded-full" style="width:${pct}%"></div></div><span class="w-8 text-right text-xs text-slate-500 flex-shrink-0">${count}</span></div>`;
+        }).join('');
+
+        allReviews = reviews;
+        renderReviewPage(1);
+
+        // FAQ
+        const faqs = Array.isArray(product.faqs) ? product.faqs : [];
+        document.getElementById('faq-container').innerHTML = faqs.length
+          ? faqs.map(f => `<div class="border border-slate-100 rounded-xl p-4">
+              <h4 class="font-medium text-slate-900 text-sm mb-2">${f.question}</h4>
+              <p class="text-sm text-slate-600">${f.answer}</p>
+            </div>`).join('')
+          : '<p class="text-sm text-slate-400">No FAQ available.</p>';
+
+        // Status badge
+        if (product.status !== 'active') {
+          const badge = document.getElementById('product-status-badge');
+          if (badge) { badge.textContent = 'Pending'; badge.className = 'text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-1 rounded-full'; }
+        }
+
+        // Store for Add to Cart
+        currentProduct = product;
+      } catch (err) {
+        console.error('Unable to load product details.', err);
+      }
+    }
+
+    function handleAddToCart() {
+      let user = null;
+      try { user = JSON.parse(localStorage.getItem('shiap_user')); } catch(e) {}
+      if (!user || !user.email || user.role !== 'buyer') {
+        window.location.href = 'login.html';
+        return;
+      }
+      if (!currentProduct) return;
+      const qty = parseInt(document.getElementById('qty').value) || currentProduct.moq || 1;
+      const moq = currentProduct.moq || 1;
+      if (qty < moq) {
+        alert(`Minimum order quantity is ${moq} units.`);
+        return;
+      }
+      const cartItem = {
+        product_id: currentProduct.id,
+        product_name: currentProduct.name,
+        supplier_email: currentProduct.supplier_email,
+        supplier_name: currentProduct.supplier_name || '',
+        supplier_country: currentProduct.supplier_country || '',
+        image_emoji: currentProduct.image_emoji || '📦',
+        quantity: qty,
+        unit_price: productUnitPrice,
+        moq: moq
+      };
+      let cart = [];
+      try { cart = JSON.parse(localStorage.getItem('shiap_cart')) || []; } catch(e) {}
+      const existing = cart.find(i => i.product_id === cartItem.product_id);
+      if (existing) {
+        existing.quantity += qty;
+        existing.unit_price = productUnitPrice;
+      } else {
+        cart.push(cartItem);
+      }
+      localStorage.setItem('shiap_cart', JSON.stringify(cart));
+      showCartToast();
+      updateCartBadge();
+    }
+
+    function showCartToast() {
+      const toast = document.getElementById('cart-toast');
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3500);
+    }
+
+    function updateCartBadge() {
+      let cart = [];
+      try { cart = JSON.parse(localStorage.getItem('shiap_cart')) || []; } catch(e) {}
+      const count = cart.length;
+      const btn = document.getElementById('nav-cart-btn');
+      const badge = document.getElementById('cart-badge');
+      if (!btn || !badge) return;
+      if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+        btn.classList.remove('hidden');
+        btn.classList.add('flex');
+      } else {
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+      }
+    }
+
+    function openChat() { document.getElementById('chat-widget').classList.remove('hidden'); }
+    function closeChat() { document.getElementById('chat-widget').classList.add('hidden'); }
+
+    document.addEventListener('DOMContentLoaded', loadProductDetails);
+
+    (function() {
+      try {
+        const user = JSON.parse(localStorage.getItem('shiap_user'));
+        if (!user || !user.email) return;
+        const dash = { admin: 'admin/dashboard.html', supplier: 'supplier/dashboard.html', buyer: 'buyer/dashboard.html' };
+        const btn = document.getElementById('nav-auth-btn');
+        if (btn) { btn.textContent = 'My Account'; btn.href = dash[user.role] || 'buyer/dashboard.html'; }
+        if (user.role === 'buyer') updateCartBadge();
+      } catch(e) {}
+    })();
+  </script>
+</body>
+</html>

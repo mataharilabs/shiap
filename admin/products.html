@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Products – SHIAP Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-slate-50">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <div class="w-64 bg-slate-900 flex flex-col flex-shrink-0">
+    <div class="p-5 border-b border-slate-700">
+      <a href="../index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        <div><span class="text-lg font-extrabold text-white">SHIAP</span><span class="text-xs text-slate-400 ml-2 bg-slate-700 px-1.5 py-0.5 rounded">ADMIN</span></div>
+      </a>
+    </div>
+    <div class="p-4 border-b border-slate-700">
+      <div class="flex items-center gap-3">
+        <div id="admin-user-avatar" class="w-9 h-9 rounded-full bg-blue-600 text-white font-bold text-sm flex items-center justify-center">AD</div>
+        <div><div id="admin-user-name" class="text-sm font-semibold text-white">Admin</div><div id="admin-user-email" class="text-xs text-slate-400">admin@shiap.com</div></div>
+      </div>
+    </div>
+    <nav class="flex-1 p-3 space-y-1">
+      <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white text-sm font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+        Dashboard
+      </a>
+      <a href="users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white text-sm font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        Manage Users
+      </a>
+      <a href="products.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-600/20 text-blue-400 font-semibold text-sm border border-blue-600/30">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        Manage Products
+      </a>
+      <a href="orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white text-sm font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Orders & Escrow
+      </a>
+      <a href="rfq.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white text-sm font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        RFQ Moderation
+      </a>
+      <div class="pt-3 border-t border-slate-700 mt-3">
+        <a href="#" onclick="doLogout()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-red-900/20 hover:text-red-400 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Sign Out
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="flex-1 overflow-y-auto">
+    <div class="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+      <div>
+        <h1 class="text-xl font-bold text-slate-900">Manage Products</h1>
+        <p id="products-summary" class="text-xs text-slate-400">Loading...</p>
+      </div>
+    </div>
+    <div class="p-8">
+      <!-- Stat Cards -->
+      <div class="grid grid-cols-4 gap-5 mb-8">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+          <div id="stat-total" class="text-2xl font-extrabold text-slate-900 mb-1">—</div>
+          <div class="text-xs text-slate-400">Total Products</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+          <div id="stat-active" class="text-2xl font-extrabold text-emerald-600 mb-1">—</div>
+          <div class="text-xs text-slate-400">Active</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+          <div id="stat-pending" class="text-2xl font-extrabold text-amber-600 mb-1">—</div>
+          <div class="text-xs text-slate-400">Pending Approval</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+          <div id="stat-inactive" class="text-2xl font-extrabold text-slate-400 mb-1">—</div>
+          <div class="text-xs text-slate-400">Inactive</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-slate-900">All Products</h2>
+        <div class="flex items-center gap-3">
+          <select id="product-category-filter" onchange="filterProducts()" class="text-sm border border-slate-200 rounded-xl px-3 py-2 focus:outline-none bg-white">
+            <option value="">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Hardware">Hardware</option>
+            <option value="Raw Materials">Raw Materials</option>
+            <option value="Textiles">Textiles</option>
+            <option value="Consumer Goods">Consumer Goods</option>
+            <option value="Machinery">Machinery</option>
+          </select>
+          <select id="product-status-filter" onchange="filterProducts()" class="text-sm border border-slate-200 rounded-xl px-3 py-2 focus:outline-none bg-white">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <div class="relative">
+            <input id="product-search" type="text" placeholder="Search products..." oninput="filterProducts()"
+              class="pl-8 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white w-52" />
+            <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 border-b border-slate-100"><tr>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Product</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Category</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Supplier</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Price / MOQ</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Status</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Actions</th>
+          </tr></thead>
+          <tbody id="products-table-body" class="divide-y divide-slate-50">
+            <tr><td colspan="6" class="px-5 py-8 text-center text-sm text-slate-400">Loading products...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="hidden fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg">Updated</div>
+
+<!-- Edit Product Modal -->
+<div id="edit-modal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center overflow-y-auto py-8">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg mx-4 my-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-slate-900">Edit Product</h2>
+      <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 text-2xl leading-none">✕</button>
+    </div>
+    <input type="hidden" id="edit-product-id" />
+    <div class="space-y-4">
+      <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Product Name *</label><input id="edit-product-name" type="text" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Category</label>
+          <select id="edit-product-category" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+            <option>Electronics</option><option>Hardware</option><option>Textiles</option><option>Raw Materials</option><option>Industrial Parts</option><option>Auto Parts</option><option>Consumer Goods</option><option>Machinery</option>
+          </select>
+        </div>
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Status</label>
+          <select id="edit-product-status" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+            <option value="active">Active</option><option value="pending">Pending</option><option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Unit Price (USD)</label><input id="edit-product-price" type="number" step="0.01" placeholder="0.00" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">MOQ</label><input id="edit-product-moq" type="number" placeholder="Min order qty" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+      </div>
+      <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Emoji Icon</label><input id="edit-product-emoji" type="text" maxlength="4" placeholder="📦" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+      <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Description</label><textarea id="edit-product-description" rows="3" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea></div>
+      <!-- Variants -->
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Variants / Models <span class="font-normal text-slate-400">(optional)</span></label>
+        <div id="admin-edit-variants-tags" class="flex flex-wrap gap-2 mb-2 min-h-[28px]"></div>
+        <div class="flex gap-2">
+          <input id="admin-edit-variant-input" type="text" placeholder="e.g. Type A, M10, Cotton..." class="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" onkeydown="if(event.key==='Enter'){event.preventDefault();adminAddVariantTag();}" />
+          <button type="button" onclick="adminAddVariantTag()" class="px-4 py-2 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">Add</button>
+        </div>
+      </div>
+      <!-- Image URL -->
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Image URL</label>
+        <input id="edit-product-image-url" type="url" placeholder="https://example.com/image.jpg" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="closeEditModal()" class="flex-1 border border-slate-200 py-3 rounded-xl text-slate-600 font-medium hover:bg-slate-50">Cancel</button>
+      <button id="admin-save-edit-btn" onclick="saveAdminEdit()" class="flex-1 bg-blue-700 text-white font-semibold py-3 rounded-xl hover:bg-blue-800">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let allProducts = [];
+  let adminEditVariants = [];
+  let editingProductId = null;
+
+  function loadAdminUser() {
+    let user = null;
+    try { user = JSON.parse(localStorage.getItem('shiap_user')); } catch(e) {}
+    if (!user || !user.email || user.role !== 'admin') { window.location.replace('../login.html'); return null; }
+    const name = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Admin';
+    const initials = name.split(' ').map(w => w[0] || '').slice(0, 2).join('').toUpperCase() || 'AD';
+    document.getElementById('admin-user-avatar').textContent = initials;
+    document.getElementById('admin-user-name').textContent = name;
+    document.getElementById('admin-user-email').textContent = user.email;
+    return user;
+  }
+
+  function doLogout() { localStorage.removeItem('shiap_user'); window.location.replace('../login.html'); }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    setTimeout(() => t.classList.add('hidden'), 2500);
+  }
+
+  function statusBadge(status) {
+    if (status === 'active') return '<span class="text-xs bg-emerald-50 text-emerald-700 font-medium px-2 py-0.5 rounded-full">Active</span>';
+    if (status === 'pending') return '<span class="text-xs bg-amber-50 text-amber-700 font-medium px-2 py-0.5 rounded-full">Pending</span>';
+    return '<span class="text-xs bg-slate-100 text-slate-500 font-medium px-2 py-0.5 rounded-full">Inactive</span>';
+  }
+
+  function actionButtons(product) {
+    const editBtn = `<button onclick="openEditModal(${product.id})" class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg font-medium hover:bg-blue-100">Edit</button>`;
+    if (product.status === 'pending') {
+      return `<div class="flex gap-2">
+        ${editBtn}
+        <button onclick="updateStatus(${product.id},'active',this)" class="text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-emerald-700">✓ Approve</button>
+        <button onclick="updateStatus(${product.id},'inactive',this)" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg font-medium hover:bg-red-100">✗ Reject</button>
+      </div>`;
+    }
+    if (product.status === 'active') {
+      return `<div class="flex gap-2">${editBtn}<button onclick="updateStatus(${product.id},'inactive',this)" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg font-medium hover:bg-slate-200">Deactivate</button></div>`;
+    }
+    return `<div class="flex gap-2">${editBtn}<button onclick="updateStatus(${product.id},'active',this)" class="text-xs bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg font-medium hover:bg-blue-100">Reactivate</button></div>`;
+  }
+
+  async function updateStatus(productId, status, btn) {
+    btn.disabled = true;
+    btn.textContent = '...';
+    try {
+      const res = await fetch(`/api/admin/products/${productId}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) throw new Error();
+      const p = allProducts.find(p => p.id === productId);
+      if (p) p.status = status;
+      filterProducts();
+      updateStats();
+      showToast(status === 'active' ? '✓ Product approved' : status === 'inactive' ? 'Product deactivated' : 'Status updated');
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Retry';
+      showToast('Failed to update product status');
+    }
+  }
+
+  function renderAdminVariantTags() {
+    const container = document.getElementById('admin-edit-variants-tags');
+    container.innerHTML = adminEditVariants.map((v, i) =>
+      `<span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full">${v}<button type="button" onclick="adminRemoveVariantTag(${i})" class="text-blue-400 hover:text-blue-700 ml-0.5 font-bold">×</button></span>`
+    ).join('');
+  }
+  function adminAddVariantTag() {
+    const input = document.getElementById('admin-edit-variant-input');
+    const val = input.value.trim();
+    if (val && !adminEditVariants.includes(val)) { adminEditVariants.push(val); renderAdminVariantTags(); }
+    input.value = '';
+    input.focus();
+  }
+  function adminRemoveVariantTag(i) { adminEditVariants.splice(i, 1); renderAdminVariantTags(); }
+
+  function openEditModal(productId) {
+    const p = allProducts.find(pr => pr.id === productId);
+    if (!p) return;
+    editingProductId = productId;
+    document.getElementById('edit-product-id').value = productId;
+    document.getElementById('edit-product-name').value = p.name || '';
+    document.getElementById('edit-product-category').value = p.category || 'Electronics';
+    document.getElementById('edit-product-status').value = p.status || 'active';
+    document.getElementById('edit-product-price').value = p.price || '';
+    document.getElementById('edit-product-moq').value = p.moq || '';
+    document.getElementById('edit-product-emoji').value = p.image_emoji || '📦';
+    document.getElementById('edit-product-description').value = p.description || '';
+    document.getElementById('edit-product-image-url').value = p.image_url || '';
+    try { adminEditVariants = Array.isArray(p.variants) ? p.variants : (p.variants ? JSON.parse(p.variants) : []); } catch(e) { adminEditVariants = []; }
+    document.getElementById('admin-edit-variant-input').value = '';
+    renderAdminVariantTags();
+    const modal = document.getElementById('edit-modal');
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    const modal = document.getElementById('edit-modal');
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    editingProductId = null;
+  }
+
+  async function saveAdminEdit() {
+    if (!editingProductId) return;
+    const btn = document.getElementById('admin-save-edit-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      const name = document.getElementById('edit-product-name').value.trim();
+      if (!name) { alert('Product name is required.'); return; }
+      const body = {
+        name,
+        category: document.getElementById('edit-product-category').value,
+        status: document.getElementById('edit-product-status').value,
+        price: parseFloat(document.getElementById('edit-product-price').value) || 0,
+        moq: parseInt(document.getElementById('edit-product-moq').value) || 50,
+        image_emoji: document.getElementById('edit-product-emoji').value.trim() || '📦',
+        description: document.getElementById('edit-product-description').value.trim(),
+        image_url: document.getElementById('edit-product-image-url').value.trim() || null,
+        variants: [...adminEditVariants]
+      };
+      const res = await fetch(`/api/admin/products/${editingProductId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error('Update failed');
+      const p = allProducts.find(pr => pr.id === editingProductId);
+      if (p) Object.assign(p, body);
+      closeEditModal();
+      filterProducts();
+      updateStats();
+      showToast('✓ Product updated');
+    } catch(e) {
+      showToast('Failed to save product');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Save Changes';
+    }
+  }
+
+  function updateStats() {
+    document.getElementById('stat-total').textContent = allProducts.length;
+    document.getElementById('stat-active').textContent = allProducts.filter(p => p.status === 'active').length;
+    document.getElementById('stat-pending').textContent = allProducts.filter(p => p.status === 'pending').length;
+    document.getElementById('stat-inactive').textContent = allProducts.filter(p => p.status === 'inactive').length;
+  }
+
+  function filterProducts() {
+    const search = (document.getElementById('product-search').value || '').toLowerCase();
+    const category = document.getElementById('product-category-filter').value;
+    const status = document.getElementById('product-status-filter').value;
+    const filtered = allProducts.filter(p => {
+      const text = `${p.name} ${p.supplier_name || ''} ${p.supplier_email}`.toLowerCase();
+      return (!search || text.includes(search)) &&
+             (!category || p.category === category) &&
+             (!status || p.status === status);
+    });
+    renderTable(filtered);
+  }
+
+  function renderTable(products) {
+    const body = document.getElementById('products-table-body');
+    if (!products.length) {
+      body.innerHTML = '<tr><td colspan="6" class="px-5 py-8 text-center text-sm text-slate-400">No products match your filters.</td></tr>';
+      return;
+    }
+    body.innerHTML = products.map(p => {
+      const rowCls = p.status === 'pending' ? 'bg-amber-50/30' : p.status === 'inactive' ? 'opacity-60' : 'hover:bg-slate-50';
+      return `<tr class="${rowCls}">
+        <td class="px-5 py-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-xl flex-shrink-0">${p.image_emoji || '📦'}</div>
+            <div>
+              <div class="font-medium text-slate-900 max-w-xs truncate">${p.name}</div>
+              <div class="text-xs text-slate-400">${p.review_count || 0} reviews · ${(p.units_sold || 0).toLocaleString()} sold</div>
+            </div>
+          </div>
+        </td>
+        <td class="px-5 py-4 text-slate-600">${p.category || '—'}</td>
+        <td class="px-5 py-4">
+          <div class="font-medium text-slate-900">${p.supplier_name || '—'}</div>
+          <div class="text-xs text-slate-400">${p.supplier_country || ''}</div>
+        </td>
+        <td class="px-5 py-4">
+          <div class="font-bold text-slate-900">$${p.price}</div>
+          <div class="text-xs text-slate-400">MOQ: ${(p.moq || 0).toLocaleString()}</div>
+        </td>
+        <td class="px-5 py-4">${statusBadge(p.status)}</td>
+        <td class="px-5 py-4">${actionButtons(p)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function loadProducts() {
+    const user = loadAdminUser();
+    if (!user) return;
+    try {
+      const res = await fetch('/api/products/admin');
+      if (!res.ok) throw new Error();
+      allProducts = await res.json();
+      const active = allProducts.filter(p => p.status === 'active').length;
+      const pending = allProducts.filter(p => p.status === 'pending').length;
+      document.getElementById('products-summary').textContent = `${allProducts.length} total · ${active} active · ${pending} pending approval`;
+      updateStats();
+      filterProducts();
+    } catch(e) {
+      document.getElementById('products-table-body').innerHTML = '<tr><td colspan="6" class="px-5 py-8 text-center text-sm text-red-500">Unable to load products.</td></tr>';
+    }
+  }
+
+  loadProducts();
+</script>
+</body>
+</html>

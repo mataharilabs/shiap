@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .payment-option { border: 2px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem; cursor: pointer; transition: border-color 0.15s; }
+    .payment-option.selected { border-color: #3b82f6; background: #eff6ff; }
+    .payment-option.disabled { opacity: 0.5; cursor: not-allowed; }
+    input:focus, select:focus, textarea:focus { outline: none; ring: 2px; }
+  </style>
+</head>
+<body class="bg-slate-50">
+
+  <!-- Minimal header -->
+  <header class="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        <span class="text-lg font-extrabold text-slate-900">SHIAP</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span class="text-blue-600 font-semibold">1 Cart</span>
+          <span>→</span>
+          <span class="text-blue-700 font-bold">2 Checkout</span>
+          <span>→</span>
+          <span>3 Order Placed</span>
+        </div>
+        <a href="cart.html" class="text-sm text-slate-500 hover:text-blue-600 font-medium">← Back to Cart</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <div class="grid lg:grid-cols-5 gap-8">
+
+      <!-- Left: Form (3 cols) -->
+      <div class="lg:col-span-3 space-y-6">
+
+        <!-- Shipping Address -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h2 class="font-bold text-slate-900 text-lg mb-5 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-full bg-blue-700 text-white text-xs font-bold flex items-center justify-center">1</span>
+            Shipping Address
+          </h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">Full Name *</label>
+              <input id="addr-name" type="text" placeholder="Budi Santoso" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">Company Name</label>
+              <input id="addr-company" type="text" placeholder="PT Maju Jaya" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">Address Line 1 *</label>
+              <input id="addr-line1" type="text" placeholder="Jl. Sudirman No. 123" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">Address Line 2</label>
+              <input id="addr-line2" type="text" placeholder="Apt / Floor / Building (optional)" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">City *</label>
+              <input id="addr-city" type="text" placeholder="Jakarta" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">Province / State</label>
+              <input id="addr-province" type="text" placeholder="DKI Jakarta" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">Postal Code</label>
+              <input id="addr-postal" type="text" placeholder="10220" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">Country *</label>
+              <input id="addr-country" type="text" placeholder="Indonesia" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1.5">Phone Number</label>
+              <input id="addr-phone" type="tel" placeholder="+62 812 3456 7890" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-400" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h2 class="font-bold text-slate-900 text-lg mb-5 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-full bg-blue-700 text-white text-xs font-bold flex items-center justify-center">2</span>
+            Payment Method
+          </h2>
+          <div class="space-y-3">
+            <label class="payment-option selected flex items-center gap-4 cursor-pointer" onclick="selectPayment(this, 'Xendit Virtual Account')">
+              <input type="radio" name="payment" value="Xendit Virtual Account" checked class="w-4 h-4 text-blue-600" />
+              <div class="flex-1">
+                <div class="font-semibold text-slate-900 text-sm">Xendit Virtual Account</div>
+                <div class="text-xs text-slate-400 mt-0.5">Transfer to a dedicated virtual bank account. Instantly confirmed.</div>
+              </div>
+              <div class="text-xl">🏦</div>
+            </label>
+            <label class="payment-option disabled flex items-center gap-4" title="Coming soon">
+              <input type="radio" name="payment" value="Credit Card" disabled class="w-4 h-4 text-slate-300" />
+              <div class="flex-1">
+                <div class="font-semibold text-slate-500 text-sm flex items-center gap-2">Credit / Debit Card <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-normal">Coming Soon</span></div>
+                <div class="text-xs text-slate-300 mt-0.5">Visa, Mastercard, JCB</div>
+              </div>
+              <div class="text-xl opacity-30">💳</div>
+            </label>
+            <label class="payment-option disabled flex items-center gap-4" title="Coming soon">
+              <input type="radio" name="payment" value="Bank Transfer" disabled class="w-4 h-4 text-slate-300" />
+              <div class="flex-1">
+                <div class="font-semibold text-slate-500 text-sm flex items-center gap-2">Direct Bank Transfer <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-normal">Coming Soon</span></div>
+                <div class="text-xs text-slate-300 mt-0.5">BCA, BNI, BRI, Mandiri</div>
+              </div>
+              <div class="text-xl opacity-30">🏧</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Error message -->
+        <div id="checkout-error" class="hidden bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3"></div>
+
+      </div>
+
+      <!-- Right: Order Summary (2 cols, sticky) -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sticky top-24">
+          <h2 class="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 text-xs font-bold flex items-center justify-center">3</span>
+            Order Summary
+          </h2>
+          <div id="summary-items" class="space-y-3 mb-4"></div>
+          <div class="border-t border-slate-100 pt-4 space-y-2">
+            <div class="flex items-center justify-between text-sm text-slate-500">
+              <span>Subtotal</span>
+              <span id="summary-subtotal">$0</span>
+            </div>
+            <div class="flex items-center justify-between text-sm text-slate-500">
+              <span>Escrow Fee (1%)</span>
+              <span id="summary-fee">$0</span>
+            </div>
+            <div class="border-t border-slate-100 pt-2 flex items-center justify-between">
+              <span class="font-bold text-slate-900">Total</span>
+              <span id="summary-total" class="text-xl font-extrabold text-blue-700">$0</span>
+            </div>
+          </div>
+
+          <button id="place-order-btn" onclick="submitOrder()" class="mt-6 w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-xl transition text-sm flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Place Order
+          </button>
+
+          <div class="mt-4 space-y-2 text-xs text-slate-400 text-center">
+            <div>🔒 Payment held in Escrow until delivery confirmed</div>
+            <div>🛡️ Buyer protection on every order</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+<script>
+  let cart = [];
+  let currentUser = null;
+  let selectedPayment = 'Xendit Virtual Account';
+
+  function readCart() {
+    try { return JSON.parse(localStorage.getItem('shiap_cart')) || []; } catch(e) { return []; }
+  }
+
+  function selectPayment(el, value) {
+    selectedPayment = value;
+    document.querySelectorAll('.payment-option:not(.disabled)').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function renderOrderSummary() {
+    cart = readCart();
+    const subtotal = cart.reduce((s, i) => s + i.quantity * i.unit_price, 0);
+    const fee = subtotal * 0.01;
+    const total = subtotal + fee;
+
+    document.getElementById('summary-items').innerHTML = cart.map(i =>
+      `<div class="flex items-start gap-3">
+        <div class="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center text-lg flex-shrink-0">${i.image_emoji || '📦'}</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium text-slate-900 leading-tight truncate">${i.product_name}</div>
+          <div class="text-xs text-slate-400 mt-0.5">${Number(i.quantity).toLocaleString()} units × $${i.unit_price}</div>
+        </div>
+        <div class="font-semibold text-slate-900 text-sm flex-shrink-0">$${(i.quantity * i.unit_price).toLocaleString()}</div>
+      </div>`
+    ).join('');
+
+    document.getElementById('summary-subtotal').textContent = '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('summary-fee').textContent = '$' + fee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('summary-total').textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function validateForm() {
+    const required = [
+      { id: 'addr-name', label: 'Full Name' },
+      { id: 'addr-line1', label: 'Address' },
+      { id: 'addr-city', label: 'City' },
+      { id: 'addr-country', label: 'Country' }
+    ];
+    for (const f of required) {
+      const el = document.getElementById(f.id);
+      if (!el.value.trim()) {
+        el.classList.add('border-red-400', 'bg-red-50');
+        el.focus();
+        return `Please fill in the ${f.label} field.`;
+      }
+      el.classList.remove('border-red-400', 'bg-red-50');
+    }
+    return null;
+  }
+
+  async function submitOrder() {
+    const errMsg = validateForm();
+    if (errMsg) { showError(errMsg); return; }
+    if (!cart.length) { showError('Your cart is empty.'); return; }
+
+    const btn = document.getElementById('place-order-btn');
+    btn.disabled = true;
+    btn.innerHTML = `<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Placing Order...`;
+
+    const shippingAddress = JSON.stringify({
+      full_name: document.getElementById('addr-name').value.trim(),
+      company_name: document.getElementById('addr-company').value.trim(),
+      address_line1: document.getElementById('addr-line1').value.trim(),
+      address_line2: document.getElementById('addr-line2').value.trim(),
+      city: document.getElementById('addr-city').value.trim(),
+      province: document.getElementById('addr-province').value.trim(),
+      postal_code: document.getElementById('addr-postal').value.trim(),
+      country: document.getElementById('addr-country').value.trim(),
+      phone: document.getElementById('addr-phone').value.trim()
+    });
+
+    const subtotal = cart.reduce((s, i) => s + i.quantity * i.unit_price, 0);
+    const fee = subtotal * 0.01;
+    const totalWithFee = subtotal + fee;
+
+    const payload = {
+      buyer_email: currentUser.email,
+      items: cart.map(i => ({
+        supplier_email: i.supplier_email,
+        product_id: i.product_id,
+        quantity: i.quantity,
+        total_price: parseFloat((i.quantity * i.unit_price).toFixed(2)),
+        product_name: i.product_name
+      })),
+      shipping_address: shippingAddress,
+      payment_method: selectedPayment
+    };
+
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Server error');
+      }
+      const data = await res.json();
+      localStorage.removeItem('shiap_cart');
+      window.location.replace('orders.html');
+    } catch (err) {
+      showError(`Failed to place order: ${err.message}. Please try again.`);
+      btn.disabled = false;
+      btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Place Order`;
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('checkout-error');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  async function init() {
+    let user = null;
+    try { user = JSON.parse(localStorage.getItem('shiap_user')); } catch(e) {}
+    if (!user || !user.email || user.role !== 'buyer') { window.location.replace('../login.html'); return; }
+
+    cart = readCart();
+    if (!cart.length) { window.location.replace('cart.html'); return; }
+
+    currentUser = user;
+    try {
+      const res = await fetch(`/api/user?email=${encodeURIComponent(user.email)}`);
+      if (res.ok) { const data = await res.json(); currentUser = data; }
+    } catch(e) {}
+
+    // Pre-fill form
+    document.getElementById('addr-name').value = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
+    document.getElementById('addr-company').value = currentUser.company_name || '';
+    document.getElementById('addr-country').value = currentUser.country || 'Indonesia';
+
+    renderOrderSummary();
+  }
+
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketplace – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;} .product-card:hover{transform:translateY(-2px);transition:all 0.2s;}</style>
+</head>
+<body class="bg-slate-50">
+
+  <!-- Nav -->
+  <nav class="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+          <span class="text-xl font-extrabold text-slate-900">SHIAP</span>
+        </a>
+        <div class="flex-1 max-w-lg mx-8">
+          <div class="relative">
+            <input id="search-input" type="text" placeholder="Search products, suppliers, categories..." class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../rfq.html" class="text-sm font-medium text-slate-600 hover:text-blue-700 px-3 py-2 rounded-lg hover:bg-slate-50">RFQ System</a>
+          <a id="nav-cart-btn" href="buyer/cart.html" class="relative hidden items-center justify-center w-9 h-9 text-slate-600 hover:text-blue-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center leading-none">0</span>
+          </a>
+          <a id="nav-auth-btn" href="../login.html" class="text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-600">Home</a>
+      <span>›</span>
+      <span class="text-slate-700">Marketplace</span>
+    </div>
+
+    <div class="flex gap-8">
+      <!-- Sidebar Filters -->
+      <div class="w-64 flex-shrink-0">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sticky top-24">
+          <h3 class="font-bold text-slate-900 mb-5">Filters</h3>
+
+          <!-- Category -->
+          <div class="mb-6">
+            <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Category</h4>
+            <div id="sidebar-categories" class="space-y-2">
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-blue-600"><input type="checkbox" value="Electronics" class="sidebar-cat rounded text-blue-600" /> Electronics (<span class="cat-count-Electronics">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-blue-600"><input type="checkbox" value="Hardware" class="sidebar-cat rounded text-blue-600" /> Hardware (<span class="cat-count-Hardware">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-blue-600"><input type="checkbox" value="Textiles" class="sidebar-cat rounded text-blue-600" /> Textiles (<span class="cat-count-Textiles">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-blue-600"><input type="checkbox" value="Raw Materials" class="sidebar-cat rounded text-blue-600" /> Raw Materials (<span class="cat-count-Raw_Materials">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-blue-600"><input type="checkbox" value="Industrial Parts" class="sidebar-cat rounded text-blue-600" /> Industrial Parts (<span class="cat-count-Industrial_Parts">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-blue-600"><input type="checkbox" value="Auto Parts" class="sidebar-cat rounded text-blue-600" /> Auto Parts (<span class="cat-count-Auto_Parts">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer hover:text-blue-600"><input type="checkbox" value="Consumer Goods" class="sidebar-cat rounded text-blue-600" /> Consumer Goods (<span class="cat-count-Consumer_Goods">0</span>)</label>
+            </div>
+          </div>
+
+          <!-- MOQ -->
+          <div class="mb-6">
+            <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Min. Order Qty (MOQ)</h4>
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="radio" name="moq" value="" checked class="text-blue-600" /> Any MOQ</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="radio" name="moq" value="under50" class="text-blue-600" /> Under 50 units</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="radio" name="moq" value="50to500" class="text-blue-600" /> 50–500 units</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="radio" name="moq" value="over500" class="text-blue-600" /> 500+ units</label>
+            </div>
+          </div>
+
+          <!-- Price Range -->
+          <div class="mb-6">
+            <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Unit Price (USD)</h4>
+            <div class="flex items-center gap-2">
+              <input id="price-min" type="number" placeholder="Min" class="w-full px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500" />
+              <span class="text-slate-400">–</span>
+              <input id="price-max" type="number" placeholder="Max" class="w-full px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500" />
+            </div>
+            <button onclick="applyFilters()" class="mt-2 w-full text-xs bg-blue-600 text-white py-1.5 rounded-lg hover:bg-blue-700">Apply</button>
+          </div>
+
+          <!-- Supplier Location -->
+          <div class="mb-6">
+            <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Supplier Location</h4>
+            <div id="sidebar-countries" class="space-y-2">
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="checkbox" value="China" class="sidebar-country rounded text-blue-600" /> China (<span class="country-count-China">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="checkbox" value="Vietnam" class="sidebar-country rounded text-blue-600" /> Vietnam (<span class="country-count-Vietnam">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="checkbox" value="India" class="sidebar-country rounded text-blue-600" /> India (<span class="country-count-India">0</span>)</label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer"><input type="checkbox" value="Taiwan" class="sidebar-country rounded text-blue-600" /> Taiwan (<span class="country-count-Taiwan">0</span>)</label>
+            </div>
+          </div>
+
+          <!-- Reset -->
+          <div class="pt-4 border-t border-slate-100">
+            <button onclick="resetFilters()" class="w-full text-xs text-slate-500 hover:text-blue-600 py-1.5">Reset all filters</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="flex-1">
+        <!-- Sort Bar -->
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-sm text-slate-500"><span id="product-count" class="font-semibold text-slate-900">0</span> products found</p>
+          <div class="flex items-center gap-3">
+            <select id="sort-select" class="text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+              <option value="newest">Newest</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+            </select>
+            <div class="flex border border-slate-200 rounded-lg overflow-hidden">
+              <button class="px-3 py-2 bg-blue-700 text-white">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Pills -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button class="category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-blue-700 text-white" data-category="all">All</button>
+          <button class="category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-blue-400 hover:text-blue-600" data-category="Electronics">Electronics</button>
+          <button class="category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-blue-400 hover:text-blue-600" data-category="Hardware">Hardware</button>
+          <button class="category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-blue-400 hover:text-blue-600" data-category="Textiles">Textiles</button>
+          <button class="category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-blue-400 hover:text-blue-600" data-category="Raw Materials">Raw Materials</button>
+          <button class="category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-blue-400 hover:text-blue-600" data-category="Auto Parts">Auto Parts</button>
+        </div>
+
+        <!-- Products -->
+        <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="col-span-full rounded-2xl border border-slate-100 bg-white p-6 text-center text-slate-500">Loading products...</div>
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination-container" class="flex items-center justify-center gap-2 mt-10"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const categoryIcons = {
+    Electronics: '💡',
+    Hardware: '⚙️',
+    Textiles: '🧵',
+    'Raw Materials': '🧪',
+    'Auto Parts': '🚗',
+    'Consumer Goods': '🛍️',
+    'Industrial Parts': '🔧'
+  };
+
+  let allProducts = [];
+  let filteredProducts = [];
+  let currentPage = 1;
+  const PAGE_SIZE = 12;
+  let activeCategory = 'all';
+  let activeSearch = '';
+  let activeSort = 'newest';
+  let activeMoq = '';
+  let activePriceMin = '';
+  let activePriceMax = '';
+  let activeCountries = [];
+  let activeSidebarCats = [];
+
+  function formatPrice(value) {
+    return '$' + Number(value).toFixed(2);
+  }
+
+  function createProductCard(product) {
+    const supplierName = product.supplier_name || product.supplier_email || 'Unknown Supplier';
+    const supplierCountry = product.supplier_country || 'China';
+    let thumbHtml;
+    if (product.image_url) {
+      thumbHtml = `<img src="${product.image_url}" class="w-full h-44 object-cover" alt="${product.name}" onerror="this.parentElement.innerHTML='<div class=\\'h-44 flex items-center justify-center text-6xl\\'>${product.image_emoji || categoryIcons[product.category] || '📦'}</div>'" />`;
+    } else {
+      const icon = product.image_emoji || categoryIcons[product.category] || '📦';
+      thumbHtml = `<div class="h-44 flex items-center justify-center text-6xl">${icon}</div>`;
+    }
+    const moqText = product.moq ? `MOQ: ${product.moq}` : '';
+    const ratingText = product.avg_rating ? `★ ${Number(product.avg_rating).toFixed(1)}` : '';
+    return `
+      <div class="product-card bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-md cursor-pointer" onclick="location='product.html?id=${product.id}'">
+        <div class="bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">${thumbHtml}</div>
+        <div class="p-4">
+          <div class="flex items-center gap-1.5 mb-2">
+            <span class="text-xs bg-blue-50 text-blue-700 font-medium px-2 py-0.5 rounded-full">${product.category || 'Marketplace'}</span>
+            ${ratingText ? `<span class="text-xs text-amber-600 font-medium">${ratingText}</span>` : ''}
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 mb-1 leading-tight line-clamp-2">${product.name}</h3>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="text-base font-bold text-blue-700">${formatPrice(product.price)}</span>
+          </div>
+          ${moqText ? `<div class="text-xs text-slate-400 mb-2">${moqText}</div>` : ''}
+          <div class="border-t border-slate-50 pt-3">
+            <div class="flex items-center gap-1.5">
+              <div class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-xs">🏭</div>
+              <span class="text-xs text-slate-500 truncate">${supplierName} · ${supplierCountry}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function updateSidebarCounts() {
+    const catCounts = {};
+    const countryCounts = {};
+    allProducts.forEach(p => {
+      const cat = p.category || '';
+      catCounts[cat] = (catCounts[cat] || 0) + 1;
+      const c = p.supplier_country || '';
+      countryCounts[c] = (countryCounts[c] || 0) + 1;
+    });
+    ['Electronics','Hardware','Textiles','Raw Materials','Industrial Parts','Auto Parts','Consumer Goods'].forEach(cat => {
+      const key = cat.replace(/ /g, '_');
+      const el = document.querySelector(`.cat-count-${key}`);
+      if (el) el.textContent = catCounts[cat] || 0;
+    });
+    ['China','Vietnam','India','Taiwan'].forEach(c => {
+      const el = document.querySelector(`.country-count-${c}`);
+      if (el) el.textContent = countryCounts[c] || 0;
+    });
+  }
+
+  function applyFilters() {
+    const moqFilter = document.querySelector('input[name="moq"]:checked')?.value || '';
+    const priceMin = parseFloat(document.getElementById('price-min').value) || '';
+    const priceMax = parseFloat(document.getElementById('price-max').value) || '';
+    const checkedCats = [...document.querySelectorAll('.sidebar-cat:checked')].map(el => el.value);
+    const checkedCountries = [...document.querySelectorAll('.sidebar-country:checked')].map(el => el.value);
+
+    filteredProducts = allProducts.filter(p => {
+      if (activeCategory !== 'all' && p.category !== activeCategory) return false;
+      if (checkedCats.length && !checkedCats.includes(p.category)) return false;
+      if (checkedCountries.length && !checkedCountries.includes(p.supplier_country)) return false;
+      if (activeSearch && !p.name.toLowerCase().includes(activeSearch)) return false;
+      if (moqFilter === 'under50' && (p.moq || 0) >= 50) return false;
+      if (moqFilter === '50to500' && ((p.moq || 0) < 50 || (p.moq || 0) > 500)) return false;
+      if (moqFilter === 'over500' && (p.moq || 0) <= 500) return false;
+      if (priceMin !== '' && p.price < priceMin) return false;
+      if (priceMax !== '' && p.price > priceMax) return false;
+      return true;
+    });
+
+    const sort = document.getElementById('sort-select').value;
+    if (sort === 'price_asc') filteredProducts.sort((a, b) => a.price - b.price);
+    else if (sort === 'price_desc') filteredProducts.sort((a, b) => b.price - a.price);
+    else filteredProducts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    currentPage = 1;
+    renderPage();
+  }
+
+  function renderPage() {
+    const total = filteredProducts.length;
+    const totalPages = Math.ceil(total / PAGE_SIZE) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = filteredProducts.slice(start, start + PAGE_SIZE);
+    const grid = document.getElementById('product-grid');
+    const countEl = document.getElementById('product-count');
+
+    countEl.textContent = total;
+    if (!pageItems.length) {
+      grid.innerHTML = '<div class="col-span-full rounded-2xl border border-slate-100 bg-white p-6 text-center text-slate-500">No products match your filters.</div>';
+    } else {
+      grid.innerHTML = pageItems.map(createProductCard).join('');
+    }
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    const container = document.getElementById('pagination-container');
+    if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+    const pages = [];
+    const delta = 2;
+    const range = [];
+    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+      range.push(i);
+    }
+    if (range.length && range[0] > 2) range.unshift('...');
+    if (range.length && range[range.length - 1] < totalPages - 1) range.push('...');
+    pages.push(1);
+    range.forEach(p => pages.push(p));
+    if (totalPages > 1) pages.push(totalPages);
+
+    const btnBase = 'px-4 py-2 text-sm rounded-lg border';
+    const btnActive = `${btnBase} bg-blue-700 text-white border-blue-700`;
+    const btnInactive = `${btnBase} border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer`;
+    const btnDisabled = `${btnBase} border-slate-200 text-slate-300 cursor-not-allowed`;
+
+    let html = `<button class="${currentPage === 1 ? btnDisabled : btnInactive}" ${currentPage === 1 ? 'disabled' : `onclick="goPage(${currentPage - 1})"`}>← Prev</button>`;
+    pages.forEach(p => {
+      if (p === '...') {
+        html += `<span class="text-slate-400 text-sm px-2">...</span>`;
+      } else {
+        html += `<button class="${p === currentPage ? btnActive : btnInactive}" onclick="goPage(${p})">${p}</button>`;
+      }
+    });
+    html += `<button class="${currentPage === totalPages ? btnDisabled : btnInactive}" ${currentPage === totalPages ? 'disabled' : `onclick="goPage(${currentPage + 1})"`}>Next →</button>`;
+    container.innerHTML = html;
+  }
+
+  function goPage(page) {
+    currentPage = page;
+    renderPage();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function resetFilters() {
+    activeCategory = 'all';
+    activeSearch = '';
+    document.getElementById('search-input').value = '';
+    document.getElementById('sort-select').value = 'newest';
+    document.getElementById('price-min').value = '';
+    document.getElementById('price-max').value = '';
+    document.querySelectorAll('.sidebar-cat').forEach(el => el.checked = false);
+    document.querySelectorAll('.sidebar-country').forEach(el => el.checked = false);
+    document.querySelector('input[name="moq"][value=""]').checked = true;
+    document.querySelectorAll('.category-pill').forEach(btn => {
+      const isAll = btn.dataset.category === 'all';
+      btn.className = isAll
+        ? 'category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-blue-700 text-white'
+        : 'category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-blue-400 hover:text-blue-600';
+    });
+    applyFilters();
+  }
+
+  async function loadMarketplaceProducts() {
+    const grid = document.getElementById('product-grid');
+    try {
+      const response = await fetch('/api/products');
+      if (!response.ok) throw new Error('Unable to load products.');
+      allProducts = await response.json();
+      updateSidebarCounts();
+      applyFilters();
+    } catch (err) {
+      console.error(err);
+      grid.innerHTML = '<div class="col-span-full rounded-2xl border border-slate-100 bg-white p-6 text-center text-red-600">Unable to load products.</div>';
+    }
+  }
+
+  document.getElementById('search-input').addEventListener('input', e => {
+    activeSearch = e.target.value.toLowerCase().trim();
+    currentPage = 1;
+    applyFilters();
+  });
+
+  document.getElementById('sort-select').addEventListener('change', () => {
+    currentPage = 1;
+    applyFilters();
+  });
+
+  document.querySelectorAll('.category-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeCategory = btn.dataset.category;
+      document.querySelectorAll('.category-pill').forEach(b => {
+        const active = b.dataset.category === activeCategory;
+        b.className = active
+          ? 'category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-blue-700 text-white'
+          : 'category-pill px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:border-blue-400 hover:text-blue-600';
+      });
+      currentPage = 1;
+      applyFilters();
+    });
+  });
+
+  document.querySelectorAll('.sidebar-cat, .sidebar-country, input[name="moq"]').forEach(el => {
+    el.addEventListener('change', () => { currentPage = 1; applyFilters(); });
+  });
+
+  loadMarketplaceProducts();
+
+  function updateCartBadge() {
+    try {
+      const cart = JSON.parse(localStorage.getItem('shiap_cart')) || [];
+      const count = cart.length;
+      const btn = document.getElementById('nav-cart-btn');
+      const badge = document.getElementById('cart-badge');
+      if (!btn || !badge) return;
+      if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden'); badge.classList.add('flex');
+        btn.classList.remove('hidden'); btn.classList.add('flex');
+      }
+    } catch(e) {}
+  }
+
+  (function() {
+    try {
+      const user = JSON.parse(localStorage.getItem('shiap_user'));
+      if (!user || !user.email) return;
+      const dash = { admin: 'admin/dashboard.html', supplier: 'supplier/dashboard.html', buyer: 'buyer/dashboard.html' };
+      const btn = document.getElementById('nav-auth-btn');
+      if (btn) { btn.textContent = 'My Account'; btn.href = dash[user.role] || 'buyer/dashboard.html'; }
+      if (user.role === 'buyer') updateCartBadge();
+    } catch(e) {}
+  })();
+</script>
+</body>
+</html>

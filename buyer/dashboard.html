@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buyer Dashboard – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-slate-50">
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-white border-r border-slate-100 shadow-sm flex flex-col flex-shrink-0">
+      <!-- Logo -->
+      <div class="p-5 border-b border-slate-100">
+        <a href="../index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+          <span class="text-lg font-extrabold text-slate-900">SHIAP</span>
+        </a>
+      </div>
+      <!-- User -->
+      <div class="p-4 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <div id="user-avatar" class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold text-sm flex items-center justify-center">?</div>
+          <div><div id="user-name" class="text-sm font-semibold text-slate-900">User Name</div><div id="user-company-role" class="text-xs text-slate-400">Company · Role</div></div>
+        </div>
+      </div>
+      <!-- Nav Items -->
+      <nav class="flex-1 p-3 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          Dashboard
+        </a>
+        <a href="orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Order History
+          <span id="nav-orders-count" class="ml-auto bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </a>
+        <a href="cart.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          My Cart
+          <span id="nav-cart-count" class="ml-auto bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+        </a>
+        <a href="rfq.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          My RFQs
+          <span id="nav-rfqs-count" class="ml-auto bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </a>
+        <a href="../marketplace.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          Browse Products
+        </a>
+        <a href="../sourcing.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          1688 Sourcing
+        </a>
+        <div class="pt-3 border-t border-slate-100 mt-3">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Settings
+          </a>
+          <a href="#" onclick="logout()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 text-sm font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto">
+      <!-- Top Bar -->
+      <div class="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">Buyer Dashboard</h1>
+          <p class="text-xs text-slate-400">Welcome back, <span id="welcome-name">Buyer</span>! Here's your sourcing overview.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../marketplace.html" class="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            New Order
+          </a>
+          <button class="relative w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Active Orders</span>
+              <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              </div>
+            </div>
+            <div class="text-3xl font-extrabold text-slate-900" id="active-orders-count">0</div>
+            <div class="text-xs text-emerald-600 mt-1 font-medium">In your account</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Running RFQs</span>
+              <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+            </div>
+            <div class="text-3xl font-extrabold text-slate-900" id="running-rfqs-count">0</div>
+            <div class="text-xs text-amber-600 mt-1 font-medium">Quotes requested</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Total Spent</span>
+              <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+            <div class="text-3xl font-extrabold text-slate-900" id="total-spent-amount">$0</div>
+            <div class="text-xs text-emerald-600 mt-1 font-medium">Total buyer spend</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Saved Products</span>
+              <div class="w-8 h-8 rounded-lg bg-pink-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              </div>
+            </div>
+            <div class="text-3xl font-extrabold text-slate-900" id="saved-products-count">0</div>
+            <div class="text-xs text-slate-400 mt-1">Saved for later</div>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6">
+          <!-- Active Orders -->
+          <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between p-6 border-b border-slate-50">
+              <h2 class="font-bold text-slate-900">Active Orders</h2>
+              <a href="orders.html" class="text-sm text-blue-600 font-medium hover:text-blue-800">View all →</a>
+            </div>
+            <div id="dashboard-orders-list" class="divide-y divide-slate-50">
+              <div class="p-5 text-center text-sm text-slate-400">Loading orders...</div>
+            </div>
+          </div>
+
+          <!-- RFQ Activity -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between p-6 border-b border-slate-50">
+              <h2 class="font-bold text-slate-900">RFQ Activity</h2>
+              <a href="rfq.html" class="text-sm text-blue-600 font-medium hover:text-blue-800">View all →</a>
+            </div>
+            <div id="dashboard-rfqs-list" class="p-5 space-y-4">
+              <div class="text-center text-sm text-slate-400 py-4">Loading RFQs...</div>
+            </div>
+            <div class="p-5 pt-0">
+              <a href="../rfq.html" class="w-full flex items-center justify-center gap-2 border border-blue-200 text-blue-700 font-medium py-2.5 rounded-xl text-sm hover:bg-blue-50 transition">
+                + Create New RFQ
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          <a href="../marketplace.html" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all text-center">
+            <div class="text-3xl mb-3">🛒</div>
+            <div class="text-sm font-semibold text-slate-900">Browse Products</div>
+            <div class="text-xs text-slate-400 mt-1">Explore 10K+ items</div>
+          </a>
+          <a href="../rfq.html" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all text-center">
+            <div class="text-3xl mb-3">📋</div>
+            <div class="text-sm font-semibold text-slate-900">Submit RFQ</div>
+            <div class="text-xs text-slate-400 mt-1">Get multiple quotes</div>
+          </a>
+          <a href="../sourcing.html" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all text-center">
+            <div class="text-3xl mb-3">🇨🇳</div>
+            <div class="text-sm font-semibold text-slate-900">1688 Sourcing</div>
+            <div class="text-xs text-slate-400 mt-1">Direct from China</div>
+          </a>
+          <a href="orders.html" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all text-center">
+            <div class="text-3xl mb-3">📦</div>
+            <div class="text-sm font-semibold text-slate-900">Track Orders</div>
+            <div class="text-xs text-slate-400 mt-1">2 shipments in transit</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  function renderUser(user) {
+    const name = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email;
+    const initials = name.split(' ').map((w) => w[0] || '').slice(0, 2).join('').toUpperCase() || user.email[0].toUpperCase();
+    const company = user.company_name || 'No company';
+    const roleLabel = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Buyer';
+    document.getElementById('user-avatar').textContent = initials;
+    document.getElementById('user-name').textContent = name;
+    document.getElementById('user-company-role').textContent = `${company} · ${roleLabel}`;
+    document.getElementById('welcome-name').textContent = user.first_name || 'Buyer';
+  }
+
+  const STATUS_LABEL = { paid: 'Payment Received', confirmed: 'Confirmed', producing: 'Producing', in_transit: 'In Transit', delivered: 'Delivered', completed: 'Completed', disputed: 'Disputed', new: 'New' };
+  const STATUS_COLOR = { paid: 'bg-slate-50 text-slate-700', confirmed: 'bg-blue-50 text-blue-700', producing: 'bg-amber-50 text-amber-700', in_transit: 'bg-blue-50 text-blue-700', delivered: 'bg-emerald-50 text-emerald-700', completed: 'bg-emerald-50 text-emerald-700', disputed: 'bg-red-50 text-red-700', new: 'bg-slate-50 text-slate-600' };
+  const STATUS_ICON = { paid: '💳', confirmed: '✅', producing: '🏭', in_transit: '🚢', delivered: '📦', completed: '✓', disputed: '⚠️', new: '🔔' };
+
+  async function loadOrdersForDashboard(email) {
+    try {
+      const res = await fetch(`/api/orders/buyer?email=${encodeURIComponent(email)}`);
+      if (!res.ok) return;
+      const orders = await res.json();
+      const container = document.getElementById('dashboard-orders-list');
+      if (!orders.length) {
+        container.innerHTML = '<div class="p-5 text-center text-sm text-slate-400">No orders yet. <a href="../marketplace.html" class="text-blue-600 hover:underline">Browse products →</a></div>';
+        return;
+      }
+      container.innerHTML = orders.slice(0, 3).map(o => {
+        const emoji = o.image_emoji || '📦';
+        const statusLabel = STATUS_LABEL[o.status] || o.status;
+        const statusColor = STATUS_COLOR[o.status] || 'bg-slate-50 text-slate-700';
+        const statusIcon = STATUS_ICON[o.status] || '📦';
+        const supplier = o.supplier_company || o.supplier_email;
+        return `<div class="flex items-center justify-between p-5 hover:bg-slate-50 cursor-pointer" onclick="location='orders.html'">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-lg">${emoji}</div>
+            <div>
+              <div class="text-sm font-semibold text-slate-900">${o.product_name || 'Product'}</div>
+              <div class="text-xs text-slate-400">${Number(o.quantity).toLocaleString()} units · ${supplier} · #${o.order_number}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm font-bold text-slate-900">$${Number(o.total_price).toLocaleString()}</div>
+            <span class="text-xs ${statusColor} font-semibold px-2 py-0.5 rounded-full">${statusIcon} ${statusLabel}</span>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      console.warn('Unable to load orders for dashboard.', e);
+    }
+  }
+
+  async function loadRfqsForDashboard(email) {
+    try {
+      const res = await fetch(`/api/rfqs/buyer?email=${encodeURIComponent(email)}`);
+      if (!res.ok) return;
+      const rfqs = await res.json();
+      const container = document.getElementById('dashboard-rfqs-list');
+      if (!rfqs.length) {
+        container.innerHTML = '<div class="text-center text-sm text-slate-400 py-4">No RFQs yet.</div>';
+        return;
+      }
+      container.innerHTML = rfqs.slice(0, 2).map(r => `
+        <div class="border border-slate-100 rounded-xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-mono text-blue-600">#RFQ-${String(r.id).padStart(3, '0')}</span>
+            <span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded-full">Pending</span>
+          </div>
+          <div class="text-sm font-medium text-slate-900 mb-1">${r.product_name || '—'}</div>
+          <div class="text-xs text-slate-400">${r.quantity || '—'} units · Target: ${r.target_price || '—'}</div>
+          <a href="../rfq.html" class="inline-block mt-3 text-xs font-semibold text-blue-600 hover:text-blue-800">View →</a>
+        </div>
+      `).join('');
+    } catch (e) {
+      console.warn('Unable to load RFQs for dashboard.', e);
+    }
+  }
+
+  async function loadBuyerDashboard(email) {
+    try {
+      const response = await fetch(`/api/dashboard/buyer?email=${encodeURIComponent(email)}`);
+      if (!response.ok) return;
+      const data = await response.json();
+      document.getElementById('nav-orders-count').textContent = data.active_orders;
+      document.getElementById('nav-rfqs-count').textContent = data.running_rfqs;
+      document.getElementById('active-orders-count').textContent = data.active_orders;
+      document.getElementById('running-rfqs-count').textContent = data.running_rfqs;
+      document.getElementById('total-spent-amount').textContent = '$' + Number(data.total_spent).toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('saved-products-count').textContent = data.saved_products;
+      loadOrdersForDashboard(email);
+      loadRfqsForDashboard(email);
+    } catch (err) {
+      console.warn('Unable to load buyer dashboard data.', err);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('shiap_user');
+    window.location.replace('../login.html');
+  }
+
+  async function loadCurrentUser() {
+    let user = null;
+    try {
+      user = JSON.parse(localStorage.getItem('shiap_user'));
+    } catch (err) {
+      user = null;
+    }
+    if (!user || !user.email) return;
+
+    try {
+      const response = await fetch(`/api/user?email=${encodeURIComponent(user.email)}`);
+      if (!response.ok) {
+        renderUser(user);
+        await loadBuyerDashboard(user.email);
+        return;
+      }
+      const data = await response.json();
+      localStorage.setItem('shiap_user', JSON.stringify(data));
+      renderUser(data);
+      await loadBuyerDashboard(data.email);
+    } catch (err) {
+      renderUser(user);
+      await loadBuyerDashboard(user.email);
+    }
+  }
+
+  function updateCartBadge() {
+    try {
+      const cart = JSON.parse(localStorage.getItem('shiap_cart')) || [];
+      const count = cart.length;
+      const badge = document.getElementById('nav-cart-count');
+      if (badge && count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+    } catch(e) {}
+  }
+
+  loadCurrentUser();
+  updateCartBadge();
+</script>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"http://localhost:3000/api/products/1\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('name:', d.get\\('name'\\)\\); print\\('avg_rating:', d.get\\('avg_rating'\\)\\); print\\('review_count:', d.get\\('review_count'\\)\\); print\\('units_sold:', d.get\\('units_sold'\\)\\); print\\('reviews:', len\\(d.get\\('reviews',[]\\)\\)\\); print\\('faqs:', len\\(d.get\\('faqs',[]\\)\\)\\); print\\('specs:', d.get\\('specifications'\\)\\); print\\('variants:', d.get\\('variants'\\)\\); print\\('wholesale:', d.get\\('wholesale_pricing'\\)\\); print\\('kyb:', d.get\\('kyb_verified'\\)\\); print\\('years:', d.get\\('years_on_platform'\\)\\); print\\('supplier_total_orders:', d.get\\('supplier_total_orders'\\)\\)\")",
+      "PowerShell(cd \"C:\\\\Users\\\\Deny\\\\Desktop\\\\Claude Code\\\\shiap\"; \\(Get-Content package.json\\) -replace '\"node-fetch\": \"\\\\^3.4.2\"', '\"node-fetch\": \"^3.3.2\"' | Set-Content package.json -Encoding utf8; Get-Content package.json)",
+      "Bash(curl -s http://localhost:3000/api/seed)",
+      "Bash(curl -s \"http://localhost:3000/api/products/2\")"
+    ]
+  }
+}

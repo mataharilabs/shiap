@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order History – SHIAP Buyer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 1.25rem; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .star-btn { cursor: pointer; font-size: 1.75rem; color: #d1d5db; transition: color 0.15s; }
+    .star-btn.active, .star-btn:hover { color: #f59e0b; }
+    @media print { .no-print { display: none !important; } }
+  </style>
+</head>
+<body class="bg-slate-50">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <div class="w-64 bg-white border-r border-slate-100 shadow-sm flex flex-col flex-shrink-0">
+    <div class="p-5 border-b border-slate-100">
+      <a href="../index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        <span class="text-lg font-extrabold text-slate-900">SHIAP</span>
+      </a>
+    </div>
+    <div class="p-4 border-b border-slate-100">
+      <div class="flex items-center gap-3">
+        <div id="user-avatar" class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold text-sm flex items-center justify-center">?</div>
+        <div><div id="user-name" class="text-sm font-semibold text-slate-900">Loading...</div><div id="user-company-role" class="text-xs text-slate-400">—</div></div>
+      </div>
+    </div>
+    <nav class="flex-1 p-3 space-y-1">
+      <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+        Dashboard
+      </a>
+      <a href="orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Order History
+        <span id="nav-orders-count" class="ml-auto bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+      </a>
+      <a href="cart.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        My Cart
+        <span id="nav-cart-count" class="ml-auto bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+      </a>
+      <a href="../marketplace.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        Browse Products
+      </a>
+      <a href="../rfq.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        My RFQs
+      </a>
+      <div class="pt-3 border-t border-slate-100 mt-3">
+        <a href="#" onclick="doLogout()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Sign Out
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 overflow-y-auto">
+    <div class="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+      <div>
+        <h1 class="text-xl font-bold text-slate-900">Order History</h1>
+        <p class="text-xs text-slate-400"><span id="orders-total-count">—</span> total orders · Lifetime spend: <span id="orders-lifetime-spend">—</span></p>
+      </div>
+      <a href="../marketplace.html" class="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        New Order
+      </a>
+    </div>
+
+    <div class="p-8">
+      <!-- Filter bar -->
+      <div class="flex flex-col sm:flex-row gap-3 mb-6">
+        <div class="relative flex-1">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input id="order-search" type="text" placeholder="Search by product or order number..." class="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
+        </div>
+        <select id="order-filter-status" class="px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700">
+          <option value="all">All Statuses</option>
+          <option value="new">New</option>
+          <option value="paid">Paid</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="producing">Producing</option>
+          <option value="in_transit">In Transit</option>
+          <option value="delivered">Delivered</option>
+          <option value="completed">Completed</option>
+          <option value="disputed">Disputed</option>
+        </select>
+      </div>
+
+      <!-- Orders container -->
+      <div id="orders-container">
+        <div class="text-center py-16 text-slate-400">
+          <div class="text-4xl mb-3">📦</div>
+          <div class="text-sm">Loading your orders...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== MODALS =================== -->
+
+<!-- Modal: Invoice -->
+<div id="modal-invoice" class="modal-overlay" onclick="if(event.target===this)closeModal('modal-invoice')">
+  <div class="modal-box">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between no-print">
+      <h2 class="font-bold text-slate-900 text-lg">Invoice</h2>
+      <div class="flex items-center gap-2">
+        <button onclick="window.print()" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 rounded-lg hover:bg-slate-50">🖨️ Print</button>
+        <button onclick="closeModal('modal-invoice')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400">✕</button>
+      </div>
+    </div>
+    <div id="invoice-content" class="p-6 space-y-5">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-2xl font-extrabold text-blue-700">SHIAP</div>
+          <div class="text-xs text-slate-400 mt-0.5">Southeast Asia Import Platform</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold">Invoice</div>
+          <div id="inv-number" class="text-base font-bold text-slate-900 mt-0.5">—</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold mb-1">Bill To</div>
+          <div id="inv-buyer-name" class="font-semibold text-slate-900">—</div>
+          <div id="inv-buyer-company" class="text-slate-500 text-xs">—</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold mb-1">Supplier</div>
+          <div id="inv-supplier" class="font-semibold text-slate-900">—</div>
+        </div>
+      </div>
+      <table class="w-full text-sm border-collapse">
+        <thead><tr class="bg-slate-50 text-left">
+          <th class="px-3 py-2 text-xs text-slate-500 font-semibold rounded-tl-lg">Product</th>
+          <th class="px-3 py-2 text-xs text-slate-500 font-semibold text-center">Qty</th>
+          <th class="px-3 py-2 text-xs text-slate-500 font-semibold text-right rounded-tr-lg">Amount</th>
+        </tr></thead>
+        <tbody id="inv-items"></tbody>
+        <tfoot>
+          <tr class="border-t-2 border-slate-200">
+            <td class="px-3 py-3 font-bold text-slate-900" colspan="2">Total</td>
+            <td class="px-3 py-3 font-bold text-slate-900 text-right" id="inv-total">—</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="bg-slate-50 rounded-xl p-4 text-xs text-slate-500 grid grid-cols-2 gap-2">
+        <div><span class="font-semibold text-slate-700">Payment Method:</span><div id="inv-payment-method">—</div></div>
+        <div><span class="font-semibold text-slate-700">Payment Date:</span><div id="inv-payment-date">—</div></div>
+        <div><span class="font-semibold text-slate-700">Order Date:</span><div id="inv-order-date">—</div></div>
+        <div><span class="font-semibold text-slate-700">Status:</span><div id="inv-status">—</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Review -->
+<div id="modal-review" class="modal-overlay" onclick="if(event.target===this)closeModal('modal-review')">
+  <div class="modal-box">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <h2 class="font-bold text-slate-900 text-lg">Write a Review</h2>
+      <button onclick="closeModal('modal-review')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400">✕</button>
+    </div>
+    <div class="p-6 space-y-5">
+      <input type="hidden" id="review-product-id" />
+      <input type="hidden" id="review-order-id" />
+      <div>
+        <div class="text-sm font-medium text-slate-700 mb-1">Product</div>
+        <div id="review-product-name" class="text-sm font-bold text-slate-900 bg-slate-50 rounded-xl px-4 py-2.5">—</div>
+      </div>
+      <div>
+        <div class="text-sm font-medium text-slate-700 mb-2">Rating</div>
+        <div class="flex gap-1" id="star-container">
+          <span class="star-btn" data-star="1">★</span>
+          <span class="star-btn" data-star="2">★</span>
+          <span class="star-btn" data-star="3">★</span>
+          <span class="star-btn" data-star="4">★</span>
+          <span class="star-btn" data-star="5">★</span>
+        </div>
+        <input type="hidden" id="review-rating" value="0" />
+      </div>
+      <div>
+        <label class="text-sm font-medium text-slate-700 mb-1 block">Review</label>
+        <textarea id="review-text" rows="4" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Share your experience with this product and supplier..."></textarea>
+      </div>
+      <div id="review-msg" class="text-sm hidden"></div>
+      <div class="flex gap-3">
+        <button onclick="closeModal('modal-review')" class="flex-1 px-4 py-2.5 border border-slate-200 text-slate-700 rounded-xl text-sm font-medium hover:bg-slate-50">Cancel</button>
+        <button onclick="submitReview()" class="flex-1 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-semibold">Submit Review</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Production Update -->
+<div id="modal-production" class="modal-overlay" onclick="if(event.target===this)closeModal('modal-production')">
+  <div class="modal-box">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <h2 class="font-bold text-slate-900 text-lg">Production Updates</h2>
+      <button onclick="closeModal('modal-production')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400">✕</button>
+    </div>
+    <div class="p-6 space-y-4">
+      <div id="production-order-ref" class="text-xs font-mono text-blue-600 bg-blue-50 rounded-lg px-3 py-2">Order —</div>
+      <div>
+        <div class="text-sm font-semibold text-slate-700 mb-2">Latest Update from Supplier</div>
+        <div id="production-update-text" class="bg-slate-50 rounded-xl p-4 text-sm text-slate-700 leading-relaxed">No production update available yet.</div>
+      </div>
+      <div class="border-t border-slate-100 pt-4">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Production Timeline</div>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 text-sm">
+            <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 flex-shrink-0">✓</div>
+            <div><div class="font-medium text-slate-900">Order Confirmed</div><div class="text-xs text-slate-400">Supplier has accepted the order</div></div>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0 text-xs font-bold">2</div>
+            <div><div class="font-medium text-slate-900">In Production</div><div id="production-eta-text" class="text-xs text-slate-400">ETA —</div></div>
+          </div>
+          <div class="flex items-center gap-3 text-sm text-slate-400">
+            <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0 text-xs">3</div>
+            <div>Quality Check &amp; Packing</div>
+          </div>
+          <div class="flex items-center gap-3 text-sm text-slate-400">
+            <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0 text-xs">4</div>
+            <div>Ready for Dispatch</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Chat -->
+<div id="modal-chat" class="modal-overlay" onclick="if(event.target===this)closeModal('modal-chat')">
+  <div class="modal-box">
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <div>
+        <h2 class="font-bold text-slate-900">Chat with Supplier</h2>
+        <div id="chat-supplier-label" class="text-xs text-slate-400">—</div>
+      </div>
+      <button onclick="closeModal('modal-chat')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400">✕</button>
+    </div>
+    <div class="h-64 p-5 overflow-y-auto space-y-3 bg-slate-50" id="chat-messages">
+      <div class="flex justify-start">
+        <div class="bg-white border border-slate-100 rounded-2xl rounded-tl-none px-4 py-2.5 text-sm text-slate-700 max-w-xs shadow-sm">Hello! How can I help you with your order today?</div>
+      </div>
+    </div>
+    <div class="p-4 border-t border-slate-100 flex gap-2">
+      <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onkeydown="if(event.key==='Enter')sendChatMessage()" />
+      <button onclick="sendChatMessage()" class="px-4 py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-sm font-semibold">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Confirm Escrow -->
+<div id="modal-escrow" class="modal-overlay" onclick="if(event.target===this)closeModal('modal-escrow')">
+  <div class="modal-box">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <h2 class="font-bold text-slate-900 text-lg">Confirm Receipt & Release Escrow</h2>
+      <button onclick="closeModal('modal-escrow')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400">✕</button>
+    </div>
+    <div class="p-6 space-y-4">
+      <input type="hidden" id="escrow-order-id" />
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-800">
+        <div class="font-semibold mb-1">✅ Confirm you have received your goods</div>
+        <div>By confirming, you release the escrowed payment to the supplier. This action cannot be undone.</div>
+      </div>
+      <div id="escrow-order-info" class="bg-slate-50 rounded-xl p-4 text-sm text-slate-700">—</div>
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-700">
+        ⚠️ If there is an issue with your goods, please raise a dispute instead of confirming receipt.
+      </div>
+      <div id="escrow-msg" class="text-sm hidden"></div>
+      <div class="flex gap-3">
+        <button onclick="closeModal('modal-escrow')" class="flex-1 px-4 py-2.5 border border-slate-200 text-slate-700 rounded-xl text-sm font-medium hover:bg-slate-50">Cancel</button>
+        <button onclick="confirmEscrow()" class="flex-1 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold">Confirm &amp; Release Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Dispute -->
+<div id="modal-dispute" class="modal-overlay" onclick="if(event.target===this)closeModal('modal-dispute')">
+  <div class="modal-box">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <h2 class="font-bold text-slate-900 text-lg">Raise a Dispute</h2>
+      <button onclick="closeModal('modal-dispute')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400">✕</button>
+    </div>
+    <div class="p-6 space-y-4">
+      <input type="hidden" id="dispute-order-id" />
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800">
+        <div class="font-semibold mb-1">⚠️ Dispute will freeze escrow payment</div>
+        <div>A SHIAP mediator will review your case within 2 business days.</div>
+      </div>
+      <div>
+        <label class="text-sm font-medium text-slate-700 mb-1 block">Reason</label>
+        <select id="dispute-reason" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">Select a reason...</option>
+          <option value="not_received">Goods not received</option>
+          <option value="damaged">Goods arrived damaged</option>
+          <option value="wrong_product">Wrong product shipped</option>
+          <option value="quality_issue">Quality does not match sample</option>
+          <option value="quantity_short">Quantity shortage</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-sm font-medium text-slate-700 mb-1 block">Description</label>
+        <textarea id="dispute-description" rows="4" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Describe the issue in detail..."></textarea>
+      </div>
+      <div id="dispute-msg" class="text-sm hidden"></div>
+      <div class="flex gap-3">
+        <button onclick="closeModal('modal-dispute')" class="flex-1 px-4 py-2.5 border border-slate-200 text-slate-700 rounded-xl text-sm font-medium hover:bg-slate-50">Cancel</button>
+        <button onclick="submitDispute()" class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold">Submit Dispute</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Tracking -->
+<div id="modal-tracking" class="modal-overlay" onclick="if(event.target===this)closeModal('modal-tracking')">
+  <div class="modal-box">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <h2 class="font-bold text-slate-900 text-lg">Track Shipment</h2>
+      <button onclick="closeModal('modal-tracking')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400">✕</button>
+    </div>
+    <div class="p-6 space-y-5">
+      <div class="bg-blue-50 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-1">
+          <div class="text-xs text-blue-500 font-semibold uppercase tracking-widest">Tracking Number</div>
+          <button onclick="copyTracking()" class="text-xs text-blue-600 hover:text-blue-800 font-medium">Copy</button>
+        </div>
+        <div id="tracking-number-display" class="text-lg font-bold font-mono text-blue-900">—</div>
+        <div id="tracking-carrier-display" class="text-xs text-blue-500 mt-0.5">Carrier: —</div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="bg-slate-50 rounded-xl p-3">
+          <div class="text-xs text-slate-400 mb-0.5">Estimated Arrival</div>
+          <div id="tracking-eta-display" class="font-semibold text-slate-900">—</div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3">
+          <div class="text-xs text-slate-400 mb-0.5">Supplier</div>
+          <div id="tracking-supplier-display" class="font-semibold text-slate-900">—</div>
+        </div>
+      </div>
+      <div>
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Shipment Timeline</div>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-sm font-bold">✓</div>
+            <div><div class="text-sm font-semibold text-slate-900">Order Dispatched</div><div class="text-xs text-slate-400">Goods handed to shipping carrier</div></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-sm font-bold">✓</div>
+            <div><div class="text-sm font-semibold text-slate-900">Export Customs Cleared</div><div class="text-xs text-slate-400">Cleared for international shipping</div></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 relative">
+              <span class="absolute w-3 h-3 bg-blue-500 rounded-full animate-ping opacity-50"></span>
+              <span class="relative w-3 h-3 bg-blue-600 rounded-full"></span>
+            </div>
+            <div><div class="text-sm font-semibold text-slate-900">In Transit</div><div class="text-xs text-blue-600 font-medium">Currently in transit to destination</div></div>
+          </div>
+          <div class="flex items-start gap-3 text-slate-400">
+            <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0 text-sm">4</div>
+            <div class="text-sm">Import Customs & Delivery</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let allOrders = [];
+  let currentUser = null;
+
+  const STATUS_STEPS = ['paid', 'confirmed', 'producing', 'in_transit', 'delivered'];
+  const STEP_LABELS = { paid: 'Payment', confirmed: 'Confirmed', producing: 'Producing', in_transit: 'Shipped', delivered: 'Delivered' };
+  const STATUS_LABEL = { new: 'New', paid: 'Payment Received', confirmed: 'Confirmed', producing: 'Producing', in_transit: 'In Transit', delivered: 'Delivered', completed: 'Completed', disputed: 'Disputed' };
+  const STATUS_BADGE = { new: 'bg-slate-100 text-slate-600', paid: 'bg-slate-100 text-slate-700', confirmed: 'bg-blue-100 text-blue-700', producing: 'bg-amber-100 text-amber-700', in_transit: 'bg-blue-100 text-blue-700', delivered: 'bg-emerald-100 text-emerald-700', completed: 'bg-emerald-100 text-emerald-700', disputed: 'bg-red-100 text-red-700' };
+  const STATUS_ICON = { new: '🔔', paid: '💳', confirmed: '✅', producing: '🏭', in_transit: '🚢', delivered: '📦', completed: '✓', disputed: '⚠️' };
+
+  function renderStatusSteps(currentStatus) {
+    if (currentStatus === 'disputed') {
+      return '<div class="text-xs text-red-500 font-semibold py-1">⚠️ Order under dispute — awaiting SHIAP mediator review</div>';
+    }
+    const currentIdx = currentStatus === 'completed' ? STATUS_STEPS.length : STATUS_STEPS.indexOf(currentStatus);
+    return `<div class="flex items-start" style="gap:0">
+      ${STATUS_STEPS.map((step, i) => {
+        const done = i < currentIdx;
+        const active = i === currentIdx;
+        const dotBg = done ? 'bg-emerald-500' : active ? 'bg-blue-600 ring-2 ring-blue-200' : 'bg-slate-200';
+        const textColor = done ? 'text-emerald-600' : active ? 'text-blue-700 font-semibold' : 'text-slate-400';
+        const leftLine = i > 0 ? `<div style="flex:1;height:2px;margin-top:5px" class="${done || (active && i > 0) ? 'bg-emerald-400' : 'bg-slate-200'}"></div>` : '';
+        const rightLine = i < STATUS_STEPS.length - 1 ? `<div style="flex:1;height:2px;margin-top:5px" class="${done ? 'bg-emerald-400' : 'bg-slate-200'}"></div>` : '';
+        return `<div class="flex flex-col items-center" style="flex:1">
+          <div class="flex items-center w-full">
+            ${leftLine}
+            <div class="w-3 h-3 rounded-full ${dotBg} flex-shrink-0"></div>
+            ${rightLine}
+          </div>
+          <div class="text-xs mt-1.5 ${textColor} text-center leading-tight">${STEP_LABELS[step]}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  function actionButtons(order) {
+    const btns = [];
+    const id = order.id;
+    const s = order.status;
+
+    if (s === 'producing') {
+      btns.push(`<button onclick="openProductionModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-amber-50 border border-amber-200 text-amber-700 rounded-lg hover:bg-amber-100">🏭 View Production Updates</button>`);
+      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Chat with Supplier</button>`);
+    }
+    if (s === 'in_transit') {
+      if (order.tracking_number) {
+        btns.push(`<button onclick="openTrackingModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-blue-50 border border-blue-200 text-blue-700 rounded-lg hover:bg-blue-100">🚢 Track Shipment</button>`);
+      }
+      btns.push(`<button onclick="openEscrowModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">✅ Confirm Receipt &amp; Release Escrow</button>`);
+      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
+      btns.push(`<button onclick="openDisputeModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-red-200 text-red-600 rounded-lg hover:bg-red-50">⚠️ Raise Dispute</button>`);
+    }
+    if (s === 'delivered') {
+      btns.push(`<button onclick="openEscrowModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">✅ Confirm Receipt &amp; Release Escrow</button>`);
+      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
+      btns.push(`<button onclick="openDisputeModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-red-200 text-red-600 rounded-lg hover:bg-red-50">⚠️ Raise Dispute</button>`);
+    }
+    if (s === 'completed') {
+      btns.push(`<button onclick="openInvoiceModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50">📋 View Invoice</button>`);
+      btns.push(`<button onclick="openReviewModal(${id})" class="px-3 py-1.5 text-xs font-semibold bg-amber-50 border border-amber-200 text-amber-700 rounded-lg hover:bg-amber-100">⭐ Write Review</button>`);
+      btns.push(`<button onclick="location='../marketplace.html'" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">🔄 Reorder</button>`);
+    }
+    if (['paid', 'confirmed'].includes(s)) {
+      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact Supplier</button>`);
+    }
+    if (s === 'disputed') {
+      btns.push(`<button onclick="openChatModal(${id})" class="px-3 py-1.5 text-xs font-semibold border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50">💬 Contact SHIAP Support</button>`);
+    }
+    return btns.join('');
+  }
+
+  function renderOrderCard(order) {
+    const statusBadge = STATUS_BADGE[order.status] || 'bg-slate-100 text-slate-600';
+    const statusLabel = STATUS_LABEL[order.status] || order.status;
+    const statusIcon = STATUS_ICON[order.status] || '📦';
+    const emoji = order.image_emoji || '📦';
+    const supplier = order.supplier_company || order.supplier_email;
+    const country = order.supplier_country || '';
+    const dateStr = order.created_at ? new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+
+    let extraSections = '';
+    if (order.status === 'in_transit' && order.tracking_number) {
+      extraSections += `<div class="mx-5 mb-4 bg-blue-50 border border-blue-100 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-1">
+          <div class="text-xs font-semibold text-blue-700 uppercase tracking-widest">Tracking</div>
+          <button onclick="openTrackingModal(${order.id})" class="text-xs text-blue-600 hover:text-blue-800 font-medium">View details →</button>
+        </div>
+        <div class="text-sm font-bold font-mono text-blue-900">${order.tracking_number}</div>
+        <div class="text-xs text-blue-500 mt-0.5">${order.carrier || 'Carrier'} · ETA: ${order.eta || '—'}</div>
+      </div>`;
+    }
+    if (order.status === 'producing' && order.production_update) {
+      extraSections += `<div class="mx-5 mb-4 bg-amber-50 border border-amber-100 rounded-xl p-4">
+        <div class="text-xs font-semibold text-amber-700 uppercase tracking-widest mb-1">Production Update</div>
+        <div class="text-sm text-amber-800">${order.production_update}</div>
+        ${order.eta ? `<div class="text-xs text-amber-600 mt-1 font-medium">Expected dispatch: ${order.eta}</div>` : ''}
+      </div>`;
+    }
+
+    const buttons = actionButtons(order);
+
+    return `<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-5">
+      <div class="flex items-center justify-between p-5 border-b border-slate-50">
+        <div>
+          <div class="text-xs text-slate-400 mb-0.5">#${order.order_number} · ${dateStr}</div>
+          <div class="text-sm font-bold text-slate-900">${order.product_name || 'Product'}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-base font-extrabold text-slate-900">$${Number(order.total_price).toLocaleString()}</div>
+          <span class="text-xs ${statusBadge} font-semibold px-2 py-0.5 rounded-full">${statusIcon} ${statusLabel}</span>
+        </div>
+      </div>
+      <div class="px-5 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-xl">${emoji}</div>
+          <div>
+            <div class="text-sm font-medium text-slate-900">${order.product_name || 'Product'}</div>
+            <div class="text-xs text-slate-400">${Number(order.quantity).toLocaleString()} units · ${supplier}${country ? ' · ' + country : ''}</div>
+          </div>
+        </div>
+        ${order.payment_method ? `<div class="text-right text-xs text-slate-500 hidden sm:block">
+          <div class="font-semibold text-slate-700">${order.payment_method}</div>
+          <div>${order.payment_date || ''}</div>
+        </div>` : ''}
+      </div>
+      <div class="px-5 py-4 border-b border-slate-100">
+        ${renderStatusSteps(order.status)}
+      </div>
+      ${extraSections}
+      ${buttons ? `<div class="px-5 py-4 flex flex-wrap gap-2">${buttons}</div>` : ''}
+    </div>`;
+  }
+
+  function applyFilters() {
+    const statusFilter = document.getElementById('order-filter-status').value;
+    const search = document.getElementById('order-search').value.toLowerCase();
+    const filtered = allOrders.filter(o => {
+      const matchStatus = statusFilter === 'all' || o.status === statusFilter;
+      const matchSearch = !search || (o.product_name || '').toLowerCase().includes(search) || (o.order_number || '').toLowerCase().includes(search);
+      return matchStatus && matchSearch;
+    });
+    const container = document.getElementById('orders-container');
+    if (!filtered.length) {
+      container.innerHTML = `<div class="text-center py-16 text-slate-400"><div class="text-4xl mb-3">🔍</div><div class="text-sm">No orders match your search.</div></div>`;
+      return;
+    }
+    container.innerHTML = filtered.map(renderOrderCard).join('');
+  }
+
+  // ---- Modal openers ----
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function openInvoiceModal(orderId) {
+    const o = allOrders.find(x => x.id === orderId);
+    if (!o) return;
+    document.getElementById('inv-number').textContent = o.order_number;
+    document.getElementById('inv-buyer-name').textContent = currentUser ? `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim() || currentUser.email : '—';
+    document.getElementById('inv-buyer-company').textContent = currentUser?.company_name || '—';
+    document.getElementById('inv-supplier').textContent = o.supplier_company || o.supplier_email;
+    document.getElementById('inv-items').innerHTML = `<tr><td class="px-3 py-3 text-slate-900">${o.product_name || 'Product'}</td><td class="px-3 py-3 text-center text-slate-700">${Number(o.quantity).toLocaleString()}</td><td class="px-3 py-3 text-right font-semibold text-slate-900">$${Number(o.total_price).toLocaleString()}</td></tr>`;
+    document.getElementById('inv-total').textContent = '$' + Number(o.total_price).toLocaleString();
+    document.getElementById('inv-payment-method').textContent = o.payment_method || '—';
+    document.getElementById('inv-payment-date').textContent = o.payment_date || '—';
+    document.getElementById('inv-order-date').textContent = o.created_at ? new Date(o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+    document.getElementById('inv-status').textContent = STATUS_LABEL[o.status] || o.status;
+    openModal('modal-invoice');
+  }
+
+  function openReviewModal(orderId) {
+    const o = allOrders.find(x => x.id === orderId);
+    if (!o) return;
+    document.getElementById('review-order-id').value = orderId;
+    document.getElementById('review-product-id').value = o.product_id;
+    document.getElementById('review-product-name').textContent = o.product_name || '—';
+    document.getElementById('review-rating').value = 0;
+    document.getElementById('review-text').value = '';
+    document.getElementById('review-msg').className = 'text-sm hidden';
+    document.querySelectorAll('.star-btn').forEach(s => s.classList.remove('active'));
+    openModal('modal-review');
+  }
+
+  document.getElementById('star-container').addEventListener('click', e => {
+    const star = e.target.closest('.star-btn');
+    if (!star) return;
+    const val = parseInt(star.dataset.star);
+    document.getElementById('review-rating').value = val;
+    document.querySelectorAll('.star-btn').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.star) <= val);
+    });
+  });
+
+  async function submitReview() {
+    const rating = parseInt(document.getElementById('review-rating').value);
+    const msgEl = document.getElementById('review-msg');
+    if (!rating) { msgEl.className = 'text-sm text-red-600'; msgEl.textContent = 'Please select a rating.'; return; }
+    const productId = document.getElementById('review-product-id').value;
+    const text = document.getElementById('review-text').value.trim();
+    try {
+      const res = await fetch(`/api/products/${productId}/review`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reviewer_company: currentUser?.company_name || '', rating, review_text: text, order_quantity: null, country: currentUser?.country || '' })
+      });
+      if (!res.ok) throw new Error();
+      msgEl.className = 'text-sm text-emerald-600 font-medium';
+      msgEl.textContent = '✓ Review submitted! Thank you.';
+      setTimeout(() => closeModal('modal-review'), 1500);
+    } catch (e) {
+      msgEl.className = 'text-sm text-red-600';
+      msgEl.textContent = 'Failed to submit review. Please try again.';
+    }
+  }
+
+  function openProductionModal(orderId) {
+    const o = allOrders.find(x => x.id === orderId);
+    if (!o) return;
+    document.getElementById('production-order-ref').textContent = `Order #${o.order_number} · ${o.product_name || 'Product'}`;
+    document.getElementById('production-update-text').textContent = o.production_update || 'No production update available yet. Please check back later or contact your supplier.';
+    document.getElementById('production-eta-text').textContent = o.eta ? `Expected dispatch: ${o.eta}` : 'ETA to be confirmed';
+    openModal('modal-production');
+  }
+
+  function openChatModal(orderId) {
+    const o = allOrders.find(x => x.id === orderId);
+    if (!o) return;
+    document.getElementById('chat-supplier-label').textContent = `${o.supplier_company || o.supplier_email} · #${o.order_number}`;
+    document.getElementById('chat-messages').innerHTML = `<div class="flex justify-start"><div class="bg-white border border-slate-100 rounded-2xl rounded-tl-none px-4 py-2.5 text-sm text-slate-700 max-w-xs shadow-sm">Hello! I'm available to help with order #${o.order_number}. How can I assist you?</div></div>`;
+    document.getElementById('chat-input').value = '';
+    openModal('modal-chat');
+  }
+
+  function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const messagesEl = document.getElementById('chat-messages');
+    messagesEl.innerHTML += `<div class="flex justify-end"><div class="bg-blue-600 rounded-2xl rounded-tr-none px-4 py-2.5 text-sm text-white max-w-xs">${msg}</div></div>`;
+    input.value = '';
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    setTimeout(() => {
+      messagesEl.innerHTML += `<div class="flex justify-start"><div class="bg-white border border-slate-100 rounded-2xl rounded-tl-none px-4 py-2.5 text-sm text-slate-700 max-w-xs shadow-sm">Thank you for your message. Our team will respond within 24 hours.</div></div>`;
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, 800);
+  }
+
+  function openEscrowModal(orderId) {
+    const o = allOrders.find(x => x.id === orderId);
+    if (!o) return;
+    document.getElementById('escrow-order-id').value = orderId;
+    document.getElementById('escrow-order-info').innerHTML = `<div class="font-semibold text-slate-900 mb-1">${o.product_name || 'Product'}</div><div class="text-slate-500 text-xs">${Number(o.quantity).toLocaleString()} units · ${o.supplier_company || o.supplier_email} · $${Number(o.total_price).toLocaleString()}</div>`;
+    document.getElementById('escrow-msg').className = 'text-sm hidden';
+    openModal('modal-escrow');
+  }
+
+  async function confirmEscrow() {
+    const orderId = document.getElementById('escrow-order-id').value;
+    const msgEl = document.getElementById('escrow-msg');
+    try {
+      const res = await fetch(`/api/orders/${orderId}/status`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'completed', buyer_email: currentUser?.email })
+      });
+      if (!res.ok) throw new Error();
+      msgEl.className = 'text-sm text-emerald-600 font-semibold';
+      msgEl.textContent = '✓ Payment released. Order marked as completed.';
+      const order = allOrders.find(o => o.id === parseInt(orderId));
+      if (order) order.status = 'completed';
+      setTimeout(() => { closeModal('modal-escrow'); applyFilters(); }, 1500);
+    } catch (e) {
+      msgEl.className = 'text-sm text-red-600';
+      msgEl.textContent = 'Failed to confirm. Please try again.';
+    }
+  }
+
+  function openDisputeModal(orderId) {
+    document.getElementById('dispute-order-id').value = orderId;
+    document.getElementById('dispute-reason').value = '';
+    document.getElementById('dispute-description').value = '';
+    document.getElementById('dispute-msg').className = 'text-sm hidden';
+    openModal('modal-dispute');
+  }
+
+  async function submitDispute() {
+    const orderId = document.getElementById('dispute-order-id').value;
+    const reason = document.getElementById('dispute-reason').value;
+    const desc = document.getElementById('dispute-description').value.trim();
+    const msgEl = document.getElementById('dispute-msg');
+    if (!reason) { msgEl.className = 'text-sm text-red-600'; msgEl.textContent = 'Please select a reason.'; return; }
+    if (!desc) { msgEl.className = 'text-sm text-red-600'; msgEl.textContent = 'Please describe the issue.'; return; }
+    try {
+      const res = await fetch(`/api/orders/${orderId}/status`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'disputed', buyer_email: currentUser?.email })
+      });
+      if (!res.ok) throw new Error();
+      msgEl.className = 'text-sm text-emerald-600 font-semibold';
+      msgEl.textContent = '✓ Dispute submitted. SHIAP will review within 2 business days.';
+      const order = allOrders.find(o => o.id === parseInt(orderId));
+      if (order) order.status = 'disputed';
+      setTimeout(() => { closeModal('modal-dispute'); applyFilters(); }, 2000);
+    } catch (e) {
+      msgEl.className = 'text-sm text-red-600';
+      msgEl.textContent = 'Failed to submit dispute. Please try again.';
+    }
+  }
+
+  function openTrackingModal(orderId) {
+    const o = allOrders.find(x => x.id === orderId);
+    if (!o) return;
+    document.getElementById('tracking-number-display').textContent = o.tracking_number || '—';
+    document.getElementById('tracking-carrier-display').textContent = `Carrier: ${o.carrier || '—'}`;
+    document.getElementById('tracking-eta-display').textContent = o.eta || '—';
+    document.getElementById('tracking-supplier-display').textContent = o.supplier_company || o.supplier_email;
+    openModal('modal-tracking');
+  }
+
+  function copyTracking() {
+    const num = document.getElementById('tracking-number-display').textContent;
+    navigator.clipboard.writeText(num).then(() => {
+      const btn = event.target;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    });
+  }
+
+  // ---- Data loading ----
+  function renderUser(user) {
+    const name = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email;
+    const initials = name.split(' ').map(w => w[0] || '').slice(0, 2).join('').toUpperCase() || user.email[0].toUpperCase();
+    document.getElementById('user-avatar').textContent = initials;
+    document.getElementById('user-name').textContent = name;
+    document.getElementById('user-company-role').textContent = `${user.company_name || 'No company'} · ${(user.role || 'buyer').charAt(0).toUpperCase() + (user.role || 'buyer').slice(1)}`;
+  }
+
+  async function loadOrders(email) {
+    try {
+      const res = await fetch(`/api/orders/buyer?email=${encodeURIComponent(email)}`);
+      if (!res.ok) throw new Error();
+      allOrders = await res.json();
+      document.getElementById('nav-orders-count').textContent = allOrders.length;
+      document.getElementById('orders-total-count').textContent = `${allOrders.length} order${allOrders.length !== 1 ? 's' : ''}`;
+      const totalSpent = allOrders.reduce((sum, o) => sum + Number(o.total_price), 0);
+      document.getElementById('orders-lifetime-spend').textContent = '$' + totalSpent.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      applyFilters();
+    } catch (e) {
+      document.getElementById('orders-container').innerHTML = '<div class="text-center py-16 text-slate-400 text-sm">Unable to load orders. <button onclick="location.reload()" class="text-blue-600 hover:underline">Retry</button></div>';
+    }
+  }
+
+  async function init() {
+    let user = null;
+    try { user = JSON.parse(localStorage.getItem('shiap_user')); } catch (e) {}
+    if (!user || !user.email) { window.location.replace('../login.html'); return; }
+    if (user.role !== 'buyer') { window.location.replace('../login.html'); return; }
+    currentUser = user;
+    try {
+      const res = await fetch(`/api/user?email=${encodeURIComponent(user.email)}`);
+      if (res.ok) { const data = await res.json(); currentUser = data; localStorage.setItem('shiap_user', JSON.stringify(data)); }
+    } catch (e) {}
+    renderUser(currentUser);
+    loadOrders(currentUser.email);
+  }
+
+  function doLogout() {
+    localStorage.removeItem('shiap_user');
+    window.location.replace('../login.html');
+  }
+
+  function updateCartBadge() {
+    try {
+      const cart = JSON.parse(localStorage.getItem('shiap_cart')) || [];
+      const count = cart.length;
+      const badge = document.getElementById('nav-cart-count');
+      if (badge && count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+    } catch(e) {}
+  }
+
+  document.getElementById('order-search').addEventListener('input', applyFilters);
+  document.getElementById('order-filter-status').addEventListener('change', applyFilters);
+
+  init();
+  updateCartBadge();
+</script>
+</body>
+</html>

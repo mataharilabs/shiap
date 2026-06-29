@@ -1,0 +1,399 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Products – SHIAP Supplier</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;} #add-modal,#edit-modal{display:none;}</style>
+</head>
+<body class="bg-slate-50">
+<div class="flex h-screen overflow-hidden">
+  <div class="w-64 bg-white border-r border-slate-100 shadow-sm flex flex-col flex-shrink-0">
+    <div class="p-5 border-b border-slate-100"><a href="../index.html" class="flex items-center gap-2"><div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div><span class="text-lg font-extrabold text-slate-900">SHIAP</span></a></div>
+    <div class="p-4 border-b border-slate-100"><div class="flex items-center gap-3"><div id="supplier-user-avatar" class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 font-bold text-sm flex items-center justify-center">S</div><div><div id="supplier-user-name" class="text-sm font-semibold text-slate-900">Loading...</div><span class="text-xs bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium">✓ Verified</span></div></div></div>
+    <nav class="flex-1 p-3 space-y-1">
+      <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">Dashboard</a>
+      <a href="products.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 font-semibold text-sm">My Products</a>
+      <a href="rfq.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">RFQ Leads <span id="rfq-badge" class="ml-auto bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span></a>
+      <a href="#" onclick="doLogout()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 text-sm font-medium">Sign Out</a>
+    </nav>
+  </div>
+
+  <div class="flex-1 overflow-y-auto">
+    <div class="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+      <div><h1 class="text-xl font-bold text-slate-900">My Products</h1><p id="products-header-stats" class="text-xs text-slate-400">Loading...</p></div>
+      <button onclick="document.getElementById('add-modal').style.display='flex'" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition">+ Add Product</button>
+    </div>
+    <div class="p-8">
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between p-5 border-b border-slate-100">
+          <div class="flex gap-2">
+            <button id="filter-btn-all" onclick="applyFilter('all')" class="px-4 py-1.5 text-xs font-semibold bg-slate-900 text-white rounded-full">All (<span id="filter-count-all">0</span>)</button>
+            <button id="filter-btn-active" onclick="applyFilter('active')" class="px-4 py-1.5 text-xs font-semibold text-slate-600 border border-slate-200 rounded-full hover:bg-slate-50">Active (<span id="filter-count-active">0</span>)</button>
+            <button id="filter-btn-pending" onclick="applyFilter('pending')" class="px-4 py-1.5 text-xs font-semibold text-amber-700 border border-amber-200 bg-amber-50 rounded-full">Pending (<span id="filter-count-pending">0</span>)</button>
+          </div>
+          <div class="relative"><input type="text" placeholder="Search products..." class="pl-8 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50" /><svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 border-b border-slate-100"><tr>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Product</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Category</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Price Range</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">MOQ</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Orders</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Status</th>
+            <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Actions</th>
+          </tr></thead>
+          <tbody id="products-tbody" class="divide-y divide-slate-50">
+            <tr><td colspan="7" class="px-5 py-8 text-center text-sm text-slate-400">Loading products...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Product Modal -->
+<div id="add-modal" class="fixed inset-0 bg-black/50 z-50 items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg mx-4">
+    <div class="flex items-center justify-between mb-6"><h2 class="text-xl font-bold text-slate-900">Add New Product</h2><button onclick="document.getElementById('add-modal').style.display='none'" class="text-slate-400 hover:text-slate-600 text-2xl">✕</button></div>
+    <div class="space-y-4">
+      <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Product Name *</label><input id="new-product-name" type="text" placeholder="Enter product name" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" /></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Category *</label><select id="new-product-category" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"><option>Electronics</option><option>Hardware</option><option>Textiles</option><option>Raw Materials</option><option>Industrial Parts</option><option>Auto Parts</option><option>Consumer Goods</option></select></div>
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">MOQ *</label><input id="new-product-moq" type="number" placeholder="Min order qty" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" /></div>
+      </div>
+      <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Description *</label><textarea id="new-product-description" rows="3" placeholder="Describe your product in English" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"></textarea></div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="document.getElementById('add-modal').style.display='none'" class="flex-1 border border-slate-200 py-3 rounded-xl text-slate-600 font-medium hover:bg-slate-50">Cancel</button>
+      <button id="submit-product-btn" onclick="submitProduct()" class="flex-1 bg-emerald-600 text-white font-semibold py-3 rounded-xl hover:bg-emerald-700">Submit for Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Product Modal -->
+<div id="edit-modal" class="fixed inset-0 bg-black/50 z-50 items-center justify-center overflow-y-auto py-8">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg mx-4">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-slate-900">Edit Product</h2>
+      <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 text-2xl">✕</button>
+    </div>
+    <input type="hidden" id="edit-product-id" />
+    <div class="space-y-4">
+      <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Product Name *</label><input id="edit-product-name" type="text" placeholder="Product name" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Category</label><select id="edit-product-category" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"><option>Electronics</option><option>Hardware</option><option>Textiles</option><option>Raw Materials</option><option>Industrial Parts</option><option>Auto Parts</option><option>Consumer Goods</option></select></div>
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">MOQ</label><input id="edit-product-moq" type="number" placeholder="Min order qty" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Unit Price (USD)</label><input id="edit-product-price" type="number" step="0.01" placeholder="0.00" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+        <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Emoji Icon</label><input id="edit-product-emoji" type="text" maxlength="4" placeholder="📦" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+      </div>
+      <div><label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Description</label><textarea id="edit-product-description" rows="3" placeholder="Describe your product" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea></div>
+
+      <!-- Variants -->
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Variants / Models <span class="font-normal text-slate-400">(optional)</span></label>
+        <div id="edit-variants-tags" class="flex flex-wrap gap-2 mb-2 min-h-[28px]"></div>
+        <div class="flex gap-2">
+          <input id="edit-variant-input" type="text" placeholder="e.g. Type A, M10, Cotton..." class="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" onkeydown="if(event.key==='Enter'){event.preventDefault();addVariantTag();}" />
+          <button type="button" onclick="addVariantTag()" class="px-4 py-2 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">Add</button>
+        </div>
+      </div>
+
+      <!-- Image Section -->
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-3">Product Image</label>
+        <div class="flex gap-2 mb-3">
+          <button id="img-tab-url" onclick="switchImgTab('url')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-700 text-white">URL</button>
+          <button id="img-tab-upload" onclick="switchImgTab('upload')" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">Upload File</button>
+        </div>
+        <div id="img-pane-url">
+          <input id="edit-image-url" type="url" placeholder="https://example.com/image.jpg" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <div id="url-preview" class="mt-2 hidden"><img id="url-preview-img" src="" class="h-24 rounded-lg object-cover border border-slate-100" alt="Preview" onerror="this.parentElement.classList.add('hidden')" /></div>
+        </div>
+        <div id="img-pane-upload" class="hidden">
+          <label class="flex flex-col items-center gap-2 border-2 border-dashed border-slate-200 rounded-xl p-4 cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition">
+            <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span class="text-xs text-slate-400">Click to select image (max 5MB)</span>
+            <input id="edit-image-file" type="file" accept="image/*" class="hidden" onchange="previewFile(this)" />
+          </label>
+          <div id="file-preview" class="mt-2 hidden"><img id="file-preview-img" src="" class="h-24 rounded-lg object-cover border border-slate-100" alt="Preview" /></div>
+        </div>
+        <p id="current-image-info" class="text-xs text-slate-400 mt-2"></p>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="closeEditModal()" class="flex-1 border border-slate-200 py-3 rounded-xl text-slate-600 font-medium hover:bg-slate-50">Cancel</button>
+      <button id="save-edit-btn" onclick="saveEditProduct()" class="flex-1 bg-blue-700 text-white font-semibold py-3 rounded-xl hover:bg-blue-800">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let allProducts = [];
+  let currentFilter = 'all';
+  let editingProductId = null;
+  let imgTabMode = 'url';
+  let editVariants = [];
+
+  function renderVariantTags() {
+    const container = document.getElementById('edit-variants-tags');
+    container.innerHTML = editVariants.map((v, i) =>
+      `<span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full">${v}<button type="button" onclick="removeVariantTag(${i})" class="text-blue-400 hover:text-blue-700 ml-0.5 font-bold">×</button></span>`
+    ).join('');
+  }
+  function addVariantTag() {
+    const input = document.getElementById('edit-variant-input');
+    const val = input.value.trim();
+    if (val && !editVariants.includes(val)) { editVariants.push(val); renderVariantTags(); }
+    input.value = '';
+    input.focus();
+  }
+  function removeVariantTag(i) { editVariants.splice(i, 1); renderVariantTags(); }
+
+  function getUser() {
+    try { return JSON.parse(localStorage.getItem('shiap_user')); } catch (e) { return null; }
+  }
+  function doLogout() { localStorage.removeItem('shiap_user'); window.location.replace('../login.html'); }
+
+  async function loadSupplierIdentity() {
+    const user = getUser();
+    if (!user || !user.email) return;
+    try {
+      const res = await fetch(`/api/dashboard/supplier?email=${encodeURIComponent(user.email)}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      document.getElementById('supplier-user-name').textContent = data.supplier.company_name || `${data.supplier.first_name || ''} ${data.supplier.last_name || ''}`.trim() || data.supplier.email;
+      document.getElementById('supplier-user-avatar').textContent = (data.supplier.company_name || data.supplier.first_name || 'S')[0].toUpperCase();
+      document.getElementById('rfq-badge').textContent = data.rfq_leads || 0;
+    } catch (e) {
+      console.warn('Unable to load supplier identity.', e);
+    }
+  }
+
+  function renderRow(p) {
+    const isActive = p.status === 'active';
+    const badge = isActive
+      ? '<span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2 py-1 rounded-full">✓ Active</span>'
+      : '<span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2 py-1 rounded-full">⏳ Pending Admin</span>';
+    const actions = `<button onclick="openEditModal(${p.id})" class="text-xs text-blue-600 hover:underline font-medium">Edit</button>`;
+    const orders = p.units_sold ? Number(p.units_sold).toLocaleString() : '<span class="text-slate-400">—</span>';
+    const price = p.price > 0 ? `$${Number(p.price).toFixed(2)}/unit` : '<span class="text-slate-400">—</span>';
+    const thumb = p.image_url
+      ? `<img src="${p.image_url}" class="w-10 h-10 rounded-xl object-cover border border-slate-100" onerror="this.outerHTML='<div class=\\'w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-lg\\'>${p.image_emoji || '📦'}</div>'" />`
+      : `<div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-lg">${p.image_emoji || '📦'}</div>`;
+    const rowBg = isActive ? 'hover:bg-slate-50' : 'hover:bg-slate-50 bg-amber-50/30';
+    return `<tr class="${rowBg}">
+      <td class="px-5 py-4"><div class="flex items-center gap-3">${thumb}<div><div class="font-medium text-slate-900">${p.name}</div><div class="text-xs text-slate-400">#ID-${p.id}</div></div></div></td>
+      <td class="px-5 py-4 text-slate-600 text-xs">${p.category || '—'}</td>
+      <td class="px-5 py-4 font-medium text-slate-900">${price}</td>
+      <td class="px-5 py-4 text-slate-600">${p.moq || '—'} units</td>
+      <td class="px-5 py-4 font-semibold text-emerald-600">${orders}</td>
+      <td class="px-5 py-4">${badge}</td>
+      <td class="px-5 py-4"><div class="flex gap-2">${actions}</div></td>
+    </tr>`;
+  }
+
+  function applyFilter(filter) {
+    currentFilter = filter;
+    ['all', 'active', 'pending'].forEach(f => {
+      const btn = document.getElementById(`filter-btn-${f}`);
+      if (f === filter) {
+        btn.className = 'px-4 py-1.5 text-xs font-semibold bg-slate-900 text-white rounded-full';
+      } else if (f === 'pending') {
+        btn.className = 'px-4 py-1.5 text-xs font-semibold text-amber-700 border border-amber-200 bg-amber-50 rounded-full hover:bg-amber-100';
+      } else {
+        btn.className = 'px-4 py-1.5 text-xs font-semibold text-slate-600 border border-slate-200 rounded-full hover:bg-slate-50';
+      }
+    });
+    const filtered = filter === 'all' ? allProducts : allProducts.filter(p => p.status === filter);
+    const tbody = document.getElementById('products-tbody');
+    tbody.innerHTML = filtered.length
+      ? filtered.map(renderRow).join('')
+      : '<tr><td colspan="7" class="px-5 py-8 text-center text-sm text-slate-400">No products found.</td></tr>';
+  }
+
+  async function loadProducts() {
+    const user = getUser();
+    if (!user || !user.email) return;
+    try {
+      const res = await fetch(`/api/supplier/products?email=${encodeURIComponent(user.email)}`);
+      if (!res.ok) return;
+      allProducts = await res.json();
+      const total = allProducts.length;
+      const active = allProducts.filter(p => p.status === 'active').length;
+      const pending = allProducts.filter(p => p.status === 'pending').length;
+      document.getElementById('products-header-stats').textContent = `${total} products · ${active} active · ${pending} pending approval`;
+      document.getElementById('filter-count-all').textContent = total;
+      document.getElementById('filter-count-active').textContent = active;
+      document.getElementById('filter-count-pending').textContent = pending;
+      applyFilter(currentFilter);
+    } catch (e) {
+      console.warn('Unable to load products.', e);
+      document.getElementById('products-tbody').innerHTML = '<tr><td colspan="7" class="px-5 py-8 text-center text-sm text-red-400">Unable to load products.</td></tr>';
+    }
+  }
+
+  async function submitProduct() {
+    const user = getUser();
+    if (!user || !user.email) return;
+    const name = document.getElementById('new-product-name').value.trim();
+    const category = document.getElementById('new-product-category').value;
+    const moq = document.getElementById('new-product-moq').value;
+    const description = document.getElementById('new-product-description').value.trim();
+    if (!name) { alert('Product name is required.'); return; }
+    const btn = document.getElementById('submit-product-btn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ supplier_email: user.email, name, category, moq: parseInt(moq) || 50, description })
+      });
+      if (!res.ok) throw new Error('Failed');
+      document.getElementById('add-modal').style.display = 'none';
+      document.getElementById('new-product-name').value = '';
+      document.getElementById('new-product-moq').value = '';
+      document.getElementById('new-product-description').value = '';
+      await loadProducts();
+    } catch (e) {
+      alert('Unable to submit product. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit for Review';
+    }
+  }
+
+  function openEditModal(productId) {
+    const p = allProducts.find(pr => pr.id === productId);
+    if (!p) return;
+    editingProductId = productId;
+    document.getElementById('edit-product-id').value = productId;
+    document.getElementById('edit-product-name').value = p.name || '';
+    document.getElementById('edit-product-category').value = p.category || 'Electronics';
+    document.getElementById('edit-product-moq').value = p.moq || '';
+    document.getElementById('edit-product-price').value = p.price || '';
+    document.getElementById('edit-product-emoji').value = p.image_emoji || '📦';
+    document.getElementById('edit-product-description').value = p.description || '';
+    document.getElementById('edit-image-url').value = p.image_url || '';
+    document.getElementById('edit-image-file').value = '';
+    document.getElementById('url-preview').classList.toggle('hidden', !p.image_url);
+    if (p.image_url) document.getElementById('url-preview-img').src = p.image_url;
+    document.getElementById('file-preview').classList.add('hidden');
+    const info = document.getElementById('current-image-info');
+    info.textContent = p.image_url ? `Current: ${p.image_url.length > 50 ? p.image_url.slice(0, 50) + '...' : p.image_url}` : 'No image set';
+    // Variants
+    try { editVariants = Array.isArray(p.variants) ? p.variants : (p.variants ? JSON.parse(p.variants) : []); } catch(e) { editVariants = []; }
+    document.getElementById('edit-variant-input').value = '';
+    renderVariantTags();
+    switchImgTab('url');
+    document.getElementById('edit-modal').style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('edit-modal').style.display = 'none';
+    editingProductId = null;
+  }
+
+  function switchImgTab(tab) {
+    imgTabMode = tab;
+    document.getElementById('img-pane-url').classList.toggle('hidden', tab !== 'url');
+    document.getElementById('img-pane-upload').classList.toggle('hidden', tab !== 'upload');
+    document.getElementById('img-tab-url').className = tab === 'url'
+      ? 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-700 text-white'
+      : 'px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50';
+    document.getElementById('img-tab-upload').className = tab === 'upload'
+      ? 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-700 text-white'
+      : 'px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50';
+  }
+
+  function previewFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('file-preview-img').src = e.target.result;
+      document.getElementById('file-preview').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  document.getElementById('edit-image-url').addEventListener('input', function() {
+    const val = this.value.trim();
+    const preview = document.getElementById('url-preview');
+    const img = document.getElementById('url-preview-img');
+    if (val) {
+      img.src = val;
+      preview.classList.remove('hidden');
+    } else {
+      preview.classList.add('hidden');
+    }
+  });
+
+  async function saveEditProduct() {
+    const user = getUser();
+    if (!user || !user.email || !editingProductId) return;
+    const btn = document.getElementById('save-edit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    try {
+      const name = document.getElementById('edit-product-name').value.trim();
+      const category = document.getElementById('edit-product-category').value;
+      const moq = parseInt(document.getElementById('edit-product-moq').value) || 50;
+      const price = parseFloat(document.getElementById('edit-product-price').value) || 0;
+      const image_emoji = document.getElementById('edit-product-emoji').value.trim() || '📦';
+      const description = document.getElementById('edit-product-description').value.trim();
+      if (!name) { alert('Product name is required.'); return; }
+
+      let image_url = null;
+
+      const variants = [...editVariants];
+      const currentStatus = allProducts.find(p => p.id === editingProductId)?.status || 'pending';
+      if (imgTabMode === 'url') {
+        image_url = document.getElementById('edit-image-url').value.trim() || null;
+        const putRes = await fetch(`/api/products/${editingProductId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, category, description, moq, price, image_emoji, image_url, supplier_email: user.email, status: currentStatus, variants })
+        });
+        if (!putRes.ok) throw new Error('Update failed');
+      } else {
+        const fileInput = document.getElementById('edit-image-file');
+        const putRes = await fetch(`/api/products/${editingProductId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, category, description, moq, price, image_emoji, image_url: null, supplier_email: user.email, status: currentStatus, variants })
+        });
+        if (!putRes.ok) throw new Error('Update failed');
+        if (fileInput.files[0]) {
+          const formData = new FormData();
+          formData.append('image', fileInput.files[0]);
+          formData.append('supplier_email', user.email);
+          const uploadRes = await fetch(`/api/products/${editingProductId}/image`, {
+            method: 'POST',
+            body: formData
+          });
+          if (!uploadRes.ok) throw new Error('Image upload failed');
+        }
+      }
+
+      closeEditModal();
+      await loadProducts();
+    } catch (e) {
+      alert('Unable to save product. Please try again.');
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
+    }
+  }
+
+  loadSupplierIdentity();
+  loadProducts();
+</script>
+</body>
+</html>

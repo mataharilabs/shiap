@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RFQ System – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;} .section{display:none;} .section.active{display:block;}</style>
+</head>
+<body class="bg-slate-50">
+
+  <!-- Nav -->
+  <nav class="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <a href="index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        <span class="text-xl font-extrabold text-slate-900">SHIAP</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <a href="marketplace.html" class="text-sm text-slate-600 hover:text-blue-700">Marketplace</a>
+        <a href="sourcing.html" class="text-sm text-slate-600 hover:text-blue-700">1688 Sourcing</a>
+        <a id="nav-auth-btn" href="login.html" class="text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 py-10">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold text-slate-900 mb-2">Global RFQ System</h1>
+      <p class="text-slate-500">Submit one Request for Quote and receive competitive offers from verified suppliers worldwide.</p>
+    </div>
+
+    <!-- Tab Nav -->
+    <div class="flex gap-1 mb-8 bg-white rounded-xl p-1 border border-slate-100 shadow-sm w-fit">
+      <button onclick="switchSection('create')" id="btn-create" class="px-5 py-2.5 text-sm font-semibold rounded-lg bg-blue-700 text-white">+ Create RFQ</button>
+      <button onclick="switchSection('my-rfq')" id="btn-my-rfq" class="px-5 py-2.5 text-sm font-semibold rounded-lg text-slate-600 hover:bg-slate-50">My RFQs</button>
+      <button onclick="switchSection('compare')" id="btn-compare" class="px-5 py-2.5 text-sm font-semibold rounded-lg text-slate-600 hover:bg-slate-50">Compare Quotes</button>
+    </div>
+
+    <!-- Create RFQ -->
+    <div id="section-create" class="section active">
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+            <h2 class="text-xl font-bold text-slate-900 mb-6">Create New RFQ</h2>
+            <form onsubmit="submitRFQ(event)">
+              <div class="mb-5">
+                <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Buyer Email *</label>
+                <input id="rfq-email" type="email" placeholder="you@company.com" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div class="grid md:grid-cols-2 gap-5 mb-5">
+                <div>
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Product Name *</label>
+                  <input id="product-name" type="text" placeholder="e.g., Stainless Steel Bolts M8" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Category *</label>
+                  <select id="category" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option value="">Select category</option>
+                    <option>Electronics</option>
+                    <option>Machinery</option>
+                    <option>Textiles & Apparel</option>
+                    <option>Industrial Parts</option>
+                    <option>Consumer Goods</option>
+                    <option>Auto Parts</option>
+                    <option>Chemicals & Materials</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-5">
+                <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Product Description *</label>
+                <textarea id="description" rows="4" placeholder="Describe the product in detail: specifications, material, quality standards, certifications required, etc." class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+              </div>
+
+              <div class="grid md:grid-cols-3 gap-5 mb-5">
+                <div>
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Quantity *</label>
+                  <input id="quantity" type="number" placeholder="e.g., 1000" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Unit</label>
+                  <select id="unit" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option>Pieces (pcs)</option>
+                    <option>Kilograms (kg)</option>
+                    <option>Meters (m)</option>
+                    <option>Sets</option>
+                    <option>Cartons</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Target Price (USD)</label>
+                  <input id="target-price" type="number" placeholder="e.g., 5.00 per unit" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+              </div>
+
+              <div class="grid md:grid-cols-2 gap-5 mb-5">
+                <div>
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Delivery Country</label>
+                  <select id="origin" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option>Indonesia</option>
+                    <option>Malaysia</option>
+                    <option>Singapore</option>
+                    <option>Philippines</option>
+                    <option>Thailand</option>
+                    <option>Vietnam</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Quote Deadline</label>
+                  <input id="deadline" type="date" class="w-full px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+              </div>
+
+              <div class="mb-6">
+                <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Attach Reference Files</label>
+                <div class="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:border-blue-400 cursor-pointer transition">
+                  <div class="text-3xl mb-2">📎</div>
+                  <p class="text-sm text-slate-500">Drop files here or <span class="text-blue-600 font-medium">browse</span></p>
+                  <p class="text-xs text-slate-400 mt-1">PDF, PNG, JPG, DWG up to 20MB</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 mb-6 p-4 bg-amber-50 rounded-xl border border-amber-100">
+                <svg class="w-5 h-5 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p class="text-xs text-amber-800">Your RFQ will be reviewed by our team before being distributed to relevant suppliers. You'll receive quotes within 24–48 hours.</p>
+              </div>
+
+              <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 rounded-xl transition shadow-sm text-base">
+                Submit RFQ to Suppliers →
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Info sidebar -->
+        <div class="space-y-5">
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900 mb-4">How RFQ Works</h3>
+            <div class="space-y-4">
+              <div class="flex gap-3"><div class="w-7 h-7 rounded-full bg-blue-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</div><div><p class="text-sm font-medium text-slate-900">Submit Details</p><p class="text-xs text-slate-500 mt-0.5">Fill in your product requirements</p></div></div>
+              <div class="flex gap-3"><div class="w-7 h-7 rounded-full bg-blue-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</div><div><p class="text-sm font-medium text-slate-900">Admin Review</p><p class="text-xs text-slate-500 mt-0.5">Our team verifies and distributes to suppliers</p></div></div>
+              <div class="flex gap-3"><div class="w-7 h-7 rounded-full bg-blue-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">3</div><div><p class="text-sm font-medium text-slate-900">Receive Quotes</p><p class="text-xs text-slate-500 mt-0.5">Get 3–10 competitive quotes within 48hrs</p></div></div>
+              <div class="flex gap-3"><div class="w-7 h-7 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">✓</div><div><p class="text-sm font-medium text-slate-900">Compare & Award</p><p class="text-xs text-slate-500 mt-0.5">Pick the best offer and place your order</p></div></div>
+            </div>
+          </div>
+          <div class="bg-gradient-to-br from-blue-700 to-indigo-800 rounded-2xl p-6 text-white">
+            <div class="text-2xl mb-2">🏆</div>
+            <h3 class="font-bold mb-2">High-Value RFQ Service</h3>
+            <p class="text-sm text-blue-100">Orders above $10,000 USD get dedicated account manager assistance and priority supplier matching.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My RFQs -->
+    <div id="section-my-rfq" class="section">
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+          <h2 class="text-xl font-bold text-slate-900">My RFQs</h2>
+          <button onclick="switchSection('create')" class="text-sm bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800">+ New RFQ</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-100">
+              <tr>
+                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">RFQ ID</th>
+                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Product</th>
+                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Quantity</th>
+                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Status</th>
+                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Quotes</th>
+                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Submitted</th>
+                <th class="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-widest">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-2026-087</td>
+                <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">Industrial Network Switch 24-Port</div><div class="text-xs text-slate-400">Electronics</div></td>
+                <td class="px-6 py-4 text-sm text-slate-700">500 units</td>
+                <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700">Quotes Received</span></td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-slate-900">5</span><span class="text-xs text-slate-400 ml-1">quotes</span></td>
+                <td class="px-6 py-4 text-sm text-slate-500">Jun 20, 2026</td>
+                <td class="px-6 py-4"><button onclick="switchSection('compare')" class="text-sm text-blue-600 font-medium hover:text-blue-800">Compare →</button></td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-2026-074</td>
+                <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">Cotton T-Shirt Plain 180gsm</div><div class="text-xs text-slate-400">Textiles</div></td>
+                <td class="px-6 py-4 text-sm text-slate-700">2,000 pcs</td>
+                <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700">Sent to Suppliers</span></td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-slate-900">3</span><span class="text-xs text-slate-400 ml-1">quotes</span></td>
+                <td class="px-6 py-4 text-sm text-slate-500">Jun 18, 2026</td>
+                <td class="px-6 py-4"><button class="text-sm text-blue-600 font-medium hover:text-blue-800">View →</button></td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-2026-061</td>
+                <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">Solar Panel 400W Monocrystalline</div><div class="text-xs text-slate-400">Electronics</div></td>
+                <td class="px-6 py-4 text-sm text-slate-700">50 units</td>
+                <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700">Awarded</span></td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-slate-900">7</span><span class="text-xs text-slate-400 ml-1">quotes</span></td>
+                <td class="px-6 py-4 text-sm text-slate-500">Jun 10, 2026</td>
+                <td class="px-6 py-4"><button class="text-sm text-slate-400 font-medium">Closed</button></td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-4 text-sm font-mono text-blue-600">#RFQ-2026-045</td>
+                <td class="px-6 py-4"><div class="text-sm font-medium text-slate-900">Servo Motor 750W AC 220V</div><div class="text-xs text-slate-400">Machinery</div></td>
+                <td class="px-6 py-4 text-sm text-slate-700">20 units</td>
+                <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">Draft</span></td>
+                <td class="px-6 py-4"><span class="text-sm text-slate-400">—</span></td>
+                <td class="px-6 py-4 text-sm text-slate-500">Jun 5, 2026</td>
+                <td class="px-6 py-4"><button class="text-sm text-blue-600 font-medium hover:text-blue-800">Edit →</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compare Quotes -->
+    <div id="section-compare" class="section">
+      <div class="mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">Compare Quotes</h2>
+            <p class="text-sm text-slate-500 mt-1">RFQ #2026-087 · Industrial Network Switch 24-Port · 500 units</p>
+          </div>
+          <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full">5 Quotes Received</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <div class="grid grid-cols-4 gap-4 min-w-max md:min-w-0">
+
+          <!-- Labels column -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mt-14">
+            <div class="space-y-[22px] pt-1 text-sm text-slate-500 font-medium">
+              <div class="h-8 flex items-center">Unit Price</div>
+              <div class="h-8 flex items-center">Total (500 units)</div>
+              <div class="h-8 flex items-center">Lead Time</div>
+              <div class="h-8 flex items-center">Shipping Terms</div>
+              <div class="h-8 flex items-center">Payment Terms</div>
+              <div class="h-8 flex items-center">Samples</div>
+              <div class="h-8 flex items-center">Rating</div>
+              <div class="h-8 flex items-center">Certifications</div>
+            </div>
+          </div>
+
+          <!-- Quote 1 - Best Price -->
+          <div class="bg-white rounded-2xl border-2 border-blue-500 shadow-lg p-5 relative">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-700 text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Best Price</div>
+            <div class="text-center mb-5 pt-2">
+              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-lg mx-auto mb-2">🏭</div>
+              <div class="font-bold text-slate-900 text-sm">Shenzhen TechPro</div>
+              <div class="text-xs text-slate-400">China · ⭐ 4.8</div>
+            </div>
+            <div class="space-y-[14px] text-sm">
+              <div class="h-8 flex items-center font-bold text-emerald-600 text-base">$12.50</div>
+              <div class="h-8 flex items-center font-bold text-slate-900">$6,250.00</div>
+              <div class="h-8 flex items-center text-slate-700">10 days</div>
+              <div class="h-8 flex items-center text-slate-700">FOB Shenzhen</div>
+              <div class="h-8 flex items-center text-slate-700">30% deposit</div>
+              <div class="h-8 flex items-center text-slate-700">$35 each</div>
+              <div class="h-8 flex items-center text-amber-500">★★★★★ 4.8</div>
+              <div class="h-8 flex items-center text-slate-700">CE, FCC, RoHS</div>
+            </div>
+            <button class="w-full mt-6 bg-blue-700 text-white font-semibold py-3 rounded-xl hover:bg-blue-800 transition text-sm">Award This Quote</button>
+          </div>
+
+          <!-- Quote 2 -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mt-14">
+            <div class="text-center mb-5">
+              <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-lg mx-auto mb-2">🏭</div>
+              <div class="font-bold text-slate-900 text-sm">Guangzhou NetTech</div>
+              <div class="text-xs text-slate-400">China · ⭐ 4.6</div>
+            </div>
+            <div class="space-y-[14px] text-sm">
+              <div class="h-8 flex items-center font-bold text-slate-900 text-base">$13.80</div>
+              <div class="h-8 flex items-center font-bold text-slate-900">$6,900.00</div>
+              <div class="h-8 flex items-center text-slate-700">14 days</div>
+              <div class="h-8 flex items-center text-slate-700">FOB Guangzhou</div>
+              <div class="h-8 flex items-center text-slate-700">50% deposit</div>
+              <div class="h-8 flex items-center text-slate-700">$45 each</div>
+              <div class="h-8 flex items-center text-amber-400">★★★★☆ 4.6</div>
+              <div class="h-8 flex items-center text-slate-700">CE, RoHS</div>
+            </div>
+            <button class="w-full mt-6 border border-slate-200 text-slate-600 font-medium py-3 rounded-xl hover:border-blue-400 hover:text-blue-700 transition text-sm">Award This Quote</button>
+          </div>
+
+          <!-- Quote 3 -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mt-14">
+            <div class="text-center mb-5">
+              <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-lg mx-auto mb-2">🏭</div>
+              <div class="font-bold text-slate-900 text-sm">Dongguan ElecCo</div>
+              <div class="text-xs text-slate-400">China · ⭐ 4.4</div>
+            </div>
+            <div class="space-y-[14px] text-sm">
+              <div class="h-8 flex items-center font-bold text-slate-900 text-base">$15.00</div>
+              <div class="h-8 flex items-center font-bold text-slate-900">$7,500.00</div>
+              <div class="h-8 flex items-center text-slate-700">7 days</div>
+              <div class="h-8 flex items-center text-slate-700">EXW Factory</div>
+              <div class="h-8 flex items-center text-slate-700">100% upfront</div>
+              <div class="h-8 flex items-center text-slate-700">$50 each</div>
+              <div class="h-8 flex items-center text-amber-400">★★★★☆ 4.4</div>
+              <div class="h-8 flex items-center text-slate-700">CE</div>
+            </div>
+            <button class="w-full mt-6 border border-slate-200 text-slate-600 font-medium py-3 rounded-xl hover:border-blue-400 hover:text-blue-700 transition text-sm">Award This Quote</button>
+          </div>
+
+        </div>
+      </div>
+      <p class="text-xs text-slate-400 mt-4 text-center">Showing top 3 of 5 quotes. <button class="text-blue-600 underline">View all 5 quotes</button></p>
+    </div>
+  </div>
+
+  <script>
+    function switchSection(name) {
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('[id^="btn-"]').forEach(el => { el.classList.remove('bg-blue-700','text-white'); el.classList.add('text-slate-600'); });
+      document.getElementById('section-'+name).classList.add('active');
+      document.getElementById('btn-'+name).classList.add('bg-blue-700','text-white');
+      document.getElementById('btn-'+name).classList.remove('text-slate-600');
+    }
+    async function submitRFQ(e) {
+      e.preventDefault();
+      const payload = {
+        email: document.getElementById('rfq-email').value.trim(),
+        product_name: document.getElementById('product-name').value.trim(),
+        description: document.getElementById('description').value.trim(),
+        quantity: document.getElementById('quantity').value.trim(),
+        target_price: document.getElementById('target-price').value.trim(),
+        origin: document.getElementById('origin').value.trim()
+      };
+
+      if (!payload.email || !payload.product_name || !payload.description) {
+        return alert('Email, product name, and description are required.');
+      }
+
+      try {
+        const response = await fetch('/api/rfq', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok) return alert(result.error || 'Unable to submit RFQ.');
+
+        alert('RFQ submitted successfully! Our team will review and distribute to relevant suppliers within 2–4 hours. You will be notified by email when quotes arrive.');
+        document.querySelector('form').reset();
+      } catch (error) {
+        alert('Unable to connect to the server. Please run the backend server and refresh.');
+      }
+    }
+  </script>
+<script>
+  (function() {
+    try {
+      const user = JSON.parse(localStorage.getItem('shiap_user'));
+      if (!user || !user.email) return;
+      const dash = { admin: 'admin/dashboard.html', supplier: 'supplier/dashboard.html', buyer: 'buyer/dashboard.html' };
+      const btn = document.getElementById('nav-auth-btn');
+      if (!btn) return;
+      btn.textContent = 'My Account';
+      btn.href = dash[user.role] || 'buyer/dashboard.html';
+    } catch(e) {}
+  })();
+</script>
+</body>
+</html>

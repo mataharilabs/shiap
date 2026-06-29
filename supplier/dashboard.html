@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supplier Dashboard – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-slate-50">
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-white border-r border-slate-100 shadow-sm flex flex-col flex-shrink-0">
+      <div class="p-5 border-b border-slate-100">
+        <a href="../index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+          <span class="text-lg font-extrabold text-slate-900">SHIAP</span>
+        </a>
+      </div>
+      <div class="p-4 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <div id="supplier-user-avatar" class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 font-bold text-sm flex items-center justify-center">ST</div>
+          <div><div id="supplier-user-name" class="text-sm font-semibold text-slate-900">SZ TechPro Ltd.</div><div id="supplier-user-meta" class="flex items-center gap-1"><span class="text-xs text-slate-400">Supplier</span><span class="text-xs bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium">✓ Verified</span></div></div>
+        </div>
+      </div>
+      <nav class="flex-1 p-3 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 font-semibold text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          Dashboard
+        </a>
+        <a href="products.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          My Products
+          <span id="supplier-products-count" class="ml-auto bg-slate-100 text-slate-600 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Order Fulfillment
+          <span id="supplier-new-orders-badge" class="ml-auto bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </a>
+        <a href="rfq.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          RFQ Leads
+          <span id="supplier-rfq-badge" class="ml-auto bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+          Payout / Withdrawal
+        </a>
+        <div class="pt-3 border-t border-slate-100 mt-3">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            Store Profile
+          </a>
+          <a href="#" onclick="doLogout()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 text-sm font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-1 overflow-y-auto">
+      <div class="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">Supplier Dashboard</h1>
+          <p class="text-xs text-slate-400">Shenzhen TechPro Ltd. · Shenzhen, China</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="products.html" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition">
+            + Add Product
+          </a>
+        </div>
+      </div>
+
+      <div class="p-8">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Total Sales</span><div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center"><svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div></div>
+            <div id="supplier-total-sales" class="text-3xl font-extrabold text-slate-900">$0</div>
+            <div class="text-xs text-emerald-600 mt-1 font-medium">Total sold</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">New Orders</span><div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center"><svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div></div>
+            <div id="supplier-new-orders" class="text-3xl font-extrabold text-slate-900">0</div>
+            <div class="text-xs text-red-500 mt-1 font-medium">Need processing</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">RFQ Leads</span><div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center"><svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div></div>
+            <div id="supplier-rfq-leads" class="text-3xl font-extrabold text-slate-900">0</div>
+            <div class="text-xs text-amber-600 mt-1 font-medium">Awaiting your quote</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Wallet Balance</span><div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div></div>
+            <div id="supplier-wallet-balance" class="text-3xl font-extrabold text-slate-900">$0</div>
+            <div class="text-xs text-blue-600 mt-1 font-medium cursor-pointer hover:underline">Withdraw →</div>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6">
+          <!-- Orders Needing Action -->
+          <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between p-6 border-b border-slate-50">
+              <h2 class="font-bold text-slate-900">Orders Needing Action</h2>
+              <span class="text-xs bg-red-50 text-red-600 font-semibold px-2.5 py-1 rounded-full">4 pending</span>
+            </div>
+            <div class="divide-y divide-slate-50">
+              <div class="p-5 hover:bg-slate-50">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2"><span class="text-xs font-mono text-blue-600">#ORD-2026-0445</span><span class="text-xs bg-red-50 text-red-600 font-semibold px-2 py-0.5 rounded-full">New Order</span></div>
+                  <span class="text-sm font-bold text-emerald-600">$3,000.00</span>
+                </div>
+                <div class="text-sm font-medium text-slate-900">Industrial Network Switch 24-Port × 200 units</div>
+                <div class="text-xs text-slate-400 mt-1">Buyer: PT Maju Jaya, Indonesia · Paid via Xendit</div>
+                <div class="flex gap-2 mt-3">
+                  <button class="text-xs bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-blue-800">Confirm & Process</button>
+                  <button class="text-xs border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg font-medium hover:bg-slate-50">View Details</button>
+                </div>
+              </div>
+              <div class="p-5 hover:bg-slate-50">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2"><span class="text-xs font-mono text-blue-600">#ORD-2026-0443</span><span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded-full">Ready to Ship</span></div>
+                  <span class="text-sm font-bold text-emerald-600">$6,250.00</span>
+                </div>
+                <div class="text-sm font-medium text-slate-900">Industrial Switch 24-Port × 500 units</div>
+                <div class="text-xs text-slate-400 mt-1">Buyer: AsiaBridge Networks, Malaysia · Escrow held</div>
+                <div class="flex gap-2 mt-3">
+                  <button class="text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-emerald-700">Mark as Shipped</button>
+                  <button class="text-xs border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg font-medium hover:bg-slate-50">Upload Tracking</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RFQ Leads -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between p-6 border-b border-slate-50">
+              <h2 class="font-bold text-slate-900">New RFQ Leads</h2>
+              <a href="rfq.html" class="text-sm text-blue-600 font-medium">View all →</a>
+            </div>
+            <div class="p-4 space-y-3">
+              <div class="border border-amber-100 bg-amber-50/30 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-1"><span class="text-xs font-mono text-blue-600">#RFQ-2026-092</span><span class="text-xs text-slate-400">2h ago</span></div>
+                <div class="text-sm font-semibold text-slate-900">Industrial Switch 48-Port</div>
+                <div class="text-xs text-slate-500 mt-0.5">1,000 units · Malaysia</div>
+                <div class="text-xs text-slate-500">Target: $15/unit</div>
+                <button class="mt-3 w-full text-xs bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 rounded-lg transition">Submit Quote</button>
+              </div>
+              <div class="border border-slate-100 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-1"><span class="text-xs font-mono text-blue-600">#RFQ-2026-089</span><span class="text-xs text-slate-400">5h ago</span></div>
+                <div class="text-sm font-semibold text-slate-900">Network Router Enterprise</div>
+                <div class="text-xs text-slate-500 mt-0.5">200 units · Indonesia</div>
+                <div class="text-xs text-slate-500">Target: $45/unit</div>
+                <button class="mt-3 w-full text-xs border border-slate-200 text-slate-600 font-medium py-2 rounded-lg hover:bg-slate-50">Submit Quote</button>
+              </div>
+              <div class="border border-slate-100 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-1"><span class="text-xs font-mono text-blue-600">#RFQ-2026-085</span><span class="text-xs text-slate-400">1d ago</span></div>
+                <div class="text-sm font-semibold text-slate-900">PoE Switch 24-Port</div>
+                <div class="text-xs text-slate-500 mt-0.5">300 units · Philippines</div>
+                <div class="text-xs text-slate-500">Target: $22/unit</div>
+                <button class="mt-3 w-full text-xs border border-slate-200 text-slate-600 font-medium py-2 rounded-lg hover:bg-slate-50">Submit Quote</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Quick Stats -->
+        <div class="mt-6 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="font-bold text-slate-900">Top Performing Products</h2>
+            <a href="products.html" class="text-sm text-blue-600 font-medium hover:text-blue-800">Manage Products →</a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead><tr class="border-b border-slate-100"><th class="text-left pb-3 text-xs font-semibold text-slate-400 uppercase tracking-widest">Product</th><th class="text-right pb-3 text-xs font-semibold text-slate-400 uppercase tracking-widest">Price</th><th class="text-right pb-3 text-xs font-semibold text-slate-400 uppercase tracking-widest">Orders</th><th class="text-right pb-3 text-xs font-semibold text-slate-400 uppercase tracking-widest">Revenue</th><th class="text-right pb-3 text-xs font-semibold text-slate-400 uppercase tracking-widest">Status</th></tr></thead>
+              <tbody class="divide-y divide-slate-50">
+                <tr class="hover:bg-slate-50"><td class="py-3"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-sm">🖥️</div><span class="font-medium text-slate-900">Network Switch 24-Port</span></div></td><td class="py-3 text-right text-slate-700">$12–18/unit</td><td class="py-3 text-right font-semibold text-slate-900">1,247</td><td class="py-3 text-right font-semibold text-emerald-600">$62,350</td><td class="py-3 text-right"><span class="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium">Active</span></td></tr>
+                <tr class="hover:bg-slate-50"><td class="py-3"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-sm">🔌</div><span class="font-medium text-slate-900">PoE Switch 8-Port</span></div></td><td class="py-3 text-right text-slate-700">$28–45/unit</td><td class="py-3 text-right font-semibold text-slate-900">445</td><td class="py-3 text-right font-semibold text-emerald-600">$18,900</td><td class="py-3 text-right"><span class="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium">Active</span></td></tr>
+                <tr class="hover:bg-slate-50"><td class="py-3"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-sm">📡</div><span class="font-medium text-slate-900">Industrial Router 4G</span></div></td><td class="py-3 text-right text-slate-700">$55–89/unit</td><td class="py-3 text-right font-semibold text-slate-900">123</td><td class="py-3 text-right font-semibold text-emerald-600">$9,840</td><td class="py-3 text-right"><span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">Review</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function doLogout() { localStorage.removeItem('shiap_user'); window.location.replace('../login.html'); }
+
+    async function loadSupplierDashboard() {
+      let user = null;
+      try {
+        user = JSON.parse(localStorage.getItem('shiap_user'));
+      } catch (err) {
+        user = null;
+      }
+      if (!user || !user.email) return;
+      try {
+        const response = await fetch(`/api/dashboard/supplier?email=${encodeURIComponent(user.email)}`);
+        if (!response.ok) return;
+        const data = await response.json();
+        document.getElementById('supplier-user-name').textContent = data.supplier.company_name || `${data.supplier.first_name || ''} ${data.supplier.last_name || ''}`.trim() || data.supplier.email;
+        document.getElementById('supplier-user-avatar').textContent = (data.supplier.company_name || data.supplier.first_name || 'S')[0].toUpperCase();
+        document.getElementById('supplier-total-sales').textContent = '$' + Number(data.total_sales).toLocaleString('en-US', { maximumFractionDigits: 0 });
+        document.getElementById('supplier-new-orders').textContent = data.new_orders;
+        document.getElementById('supplier-new-orders-badge').textContent = data.new_orders;
+        document.getElementById('supplier-rfq-leads').textContent = data.rfq_leads;
+        document.getElementById('supplier-rfq-badge').textContent = data.rfq_leads;
+        document.getElementById('supplier-products-count').textContent = data.products_count || 0;
+        document.getElementById('supplier-wallet-balance').textContent = '$' + Number(data.wallet_balance).toLocaleString('en-US', { maximumFractionDigits: 0 });
+      } catch (err) {
+        console.warn('Unable to load supplier dashboard data.', err);
+      }
+    }
+    loadSupplierDashboard();
+  </script>
+</body>
+</html>

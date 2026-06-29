@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1688 & Taobao Sourcing – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;} #product-result{display:none;} .loading{display:none;}</style>
+</head>
+<body class="bg-slate-50">
+
+  <!-- Nav -->
+  <nav class="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <a href="index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        <span class="text-xl font-extrabold text-slate-900">SHIAP</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <a href="marketplace.html" class="text-sm text-slate-600 hover:text-blue-700">Marketplace</a>
+        <a href="rfq.html" class="text-sm text-slate-600 hover:text-blue-700">RFQ</a>
+        <a id="nav-auth-btn" href="login.html" class="text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 py-12">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 bg-red-50 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+        <span class="text-base">🇨🇳</span> Powered by 1688 & Taobao Integration API
+      </div>
+      <h1 class="text-4xl font-extrabold text-slate-900 mb-3">Source Directly from China</h1>
+      <p class="text-slate-500 text-lg max-w-xl mx-auto">Paste any 1688.com or Taobao.com product URL. We'll translate it, convert the price, add shipping & commission, and let you order directly.</p>
+    </div>
+
+    <!-- URL Input -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 mb-8">
+      <h2 class="text-lg font-bold text-slate-900 mb-4">Paste Product URL</h2>
+      <div class="flex gap-3">
+        <div class="flex-1 relative">
+          <input type="text" id="url-input" placeholder="https://detail.1688.com/offer/12345678.html  or  https://item.taobao.com/item.htm?id=..." class="w-full pl-12 pr-4 py-4 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
+          <div class="absolute left-4 top-1/2 -translate-y-1/2 text-xl">🔗</div>
+        </div>
+        <button onclick="parsURL()" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-8 py-4 rounded-xl transition shadow-sm flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Fetch Product
+        </button>
+      </div>
+      <div class="flex items-center gap-4 mt-4">
+        <span class="text-xs text-slate-400">Try a demo:</span>
+        <button onclick="demoFetch('1688')" class="text-xs text-red-600 bg-red-50 px-3 py-1.5 rounded-lg hover:bg-red-100 font-medium">Demo 1688 URL</button>
+        <button onclick="demoFetch('taobao')" class="text-xs text-orange-600 bg-orange-50 px-3 py-1.5 rounded-lg hover:bg-orange-100 font-medium">Demo Taobao URL</button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading-state" class="loading text-center py-12">
+      <div class="inline-block w-10 h-10 border-4 border-blue-200 border-t-blue-700 rounded-full animate-spin mb-4"></div>
+      <p class="text-slate-500 text-sm">Fetching product data from China... translating...</p>
+    </div>
+
+    <!-- Product Result -->
+    <div id="product-result">
+      <!-- Platform Badge -->
+      <div class="flex items-center gap-3 mb-5">
+        <div id="platform-badge" class="flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+          <span>🇨🇳</span> Sourced from 1688.com
+        </div>
+        <span class="text-xs text-slate-400">Translated & localized by SHIAP</span>
+        <span class="text-xs bg-emerald-50 text-emerald-700 font-medium px-2 py-1 rounded-full">✓ Verified Seller</span>
+      </div>
+
+      <div class="grid lg:grid-cols-5 gap-8">
+        <!-- Product Images & Details -->
+        <div class="lg:col-span-3 space-y-5">
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div id="product-image" class="bg-gradient-to-br from-slate-100 to-slate-200 h-72 flex items-center justify-center text-8xl">🧴</div>
+            <div class="flex gap-3 p-4">
+              <div class="w-14 h-14 rounded-lg bg-slate-50 border-2 border-blue-400 flex items-center justify-center text-xl cursor-pointer">🧴</div>
+              <div class="w-14 h-14 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-xl cursor-pointer">📦</div>
+              <div class="w-14 h-14 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-xl cursor-pointer">📋</div>
+            </div>
+          </div>
+
+          <!-- Price Breakdown Table -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900 mb-4">Price Breakdown & Calculation</h3>
+            <table class="w-full text-sm">
+              <tbody class="divide-y divide-slate-50">
+                <tr><td class="py-2.5 text-slate-500">Original Price (1688)</td><td class="py-2.5 text-right text-slate-700 font-medium" id="cny-price">¥ 16.80 CNY</td></tr>
+                <tr><td class="py-2.5 text-slate-500">Exchange Rate (CNY → USD)</td><td class="py-2.5 text-right text-slate-700">1 CNY = $0.138</td></tr>
+                <tr><td class="py-2.5 text-slate-500">Product Price (USD)</td><td class="py-2.5 text-right text-slate-700">$2.32</td></tr>
+                <tr><td class="py-2.5 text-slate-500">Domestic Shipping (China)</td><td class="py-2.5 text-right text-slate-700">$0.15</td></tr>
+                <tr><td class="py-2.5 text-slate-500">SHIAP Service Fee (12%)</td><td class="py-2.5 text-right text-slate-700">$0.30</td></tr>
+                <tr class="font-bold"><td class="py-3 text-slate-900">Your Price (ex International Freight)</td><td class="py-3 text-right text-blue-700 text-base" id="usd-price">$2.77 / unit</td></tr>
+              </tbody>
+            </table>
+            <div class="mt-3 p-3 bg-amber-50 rounded-xl text-xs text-amber-700">
+              ⚠️ International freight (sea/air) and import duties will be calculated at checkout based on your delivery address and quantity.
+            </div>
+          </div>
+
+          <!-- Product Description -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900 mb-4">Product Description <span class="text-xs font-normal text-slate-400 ml-2">(Auto-translated from Chinese)</span></h3>
+            <p id="product-desc" class="text-sm text-slate-600 leading-relaxed">Stainless Steel Double Wall Insulated Water Bottle 500ml. Food-grade 304 stainless steel interior and 201 stainless steel exterior. Vacuum insulation keeps beverages cold for 24 hours and hot for 12 hours. Leak-proof BPA-free cap. Available in 8 colors. Custom logo printing available for orders above 100 units (additional cost).</p>
+          </div>
+        </div>
+
+        <!-- Order Panel -->
+        <div class="lg:col-span-2 space-y-5">
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <h2 id="product-name" class="text-xl font-bold text-slate-900 mb-1">Stainless Steel Double Wall Water Bottle 500ml</h2>
+            <p class="text-sm text-slate-400 mb-4">Seller: 义乌市好货贸易有限公司 (Yiwu Good Goods Trading Co.)</p>
+
+            <!-- Variants -->
+            <div class="mb-5">
+              <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Color</label>
+              <div class="flex flex-wrap gap-2">
+                <button class="w-8 h-8 rounded-full bg-slate-800 border-2 border-blue-500 ring-2 ring-blue-200"></button>
+                <button class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 hover:border-blue-400"></button>
+                <button class="w-8 h-8 rounded-full bg-blue-600 border-2 border-slate-300 hover:border-blue-400"></button>
+                <button class="w-8 h-8 rounded-full bg-red-500 border-2 border-slate-300 hover:border-blue-400"></button>
+                <button class="w-8 h-8 rounded-full bg-emerald-500 border-2 border-slate-300 hover:border-blue-400"></button>
+                <button class="w-8 h-8 rounded-full bg-amber-500 border-2 border-slate-300 hover:border-blue-400"></button>
+              </div>
+            </div>
+
+            <div class="mb-5">
+              <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Capacity</label>
+              <div class="flex gap-2">
+                <button class="px-3 py-1.5 text-xs font-medium bg-white border border-slate-200 rounded-lg hover:border-blue-400">350ml</button>
+                <button class="px-3 py-1.5 text-xs font-medium bg-blue-700 text-white rounded-lg">500ml</button>
+                <button class="px-3 py-1.5 text-xs font-medium bg-white border border-slate-200 rounded-lg hover:border-blue-400">750ml</button>
+                <button class="px-3 py-1.5 text-xs font-medium bg-white border border-slate-200 rounded-lg hover:border-blue-400">1000ml</button>
+              </div>
+            </div>
+
+            <!-- Quantity -->
+            <div class="mb-5">
+              <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Quantity</label>
+              <div class="flex items-center gap-3">
+                <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+                  <button class="px-4 py-2.5 text-slate-600 hover:bg-slate-50 font-bold" onclick="changeSourceQty(-100)">−</button>
+                  <input type="number" id="src-qty" value="200" min="100" class="w-20 text-center py-2.5 text-sm font-semibold text-slate-900 border-x border-slate-200 focus:outline-none" />
+                  <button class="px-4 py-2.5 text-slate-600 hover:bg-slate-50 font-bold" onclick="changeSourceQty(100)">+</button>
+                </div>
+                <div>
+                  <div class="text-xs text-slate-500">Total Estimate</div>
+                  <div class="font-extrabold text-lg text-blue-700" id="src-total">$554.00</div>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400 mt-1.5">MOQ: 100 units from this seller</p>
+            </div>
+
+            <!-- Price Tiers from Source -->
+            <div class="bg-blue-50 rounded-xl p-4 mb-5">
+              <div class="text-xs font-semibold text-blue-700 mb-2">Volume Discounts (from seller)</div>
+              <div class="space-y-1 text-xs text-blue-900">
+                <div class="flex justify-between"><span>100–499 units</span><span class="font-bold">$2.77 / unit</span></div>
+                <div class="flex justify-between"><span>500–999 units</span><span class="font-bold">$2.50 / unit</span></div>
+                <div class="flex justify-between text-emerald-700"><span>1,000+ units</span><span class="font-bold">$2.20 / unit 🏆</span></div>
+              </div>
+            </div>
+
+            <!-- Custom Logo -->
+            <div class="flex items-center justify-between mb-5 p-3 bg-slate-50 rounded-xl">
+              <div>
+                <div class="text-sm font-medium text-slate-700">Custom Logo / Branding</div>
+                <div class="text-xs text-slate-400">Min. 100 units · +$0.30/unit</div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" />
+                <div class="w-9 h-5 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4"></div>
+              </label>
+            </div>
+
+            <a href="login.html" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 rounded-xl transition shadow-sm flex items-center justify-center gap-2 mb-3">
+              Add to Sourcing Cart
+            </a>
+            <a href="rfq.html" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-medium py-3 rounded-xl transition border border-slate-200 hover:border-blue-300 flex items-center justify-center gap-2 text-sm">
+              Request Custom Quote Instead
+            </a>
+          </div>
+
+          <!-- Seller Info -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Original Seller (1688)</h3>
+            <div class="text-sm space-y-2">
+              <div class="flex justify-between"><span class="text-slate-500">Seller Name</span><span class="text-slate-900 font-medium">义乌好货贸易</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Location</span><span class="text-slate-900">Yiwu, Zhejiang</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">1688 Rating</span><span class="text-amber-500">★★★★☆ 4.7</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Annual Sales</span><span class="text-slate-900">¥5.2M+</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Response Time</span><span class="text-emerald-600">< 2 hours</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="mt-16 bg-white rounded-2xl border border-slate-100 shadow-sm p-10">
+      <h2 class="text-2xl font-bold text-slate-900 text-center mb-8">How the Sourcing Tool Works</h2>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">🔗</div>
+          <h3 class="font-semibold text-slate-900 mb-1 text-sm">1. Paste URL</h3>
+          <p class="text-xs text-slate-500">Copy any product URL from 1688.com or Taobao.com</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🌐</div>
+          <h3 class="font-semibold text-slate-900 mb-1 text-sm">2. Auto-Translate</h3>
+          <p class="text-xs text-slate-500">We fetch, translate, and localize all product details into English</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">💱</div>
+          <h3 class="font-semibold text-slate-900 mb-1 text-sm">3. Currency + Fee</h3>
+          <p class="text-xs text-slate-500">CNY converted to USD + our transparent 12% service fee added</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🛒</div>
+          <h3 class="font-semibold text-slate-900 mb-1 text-sm">4. Order Directly</h3>
+          <p class="text-xs text-slate-500">Add to cart and checkout in your currency with escrow protection</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function parsURL() {
+      const url = document.getElementById('url-input').value.trim();
+      if (!url) { alert('Please paste a 1688 or Taobao URL'); return; }
+      const isTaboao = url.includes('taobao');
+      demoFetch(isTaboao ? 'taobao' : '1688');
+    }
+
+    function demoFetch(platform) {
+      const loadEl = document.getElementById('loading-state');
+      const resultEl = document.getElementById('product-result');
+      loadEl.style.display = 'block';
+      resultEl.style.display = 'none';
+
+      if (platform === '1688') {
+        document.getElementById('url-input').value = 'https://detail.1688.com/offer/732819456123.html';
+      } else {
+        document.getElementById('url-input').value = 'https://item.taobao.com/item.htm?id=654321987654';
+      }
+
+      setTimeout(() => {
+        loadEl.style.display = 'none';
+        resultEl.style.display = 'block';
+
+        if (platform === 'taobao') {
+          document.getElementById('product-image').textContent = '👕';
+          document.getElementById('product-name').textContent = 'Premium Cotton Polo Shirt Blank Wholesale';
+          document.getElementById('product-desc').textContent = 'High-quality 100% cotton polo shirt 200gsm. Breathable and comfortable. Available in 12 colors and 6 sizes (XS to 3XL). Suitable for custom embroidery or screen printing. MOQ 50 pieces per color.';
+          document.getElementById('cny-price').textContent = '¥ 28.00 CNY';
+          document.getElementById('usd-price').textContent = '$4.30 / unit';
+          document.getElementById('platform-badge').innerHTML = '<span>🇨🇳</span> Sourced from Taobao.com';
+          document.getElementById('platform-badge').className = 'flex items-center gap-2 bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full';
+        }
+      }, 2000);
+    }
+
+    function changeSourceQty(delta) {
+      const el = document.getElementById('src-qty');
+      let val = parseInt(el.value) + delta;
+      if (val < 100) val = 100;
+      el.value = val;
+      const price = val >= 1000 ? 2.20 : val >= 500 ? 2.50 : 2.77;
+      document.getElementById('src-total').textContent = '$' + (val * price).toFixed(2);
+    }
+  </script>
+<script>
+  (function() {
+    try {
+      const user = JSON.parse(localStorage.getItem('shiap_user'));
+      if (!user || !user.email) return;
+      const dash = { admin: 'admin/dashboard.html', supplier: 'supplier/dashboard.html', buyer: 'buyer/dashboard.html' };
+      const btn = document.getElementById('nav-auth-btn');
+      if (!btn) return;
+      btn.textContent = 'My Account';
+      btn.href = dash[user.role] || 'buyer/dashboard.html';
+    } catch(e) {}
+  })();
+</script>
+</body>
+</html>

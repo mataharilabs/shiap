@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;} .gradient-bg{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#1d4ed8 100%);}</style>
+</head>
+<body class="min-h-screen flex">
+
+  <!-- Left Panel -->
+  <div class="hidden lg:flex flex-col justify-between gradient-bg p-12 w-5/12">
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+      <span class="text-2xl font-extrabold text-white">SHIAP</span>
+    </a>
+    <div>
+      <blockquote class="text-xl font-semibold text-white leading-relaxed mb-6">"SHIAP helped us reduce sourcing costs by 35% by connecting us directly with verified Chinese manufacturers — without the language barrier."</blockquote>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-lg">👤</div>
+        <div><div class="text-white font-semibold text-sm">Budi Santoso</div><div class="text-blue-200 text-xs">CEO, PT Maju Jaya Indonesia</div></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="bg-white/10 rounded-xl p-4 text-center"><div class="text-2xl font-extrabold text-white">10K+</div><div class="text-blue-200 text-xs">Products</div></div>
+      <div class="bg-white/10 rounded-xl p-4 text-center"><div class="text-2xl font-extrabold text-white">500+</div><div class="text-blue-200 text-xs">Suppliers</div></div>
+      <div class="bg-white/10 rounded-xl p-4 text-center"><div class="text-2xl font-extrabold text-white">30+</div><div class="text-blue-200 text-xs">Countries</div></div>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="flex-1 flex items-center justify-center px-6 py-12 bg-white">
+    <div class="w-full max-w-md">
+      <!-- Mobile Logo -->
+      <div class="lg:hidden flex items-center gap-2 mb-8">
+        <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        <span class="text-xl font-extrabold text-slate-900">SHIAP</span>
+      </div>
+
+      <h1 class="text-3xl font-extrabold text-slate-900 mb-2">Welcome back</h1>
+      <p class="text-slate-500 mb-8">Sign in to your SHIAP account</p>
+
+      <!-- Role Quick-select Demo -->
+      <div class="flex gap-2 mb-6 p-1 bg-slate-100 rounded-xl">
+        <button onclick="setRole('buyer')" id="role-buyer" class="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-white text-blue-700 shadow-sm transition">Buyer</button>
+        <button onclick="setRole('supplier')" id="role-supplier" class="flex-1 py-2.5 text-sm font-semibold rounded-lg text-slate-500 transition">Supplier</button>
+        <button onclick="setRole('admin')" id="role-admin" class="flex-1 py-2.5 text-sm font-semibold rounded-lg text-slate-500 transition">Admin</button>
+      </div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="mb-4">
+          <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest block mb-2">Email Address</label>
+          <input type="email" id="email" placeholder="you@company.com" value="buyer@example.com" class="w-full px-4 py-3.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
+        </div>
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Password</label>
+            <a href="#" class="text-xs text-blue-600 hover:text-blue-800">Forgot password?</a>
+          </div>
+          <input id="password" type="password" placeholder="••••••••" value="password123" class="w-full px-4 py-3.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
+        </div>
+        <div class="flex items-center gap-2 mb-6">
+          <input type="checkbox" id="remember" class="rounded text-blue-600" checked />
+          <label for="remember" class="text-sm text-slate-600">Keep me signed in</label>
+        </div>
+        <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 rounded-xl transition shadow-sm text-base">
+          Sign In
+        </button>
+      </form>
+
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-100"></div></div>
+        <div class="relative flex justify-center"><span class="bg-white px-4 text-xs text-slate-400">or continue with</span></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mb-8">
+        <button id="google-login-btn" type="button" onclick="googleSignIn()" class="flex items-center justify-center gap-2 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Sign in with Google
+        </button>
+        <button class="flex items-center justify-center gap-2 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </button>
+      </div>
+
+      <p class="text-center text-sm text-slate-500">Don't have an account? <a href="register.html" class="text-blue-600 font-semibold hover:text-blue-800">Create one free →</a></p>
+    </div>
+  </div>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    (function() {
+      try {
+        const user = JSON.parse(localStorage.getItem('shiap_user'));
+        if (user && user.email) {
+          const dash = { admin: 'admin/dashboard.html', supplier: 'supplier/dashboard.html', buyer: 'buyer/dashboard.html' };
+          window.location.replace(dash[user.role] || 'buyer/dashboard.html');
+        }
+      } catch(e) {}
+    })();
+
+    let GOOGLE_CLIENT_ID = '';
+
+    async function loadGoogleClientId() {
+      try {
+        const response = await fetch('/api/google-client-id');
+        const data = await response.json();
+        GOOGLE_CLIENT_ID = data.client_id;
+      } catch (error) {
+        console.warn('Unable to load Google client ID:', error);
+      }
+    }
+    loadGoogleClientId();
+
+    function setRole(role) {
+      const emails = { buyer: 'buyer@example.com', supplier: 'vendor@techpro.cn', admin: 'admin@shiap.com' };
+      document.getElementById('email').value = emails[role];
+      document.querySelectorAll('[id^="role-"]').forEach(el => { el.classList.remove('bg-white','text-blue-700','shadow-sm'); el.classList.add('text-slate-500'); });
+      document.getElementById('role-'+role).classList.add('bg-white','text-blue-700','shadow-sm');
+      document.getElementById('role-'+role).classList.remove('text-slate-500');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      if (!email || !password) {
+        return alert('Please enter email and password.');
+      }
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          return alert(result.error || 'Login failed.');
+        }
+
+        localStorage.setItem('shiap_user', JSON.stringify({
+          email: result.email,
+          first_name: result.first_name || '',
+          last_name: result.last_name || '',
+          company_name: result.company_name || '',
+          role: result.role,
+          status: result.status
+        }));
+
+        if (result.role === 'admin') {
+          location.href = 'admin/dashboard.html';
+        } else if (result.role === 'supplier') {
+          location.href = 'supplier/dashboard.html';
+        } else {
+          location.href = 'buyer/dashboard.html';
+        }
+      } catch (error) {
+        alert('Unable to connect to the server. Please run the backend server and refresh.');
+      }
+    }
+
+    function handleGoogleCredential(response) {
+      if (!response.credential) {
+        return alert('Google sign-in failed.');
+      }
+      fetch('/api/google-signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_token: response.credential })
+      })
+      .then(async (res) => {
+        const result = await res.json();
+        if (!res.ok) {
+          throw new Error(result.error || 'Google sign-in failed.');
+        }
+        localStorage.setItem('shiap_user', JSON.stringify({
+          email: result.email,
+          first_name: result.first_name || '',
+          last_name: result.last_name || '',
+          company_name: result.company_name || '',
+          role: result.role,
+          status: result.status
+        }));
+        if (result.role === 'admin') {
+          location.href = 'admin/dashboard.html';
+        } else if (result.role === 'supplier') {
+          location.href = 'supplier/dashboard.html';
+        } else {
+          location.href = 'buyer/dashboard.html';
+        }
+      })
+      .catch((err) => {
+        alert(err.message || 'Unable to sign in with Google.');
+      });
+    }
+
+    function googleSignIn() {
+      if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+        return alert('Google Identity Services not loaded yet. Refresh the page and try again.');
+      }
+      if (!GOOGLE_CLIENT_ID) {
+        return alert('Google client ID is not configured. Please check the server settings.');
+      }
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredential
+      });
+      google.accounts.id.prompt();
+    }
+  </script>
+</body>
+</html>

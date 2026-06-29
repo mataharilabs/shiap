@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My RFQs – SHIAP Buyer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-slate-50">
+<div class="flex h-screen overflow-hidden">
+  <div class="w-64 bg-white border-r border-slate-100 shadow-sm flex flex-col flex-shrink-0">
+    <div class="p-5 border-b border-slate-100"><a href="../index.html" class="flex items-center gap-2"><div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div><span class="text-lg font-extrabold text-slate-900">SHIAP</span></a></div>
+    <div class="p-4 border-b border-slate-100"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold text-sm flex items-center justify-center">BS</div><div><div class="text-sm font-semibold text-slate-900">Budi Santoso</div><div class="text-xs text-slate-400">PT Maju Jaya · Buyer</div></div></div></div>
+    <nav class="flex-1 p-3 space-y-1">
+      <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">Dashboard</a>
+      <a href="orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">Order History</a>
+      <a href="rfq.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm">My RFQs <span class="ml-auto bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">2</span></a>
+      <a href="../marketplace.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">Browse Products</a>
+      <a href="../sourcing.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-medium">1688 Sourcing</a>
+      <div class="pt-3 border-t border-slate-100 mt-3"><a href="../login.html" onclick="logout()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 text-sm font-medium">Sign Out</a></div>
+    </nav>
+  </div>
+
+  <div class="flex-1 overflow-y-auto">
+    <div class="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+      <div><h1 class="text-xl font-bold text-slate-900">My RFQs</h1><p class="text-xs text-slate-400">4 total · 2 awaiting quotes · 1 ready to award</p></div>
+      <a href="../rfq.html" class="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition">+ New RFQ</a>
+    </div>
+
+    <div class="p-8 space-y-5">
+
+      <!-- RFQ with quotes ready -->
+      <div class="bg-white rounded-2xl border-2 border-emerald-200 shadow-sm p-6">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <div class="flex items-center gap-3 mb-2"><span class="text-sm font-mono text-blue-600">#RFQ-2026-087</span><span class="text-xs bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">✓ 5 Quotes Ready</span></div>
+            <h3 class="text-base font-bold text-slate-900">Industrial Network Switch 24-Port Managed</h3>
+            <div class="flex items-center gap-4 text-xs text-slate-500 mt-1"><span>500 units</span><span>·</span><span>Electronics</span><span>·</span><span>Submitted Jun 20, 2026</span></div>
+          </div>
+          <div class="text-right"><div class="text-sm text-slate-500">Best offer:</div><div class="text-xl font-extrabold text-emerald-600">$12.50/unit</div><div class="text-xs text-slate-400">Total: $6,250</div></div>
+        </div>
+
+        <!-- Quote Preview -->
+        <div class="grid grid-cols-3 gap-3 mb-5">
+          <div class="border-2 border-blue-500 rounded-xl p-3 bg-blue-50 relative">
+            <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-blue-700 text-white text-xs px-2 py-0.5 rounded-full font-bold">Best</div>
+            <div class="text-sm font-bold text-slate-900">Shenzhen TechPro</div>
+            <div class="text-lg font-extrabold text-emerald-600">$12.50</div>
+            <div class="text-xs text-slate-500">10 days · FOB Shenzhen</div>
+          </div>
+          <div class="border border-slate-200 rounded-xl p-3">
+            <div class="text-sm font-bold text-slate-900">Guangzhou NetTech</div>
+            <div class="text-lg font-extrabold text-slate-900">$13.80</div>
+            <div class="text-xs text-slate-500">14 days · FOB Guangzhou</div>
+          </div>
+          <div class="border border-slate-200 rounded-xl p-3">
+            <div class="text-sm font-bold text-slate-900">Dongguan ElecCo</div>
+            <div class="text-lg font-extrabold text-slate-900">$15.00</div>
+            <div class="text-xs text-slate-500">7 days · EXW Factory</div>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <a href="../rfq.html" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 rounded-xl transition text-sm text-center">Compare All 5 Quotes →</a>
+          <button onclick="alert('Order placed with Shenzhen TechPro for 500 units at $12.50/unit. Total: $6,250. Payment link will be sent via email.')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition text-sm">Award Best Quote & Order</button>
+        </div>
+      </div>
+
+      <!-- RFQ pending quotes -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <div class="flex items-center gap-3 mb-2"><span class="text-sm font-mono text-blue-600">#RFQ-2026-074</span><span class="text-xs bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">⏳ 3 Quotes Received</span></div>
+            <h3 class="text-base font-bold text-slate-900">Cotton T-Shirt Plain 180gsm — Natural White</h3>
+            <div class="flex items-center gap-4 text-xs text-slate-500 mt-1"><span>2,000 pcs</span><span>·</span><span>Textiles</span><span>·</span><span>Submitted Jun 18, 2026</span></div>
+          </div>
+          <div class="text-right"><div class="text-sm text-slate-500">Best so far:</div><div class="text-xl font-extrabold text-blue-700">$2.10/unit</div></div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3 mb-4 text-xs text-slate-600">💡 Tip: Deadline for quotes is Jun 25. 2 more suppliers may still respond. You can compare now or wait for more quotes.</div>
+        <div class="flex gap-3">
+          <button class="flex-1 border border-slate-200 text-slate-600 font-medium py-3 rounded-xl hover:bg-slate-50 text-sm">View 3 Current Quotes</button>
+          <button class="flex-1 border border-slate-200 text-slate-600 font-medium py-3 rounded-xl hover:bg-slate-50 text-sm">Extend Deadline</button>
+        </div>
+      </div>
+
+      <!-- Awarded RFQ -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 opacity-70">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <div class="flex items-center gap-3 mb-2"><span class="text-sm font-mono text-blue-600">#RFQ-2026-061</span><span class="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">✓ Awarded & Ordered</span></div>
+            <h3 class="text-base font-bold text-slate-900">Solar Panel 400W Monocrystalline Half-Cell</h3>
+            <div class="flex items-center gap-4 text-xs text-slate-500 mt-1"><span>50 units</span><span>·</span><span>Electronics</span><span>·</span><span>Awarded to Chengdu Solar Tech</span></div>
+          </div>
+          <div class="text-right"><div class="text-sm text-slate-500">Awarded at:</div><div class="text-xl font-extrabold text-slate-900">$88/unit</div></div>
+        </div>
+        <a href="orders.html" class="inline-block text-sm text-blue-600 font-medium hover:text-blue-800">View Order #ORD-2026-0432 →</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  async function loadCurrentUser() {
+    let user = null;
+    try {
+      user = JSON.parse(localStorage.getItem('shiap_user'));
+    } catch (err) {
+      user = null;
+    }
+    if (!user || !user.email) return;
+
+    try {
+      const response = await fetch(`/api/user?email=${encodeURIComponent(user.email)}`);
+      if (!response.ok) {
+        renderUser(user);
+        return;
+      }
+      const data = await response.json();
+      localStorage.setItem('shiap_user', JSON.stringify(data));
+      renderUser(data);
+    } catch (err) {
+      renderUser(user);
+    }
+  }
+
+  function renderUser(user) {
+    const name = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email;
+    const initials = name.split(' ').map((w) => w[0] || '').slice(0, 2).join('').toUpperCase() || user.email[0].toUpperCase();
+    const company = user.company_name || 'No company';
+    const roleLabel = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Buyer';
+    document.getElementById('user-avatar').textContent = initials;
+    document.getElementById('user-name').textContent = name;
+    document.getElementById('user-company-role').textContent = `${company} · ${roleLabel}`;
+  }
+
+  function logout() {
+    localStorage.removeItem('shiap_user');
+    window.location.replace('../login.html');
+  }
+
+  loadCurrentUser();
+</script>
+</body>
+</html>

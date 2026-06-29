@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – SHIAP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body{font-family:'Inter',sans-serif;}
+    #revenueChart { display: block; width: 100% !important; height: 100% !important; max-height: 100% !important; }
+  </style>
+</head>
+<body class="bg-slate-50">
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-slate-900 flex flex-col flex-shrink-0">
+      <div class="p-5 border-b border-slate-700">
+        <a href="../index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+          <div><span class="text-lg font-extrabold text-white">SHIAP</span><span class="text-xs text-slate-400 ml-2 bg-slate-700 px-1.5 py-0.5 rounded">ADMIN</span></div>
+        </a>
+      </div>
+      <div class="p-4 border-b border-slate-700">
+        <div class="flex items-center gap-3">
+          <div id="admin-user-avatar" class="w-9 h-9 rounded-full bg-blue-600 text-white font-bold text-sm flex items-center justify-center">AD</div>
+          <div><div id="admin-user-name" class="text-sm font-semibold text-white">Admin</div><div id="admin-user-email" class="text-xs text-slate-400">admin@shiap.com</div></div>
+        </div>
+      </div>
+      <nav class="flex-1 p-3 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-600/20 text-blue-400 font-semibold text-sm border border-blue-600/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          Dashboard
+        </a>
+        <a href="users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          Manage Users
+          <span id="sidebar-badge-kyb" class="ml-auto bg-red-500/20 text-red-400 text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+        </a>
+        <a href="products.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          Manage Products
+          <span id="sidebar-badge-products" class="ml-auto bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+        </a>
+        <a href="orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Orders & Escrow
+          <span id="sidebar-badge-disputes" class="ml-auto bg-orange-500/20 text-orange-400 text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+        </a>
+        <a href="rfq.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white text-sm font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          RFQ Moderation
+          <span id="sidebar-badge-rfqs" class="ml-auto bg-purple-500/20 text-purple-400 text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+        </a>
+        <div class="pt-3 border-t border-slate-700 mt-3">
+          <a href="#" onclick="doLogout()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-red-900/20 hover:text-red-400 text-sm font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-1 overflow-y-auto">
+      <div class="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">Admin Control Tower</h1>
+          <p id="dashboard-date" class="text-xs text-slate-400">Platform overview</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-3 py-1.5 rounded-full">● Platform Online</span>
+        </div>
+      </div>
+
+      <div class="p-8">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Total Users</span><div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div></div>
+            <div id="admin-total-users" class="text-3xl font-extrabold text-slate-900">—</div>
+            <div class="text-xs text-emerald-600 mt-1 font-medium">Registered users</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Active Suppliers</span><div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center"><svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div></div>
+            <div id="admin-active-suppliers" class="text-3xl font-extrabold text-slate-900">—</div>
+            <div class="text-xs text-emerald-600 mt-1 font-medium">Active suppliers</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Products</span><div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l8-4 8 4-8 4-8-4zm0 7l8 4 8-4M3 16l8 4 8-4"/></svg></div></div>
+            <div id="admin-total-products" class="text-3xl font-extrabold text-slate-900">—</div>
+            <div class="text-xs text-slate-400 mt-1 font-medium">Listed products</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Escrow Balance</span><div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center"><svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div></div>
+            <div id="admin-total-revenue" class="text-3xl font-extrabold text-slate-900">$—</div>
+            <div class="text-xs text-slate-400 mt-1 font-medium">Total GMV</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Open Disputes</span><div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center"><svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div></div>
+            <div id="admin-open-disputes" class="text-3xl font-extrabold text-red-600">—</div>
+            <div class="text-xs text-red-500 mt-1 font-medium">Require resolution</div>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 mb-6">
+          <!-- Revenue Chart -->
+          <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-bold text-slate-900">Platform Revenue (GMV)</h2>
+              <select class="text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none bg-white text-slate-600">
+                <option>Last 7 days</option>
+                <option>Last 30 days</option>
+                <option>This Quarter</option>
+              </select>
+            </div>
+            <div class="h-80">
+              <canvas id="revenueChart" width="700" height="280" class="w-full"></canvas>
+            </div>
+          </div>
+          <!-- Pending Actions -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <h2 class="font-bold text-slate-900 mb-4">Pending Actions</h2>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 bg-red-50 rounded-xl">
+                <div>
+                  <div class="text-sm font-semibold text-slate-900">KYB Pending</div>
+                  <div class="text-xs text-slate-500"><span id="pending-kyb-count">—</span> users await verification</div>
+                </div>
+                <a href="users.html" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-red-700">Review</a>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-amber-50 rounded-xl">
+                <div>
+                  <div class="text-sm font-semibold text-slate-900">Product Approval</div>
+                  <div class="text-xs text-slate-500"><span id="pending-products-count">—</span> products await moderation</div>
+                </div>
+                <a href="products.html" class="text-xs bg-amber-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-amber-600">Review</a>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
+                <div>
+                  <div class="text-sm font-semibold text-slate-900">RFQ Moderation</div>
+                  <div class="text-xs text-slate-500"><span id="pending-rfqs-count">—</span> RFQs need review</div>
+                </div>
+                <a href="rfq.html" class="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-purple-700">Review</a>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-red-50 rounded-xl border border-red-100">
+                <div>
+                  <div class="text-sm font-semibold text-red-700">⚠️ Disputes</div>
+                  <div class="text-xs text-slate-500"><span id="pending-disputes-count">—</span> escrow disputes open</div>
+                </div>
+                <a href="orders.html" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-red-700">Resolve</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+          <!-- Recent Registrations -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between p-6 border-b border-slate-50">
+              <h2 class="font-bold text-slate-900">Recent Registrations</h2>
+              <a href="users.html" class="text-sm text-blue-600 font-medium hover:text-blue-800">View all →</a>
+            </div>
+            <div id="recent-registrations-body" class="divide-y divide-slate-50">
+              <div class="px-6 py-8 text-center text-slate-400 text-sm">Loading...</div>
+            </div>
+          </div>
+
+          <!-- Open Dispute Cases -->
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between p-6 border-b border-slate-50">
+              <h2 class="font-bold text-slate-900">Open Dispute Cases</h2>
+              <a href="orders.html" class="text-sm text-blue-600 font-medium hover:text-blue-800">View all orders →</a>
+            </div>
+            <div id="dispute-cases-container" class="p-5 space-y-4">
+              <div class="text-center py-6 text-slate-400 text-sm">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loadAdminUser() {
+      let user = null;
+      try { user = JSON.parse(localStorage.getItem('shiap_user')); } catch(e) {}
+      if (!user || !user.email || user.role !== 'admin') { window.location.replace('../login.html'); return null; }
+      const name = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Admin';
+      const initials = name.split(' ').map(w => w[0] || '').slice(0, 2).join('').toUpperCase() || 'AD';
+      document.getElementById('admin-user-avatar').textContent = initials;
+      document.getElementById('admin-user-name').textContent = name;
+      document.getElementById('admin-user-email').textContent = user.email;
+      return user;
+    }
+
+    function doLogout() { localStorage.removeItem('shiap_user'); window.location.replace('../login.html'); }
+
+    function statusBadge(status) {
+      if (status === 'active') return '<span class="text-xs bg-emerald-50 text-emerald-700 font-medium px-2 py-1 rounded-full">Active</span>';
+      if (status === 'pending') return '<span class="text-xs bg-amber-50 text-amber-700 font-medium px-2 py-1 rounded-full">Pending KYB</span>';
+      return '<span class="text-xs bg-slate-100 text-slate-500 font-medium px-2 py-1 rounded-full">' + status + '</span>';
+    }
+
+    function renderRecentRegistrations(users) {
+      const el = document.getElementById('recent-registrations-body');
+      if (!users || !users.length) {
+        el.innerHTML = '<div class="px-6 py-8 text-center text-slate-400 text-sm">No registrations yet.</div>';
+        return;
+      }
+      el.innerHTML = users.map(u => {
+        const name = `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email;
+        const initials = name.split(' ').map(w => w[0] || '').slice(0, 2).join('').toUpperCase();
+        const colors = u.role === 'supplier' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700';
+        const roleLabel = u.role.charAt(0).toUpperCase() + u.role.slice(1);
+        return `<div class="flex items-center justify-between px-6 py-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full ${colors} font-bold text-xs flex items-center justify-center">${initials}</div>
+            <div>
+              <div class="text-sm font-medium text-slate-900">${u.company_name || name}</div>
+              <div class="text-xs text-slate-400">${u.email} · ${roleLabel}</div>
+            </div>
+          </div>
+          ${statusBadge(u.status)}
+        </div>`;
+      }).join('');
+    }
+
+    function renderDisputeCases(orders) {
+      const el = document.getElementById('dispute-cases-container');
+      if (!orders || !orders.length) {
+        el.innerHTML = '<div class="text-center py-8"><div class="text-2xl mb-2">✅</div><div class="text-sm text-slate-400">No open disputes</div></div>';
+        return;
+      }
+      el.innerHTML = orders.map(o => `
+        <div class="border border-red-100 bg-red-50/50 rounded-xl p-5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-mono text-blue-600">#${o.order_number}</span>
+                <span class="text-xs bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">⚠️ Disputed</span>
+              </div>
+              <div class="text-sm font-semibold text-slate-900">${o.product_name || 'Product'}</div>
+              <div class="text-xs text-slate-500 mt-0.5">Buyer: ${o.buyer_company || o.buyer_email} · Seller: ${o.supplier_company || o.supplier_email}</div>
+            </div>
+            <div class="text-sm font-bold text-slate-900">$${Number(o.total_price).toLocaleString()}</div>
+          </div>
+          <div class="flex gap-2">
+            <a href="orders.html" class="text-xs bg-emerald-600 text-white px-3 py-2 rounded-lg font-medium hover:bg-emerald-700 flex-1 text-center">Resolve</a>
+            <a href="orders.html" class="text-xs bg-blue-700 text-white px-3 py-2 rounded-lg font-medium hover:bg-blue-800 flex-1 text-center">View Details</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function showBadge(id, count) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (count > 0) { el.textContent = count; el.classList.remove('hidden'); }
+    }
+
+    async function loadAdminDashboard() {
+      const user = loadAdminUser();
+      if (!user) return;
+
+      const now = new Date();
+      document.getElementById('dashboard-date').textContent = 'Platform overview · ' + now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+      try {
+        const [baseRes, statsRes] = await Promise.all([
+          fetch('/api/dashboard/admin'),
+          fetch('/api/admin/stats')
+        ]);
+        if (baseRes.ok) {
+          const d = await baseRes.json();
+          document.getElementById('admin-total-users').textContent = d.total_users;
+          document.getElementById('admin-active-suppliers').textContent = d.active_suppliers;
+          document.getElementById('admin-total-products').textContent = d.total_products;
+          document.getElementById('admin-total-revenue').textContent = '$' + Number(d.total_revenue).toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+        if (statsRes.ok) {
+          const s = await statsRes.json();
+          document.getElementById('admin-open-disputes').textContent = s.open_disputes;
+          document.getElementById('pending-kyb-count').textContent = s.pending_kyb;
+          document.getElementById('pending-products-count').textContent = s.pending_products;
+          document.getElementById('pending-rfqs-count').textContent = s.open_rfqs;
+          document.getElementById('pending-disputes-count').textContent = s.open_disputes;
+          showBadge('sidebar-badge-kyb', s.pending_kyb);
+          showBadge('sidebar-badge-products', s.pending_products);
+          showBadge('sidebar-badge-disputes', s.open_disputes);
+          showBadge('sidebar-badge-rfqs', s.open_rfqs);
+          renderRecentRegistrations(s.recent_registrations);
+          renderDisputeCases(s.dispute_orders);
+        }
+      } catch (err) {
+        console.warn('Unable to load admin dashboard data.', err);
+      }
+    }
+
+    loadAdminDashboard();
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'GMV (USD)',
+          data: [18500, 22000, 19800, 31000, 28500, 24000, 35000],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.08)',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#2563eb',
+          pointRadius: 4,
+          tension: 0.4,
+          fill: true
+        },{
+          label: 'Platform Revenue',
+          data: [2220, 2640, 2376, 3720, 3420, 2880, 4200],
+          borderColor: '#059669',
+          backgroundColor: 'rgba(5,150,105,0.05)',
+          borderWidth: 2,
+          pointBackgroundColor: '#059669',
+          pointRadius: 4,
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', labels: { font: { family: 'Inter', size: 11 }, boxWidth: 12 } } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Inter', size: 11 }, callback: v => '$' + (v/1000).toFixed(0) + 'K' } },
+          x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 11 } } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

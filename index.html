@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SHIAP – Cross-Border Wholesale Marketplace & Sourcing SaaS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            shiap: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe',
+              300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6',
+              600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .gradient-hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%); }
+    .feature-card:hover { transform: translateY(-4px); transition: transform 0.2s; }
+    .shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .nav-link { position: relative; }
+    .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; background: #3b82f6; bottom: -2px; left: 0; transition: width 0.3s; }
+    .nav-link:hover::after { width: 100%; }
+  </style>
+</head>
+<body class="bg-white text-slate-900">
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+          </div>
+          <span class="text-xl font-800 font-extrabold text-slate-900">SHIAP</span>
+        </a>
+        <!-- Nav Links -->
+        <div class="hidden md:flex items-center gap-7">
+          <a href="marketplace.html" class="nav-link text-sm font-medium text-slate-600 hover:text-blue-700">Marketplace</a>
+          <a href="rfq.html" class="nav-link text-sm font-medium text-slate-600 hover:text-blue-700">RFQ System</a>
+          <a href="sourcing.html" class="nav-link text-sm font-medium text-slate-600 hover:text-blue-700">1688 Sourcing</a>
+          <a href="#how-it-works" class="nav-link text-sm font-medium text-slate-600 hover:text-blue-700">How It Works</a>
+        </div>
+        <!-- Auth Buttons -->
+        <div class="flex items-center gap-3">
+          <a id="nav-auth-btn" href="login.html" class="text-sm font-medium text-slate-600 hover:text-blue-700 px-4 py-2 rounded-lg hover:bg-slate-50 transition">Sign In</a>
+          <a href="register.html" class="text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition shadow-sm">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="gradient-hero pt-32 pb-24 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 bg-white/10 text-blue-200 text-xs font-medium px-3 py-1.5 rounded-full mb-6 backdrop-blur">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        Trusted by 500+ Businesses in 30+ Countries
+      </div>
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
+        Source Smarter<br />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300">From China & Beyond</span>
+      </h1>
+      <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-10 leading-relaxed">
+        The all-in-one B2B wholesale marketplace for global buyers. Browse verified suppliers, submit RFQs, and source directly from 1688 & Taobao — all in one platform.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="marketplace.html" class="inline-flex items-center justify-center gap-2 bg-white text-blue-800 font-semibold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl hover:bg-blue-50 transition text-base">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          Browse Marketplace
+        </a>
+        <a href="rfq.html" class="inline-flex items-center justify-center gap-2 bg-transparent text-white font-semibold border-2 border-white/40 px-8 py-4 rounded-xl hover:bg-white/10 transition text-base backdrop-blur">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Submit a Free RFQ
+        </a>
+      </div>
+      <!-- Hero Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 max-w-4xl mx-auto">
+        <div class="text-center">
+          <div class="text-3xl font-extrabold text-white">10,000+</div>
+          <div class="text-blue-200 text-sm mt-1">Products Listed</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-extrabold text-white">500+</div>
+          <div class="text-blue-200 text-sm mt-1">Verified Suppliers</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-extrabold text-white">30+</div>
+          <div class="text-blue-200 text-sm mt-1">Countries Served</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-extrabold text-white">98%</div>
+          <div class="text-blue-200 text-sm mt-1">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted Brands -->
+  <section class="bg-slate-50 py-12 border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-8">Trusted by Leading Businesses</p>
+      <div class="flex flex-wrap justify-center items-center gap-10 opacity-50">
+        <div class="text-xl font-bold text-slate-400">PT. Maju Jaya</div>
+        <div class="text-xl font-bold text-slate-400">Indo Trade Co.</div>
+        <div class="text-xl font-bold text-slate-400">AsiaBridge Ltd.</div>
+        <div class="text-xl font-bold text-slate-400">NusaSource</div>
+        <div class="text-xl font-bold text-slate-400">GlobalProcure</div>
+        <div class="text-xl font-bold text-slate-400">SingaTrade</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="py-24 px-4 bg-white" id="features">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <span class="text-xs font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Platform Features</span>
+        <h2 class="text-4xl font-extrabold text-slate-900 mt-4 mb-4">Everything You Need to<br />Source Globally</h2>
+        <p class="text-slate-500 text-lg max-w-xl mx-auto">Five powerful features designed to eliminate friction from cross-border wholesale sourcing.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <!-- Feature 1 -->
+        <div class="feature-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">B2B Marketplace</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Browse 10,000+ wholesale products with tiered pricing, MOQ filters, and verified supplier profiles. Chat directly with suppliers via real-time messaging.</p>
+          <a href="marketplace.html" class="inline-flex items-center gap-1 text-blue-600 text-sm font-medium mt-4 hover:gap-2 transition-all">Explore Marketplace <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Global RFQ System</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Submit one RFQ and receive competitive quotes from multiple verified suppliers simultaneously. Compare quotes side-by-side and award to the best offer.</p>
+          <a href="rfq.html" class="inline-flex items-center gap-1 text-amber-600 text-sm font-medium mt-4 hover:gap-2 transition-all">Create RFQ <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">1688 / Taobao Sourcing</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Paste any 1688.com or Taobao.com product URL and instantly get a translated, localized product page with your currency and our logistics markup included.</p>
+          <a href="sourcing.html" class="inline-flex items-center gap-1 text-red-600 text-sm font-medium mt-4 hover:gap-2 transition-all">Try Sourcing Tool <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Escrow Payment Protection</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Your payment is held in escrow and only released to suppliers after you confirm receipt. Supports Stripe (global) and Xendit (Indonesia) for seamless transactions.</p>
+          <a href="register.html" class="inline-flex items-center gap-1 text-emerald-600 text-sm font-medium mt-4 hover:gap-2 transition-all">Start Trading Safely <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Multi-Role Platform</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Dedicated dashboards for Buyers, Suppliers, and Admins. Full KYB verification for suppliers, RBAC access control, and tenant data isolation for enterprise-grade security.</p>
+          <a href="register.html" class="inline-flex items-center gap-1 text-purple-600 text-sm font-medium mt-4 hover:gap-2 transition-all">Create Account <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </div>
+
+        <!-- Feature 6 - Admin -->
+        <div class="feature-card bg-gradient-to-br from-blue-700 to-indigo-800 rounded-2xl p-8 hover:shadow-xl transition-all">
+          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Admin Control Tower</h3>
+          <p class="text-blue-100 text-sm leading-relaxed">Full platform oversight: KYB verification, escrow dispute resolution, RFQ moderation, supplier approval, and real-time analytics for platform operations.</p>
+          <a href="admin/dashboard.html" class="inline-flex items-center gap-1 text-white/80 text-sm font-medium mt-4 hover:text-white hover:gap-2 transition-all">Admin Panel <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-24 px-4 bg-slate-50" id="how-it-works">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <span class="text-xs font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Process</span>
+        <h2 class="text-4xl font-extrabold text-slate-900 mt-4 mb-4">How SHIAP Works</h2>
+        <p class="text-slate-500 text-lg max-w-xl mx-auto">Source from global suppliers in 4 simple steps.</p>
+      </div>
+      <div class="grid md:grid-cols-4 gap-8">
+        <div class="text-center relative">
+          <div class="w-16 h-16 rounded-2xl bg-blue-700 text-white text-2xl font-extrabold flex items-center justify-center mx-auto mb-5 shadow-lg">1</div>
+          <h3 class="font-bold text-slate-900 mb-2">Create Account</h3>
+          <p class="text-slate-500 text-sm">Register as a Buyer or Supplier. Complete KYB verification for full platform access.</p>
+          <div class="hidden md:block absolute top-8 left-full w-full h-0.5 bg-blue-200 -translate-x-8"></div>
+        </div>
+        <div class="text-center relative">
+          <div class="w-16 h-16 rounded-2xl bg-blue-700 text-white text-2xl font-extrabold flex items-center justify-center mx-auto mb-5 shadow-lg">2</div>
+          <h3 class="font-bold text-slate-900 mb-2">Find or Request</h3>
+          <p class="text-slate-500 text-sm">Browse the marketplace, paste a 1688 URL, or submit an RFQ to reach multiple suppliers at once.</p>
+          <div class="hidden md:block absolute top-8 left-full w-full h-0.5 bg-blue-200 -translate-x-8"></div>
+        </div>
+        <div class="text-center relative">
+          <div class="w-16 h-16 rounded-2xl bg-blue-700 text-white text-2xl font-extrabold flex items-center justify-center mx-auto mb-5 shadow-lg">3</div>
+          <h3 class="font-bold text-slate-900 mb-2">Compare & Order</h3>
+          <p class="text-slate-500 text-sm">Review quotes side-by-side, negotiate via chat, and place your order with escrow payment protection.</p>
+          <div class="hidden md:block absolute top-8 left-full w-full h-0.5 bg-blue-200 -translate-x-8"></div>
+        </div>
+        <div class="text-center">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-600 text-white text-2xl font-extrabold flex items-center justify-center mx-auto mb-5 shadow-lg">✓</div>
+          <h3 class="font-bold text-slate-900 mb-2">Receive & Release</h3>
+          <p class="text-slate-500 text-sm">Confirm delivery, release escrow funds to supplier. Dispute resolution handled by SHIAP admin.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buyer vs Supplier -->
+  <section class="py-24 px-4 bg-white">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
+      <!-- For Buyers -->
+      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-10 border border-blue-100">
+        <div class="w-12 h-12 rounded-xl bg-blue-700 flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        </div>
+        <h3 class="text-2xl font-extrabold text-slate-900 mb-3">For Buyers</h3>
+        <p class="text-slate-500 mb-6">Importers, e-commerce owners, SMEs, and procurement agents looking for competitive wholesale products from verified global suppliers.</p>
+        <ul class="space-y-3 mb-8">
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Access 10,000+ verified wholesale products</li>
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Submit RFQ and get 3–10 quotes automatically</li>
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Source directly from 1688 & Taobao in English</li>
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Pay via Virtual Account, QRIS, or Credit Card</li>
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Full escrow protection on every order</li>
+        </ul>
+        <a href="register.html?role=buyer" class="inline-flex items-center gap-2 bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl hover:bg-blue-800 transition shadow-sm">
+          Register as Buyer
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <!-- For Suppliers -->
+      <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl p-10 border border-emerald-100">
+        <div class="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        </div>
+        <h3 class="text-2xl font-extrabold text-slate-900 mb-3">For Suppliers</h3>
+        <p class="text-slate-500 mb-6">Manufacturers, distributors, and trusted wholesalers who want to sell globally to verified B2B buyers at scale.</p>
+        <ul class="space-y-3 mb-8">
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> List products and reach 10,000+ global buyers</li>
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Receive matched RFQ leads automatically</li>
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Tiered pricing and MOQ configuration</li>
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Guaranteed payment via escrow system</li>
+          <li class="flex items-center gap-3 text-sm text-slate-700"><span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span> Payout to bank account or e-wallet</li>
+        </ul>
+        <a href="register.html?role=supplier" class="inline-flex items-center gap-2 bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-emerald-700 transition shadow-sm">
+          Register as Supplier
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="py-20 px-4 gradient-hero">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-4xl font-extrabold text-white mb-4">Ready to Source Smarter?</h2>
+      <p class="text-blue-100 text-lg mb-8">Join 500+ businesses sourcing globally with SHIAP. Free to sign up, no credit card required.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="register.html" class="inline-flex items-center justify-center gap-2 bg-white text-blue-800 font-semibold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl hover:bg-blue-50 transition text-base">
+          Create Free Account
+        </a>
+        <a href="marketplace.html" class="inline-flex items-center justify-center gap-2 bg-transparent text-white font-semibold border-2 border-white/40 px-8 py-4 rounded-xl hover:bg-white/10 transition text-base">
+          View Products
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 py-16 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-10 mb-12">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+            <span class="text-white font-extrabold text-lg">SHIAP</span>
+          </div>
+          <p class="text-sm leading-relaxed">Cross-Border Wholesale Marketplace & Sourcing SaaS connecting global buyers with verified suppliers.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">Platform</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="marketplace.html" class="hover:text-white transition">Marketplace</a></li>
+            <li><a href="rfq.html" class="hover:text-white transition">RFQ System</a></li>
+            <li><a href="sourcing.html" class="hover:text-white transition">1688 Sourcing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">Account</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="login.html" class="hover:text-white transition">Sign In</a></li>
+            <li><a href="register.html" class="hover:text-white transition">Register as Buyer</a></li>
+            <li><a href="register.html?role=supplier" class="hover:text-white transition">Register as Supplier</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">Legal</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-sm">© 2026 SHIAP. All rights reserved. Built for global wholesale trade.</p>
+        <div class="flex items-center gap-4">
+          <span class="text-xs bg-emerald-900/50 text-emerald-400 px-2 py-1 rounded">✓ Stripe Certified</span>
+          <span class="text-xs bg-blue-900/50 text-blue-400 px-2 py-1 rounded">✓ Xendit Partner</span>
+          <span class="text-xs bg-purple-900/50 text-purple-400 px-2 py-1 rounded">✓ SSL Secured</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  (function() {
+    try {
+      const user = JSON.parse(localStorage.getItem('shiap_user'));
+      if (!user || !user.email) return;
+      const dash = { admin: 'admin/dashboard.html', supplier: 'supplier/dashboard.html', buyer: 'buyer/dashboard.html' };
+      const btn = document.getElementById('nav-auth-btn');
+      if (!btn) return;
+      btn.textContent = 'My Account';
+      btn.href = dash[user.role] || 'buyer/dashboard.html';
+    } catch(e) {}
+  })();
+</script>
+</body>
+</html>
