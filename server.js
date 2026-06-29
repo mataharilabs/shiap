@@ -1058,6 +1058,28 @@ app.get('/api/debug/products', (req, res) => {
   });
 });
 
+// ── Image Proxy (bypass alicdn hotlink protection) ──────────────────────────
+app.get('/api/img-proxy', (req, res) => {
+  const imgUrl = req.query.url;
+  if (!imgUrl || !/^https?:\/\/[a-z0-9.-]+\.(alicdn|taobaocdn|tbcdn|tmall)\.com\//i.test(imgUrl)) {
+    return res.status(400).send('Invalid or disallowed image URL');
+  }
+  const mod = imgUrl.startsWith('https') ? https : require('http');
+  const proxyReq = mod.get(imgUrl, {
+    headers: {
+      'Referer': 'https://detail.1688.com/',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36',
+    }
+  }, (imgRes) => {
+    res.set('Content-Type', imgRes.headers['content-type'] || 'image/jpeg');
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.set('Access-Control-Allow-Origin', '*');
+    imgRes.pipe(res);
+  });
+  proxyReq.setTimeout(10000, () => { proxyReq.destroy(); if (!res.headersSent) res.status(504).send('Image fetch timed out'); });
+  proxyReq.on('error', () => { if (!res.headersSent) res.status(502).send('Image fetch failed'); });
+});
+
 // ── 1688 Sourcing Proxy ─────────────────────────────────────────────────────
 const TMAPI_TOKEN = process.env.TMAPI_TOKEN || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImZyYW5zaW5nIiwiQ29taWQiOm51bGwsIlJvbGVpZCI6bnVsbCwiaXNzIjoidG1hcGkiLCJzdWIiOiJmcmFuc2luZyIsImF1ZCI6WyIiXX0.meAKUhYnWPqfhNAINLIxIm3aQ36h2BarInWA9lsO_VY';
 const CNY_TO_USD = parseFloat(process.env.CNY_USD_RATE || '0.138');
